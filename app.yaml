@@ -1,0 +1,52 @@
+application: ts-zapis
+version: 0-test
+runtime: python
+api_version: 1
+
+admin_console:
+  pages:
+  - name: Stats
+    url: /_ah/stats/
+
+builtins:
+- datastore_admin: on
+- appstats: on
+- remote_api: on
+- deferred: on     
+
+#inbound_services:
+#- mail
+
+handlers:
+- url: /static
+  static_dir: static
+
+- url: /favicon\.ico
+  static_files: static/favicon.ico
+  upload: favicon\.ico
+  mime_type: image/x-icon
+
+#- url: /cron_jobs/.*
+#  script: main.py
+#  login: admin
+
+#- url: /tasks/.*
+#  script: main.py
+#  login: admin
+
+#- url: /upload
+#  script: files.py
+#  login: admin
+
+#- url: /download/.*
+#  script: files.py
+#  login: admin
+
+#- url: /_ah/mail/.+
+#  script: inmail.py
+#  login: admin
+
+- url: /.*
+  script: main.py
+
+
