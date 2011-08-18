@@ -7,5 +7,5 @@ import utils.config as cfg
 import logging
 
 def index(request):
-    return render_to_response('admin/index.html', RequestContext(request))
+    return render_to_response('admin/opt_index.html', RequestContext(request))
 
