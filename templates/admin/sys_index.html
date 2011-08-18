@@ -14,7 +14,7 @@
     <table>
     <tr><th>active</th><th>name</th><th>value</th><th>actions</th></tr>
     {% for config in config_list %}
-        <tr><td>{{config.active}}</td><td>{{config.name}}</td><td>{{config.value}}</td><td><a class='button' href='{{config.key.id}}/edit/'>edit</a></td></tr>
+        <tr><td>{{config.active}}</td><td>{{config.name}}</td><td>{{config.value}}</td><td><a class='button' href='{{config.key.id}}/'>edit</a></td></tr>
     {% endfor %}
     </table>
 {% else %}
