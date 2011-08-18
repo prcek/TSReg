@@ -16,7 +16,9 @@ from django.conf.urls.defaults import *
 
 urlpatterns = patterns('',
     # Example:
-    (r'^$', 'enroll.views.index'),
+    (r'^$', 'enroll.views.goto_index'),
+    (r'^zapis/', include('enroll.urls')),
+    (r'^admin/', include('admin.urls')), 
     # Uncomment this for admin:
 #     (r'^admin/', include('django.contrib.admin.urls')),
 )

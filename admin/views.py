@@ -6,9 +6,6 @@ from django.template import RequestContext,Context, loader
 
 import logging
 
-def goto_index(request):
-    return redirect('/zapis/')
-
 def index(request):
-    return render_to_response('enroll/index.html', RequestContext(request))
+    return render_to_response('admin/index.html', RequestContext(request))
 
