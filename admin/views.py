@@ -9,3 +9,6 @@ import logging
 def index(request):
     return render_to_response('admin/index.html', RequestContext(request))
 
+def sys_index(request):
+    return render_to_response('admin/sys_index.html', RequestContext(request))
+
