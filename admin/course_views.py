@@ -17,7 +17,7 @@ GROUP_MODE_CHOICES = (
 
 
 class CourseForm(forms.ModelForm):
-    active = forms.BooleanField(label='aktivní')
+    active = forms.BooleanField(label='aktivní', required=False)
     order_value = forms.IntegerField(label='řazení')
     code = forms.CharField(label='kód')
     name = forms.CharField(label='název')
