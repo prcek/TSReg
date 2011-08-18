@@ -46,6 +46,14 @@ handlers:
 #  script: inmail.py
 #  login: admin
 
+- url: /admin/sys/.*
+  script: main.py
+  login: admin
+
+- url: /admin/.*
+  script: main.py
+  login: required
+
 - url: /.*
   script: main.py
 
