@@ -7,7 +7,43 @@
     <a class='button' href='add'>přidat kurz</a>
     <a class='button' href='.'>přenačíst</a>
 
-    <br>Přehled kurzů<br>
+    <br><br>Přehled kurzů<br>
+
+{% if course_list %}
+    <table>
+    <tr>
+        <th>aktivní</th>
+        <th>řazení</th>
+        <th>kód</th>
+        <th>název</th>
+        <th>kategorie</th>
+        <th>režim</th>
+        <th>kapacita</th>
+        <th>obsazeno</th>
+        <th>k zápisu</th>
+        <th>limit k zápisu</th>
+        <th>operace</th>
+    </tr>
+    {% for c in course_list %}
+        <tr>
+            <td>{{c.active}}</td>
+            <td>{{c.order_value}}</td>
+            <td>{{c.code}}</td>
+            <td>{{c.name}}</td>
+            <td>{{c.category}}</td>
+            <td>{{c.group_mode}}</td>
+            <td>{{c.capacity}}</td>
+            <td>{{c.usage}}</td>
+            <td>{{c.pending}}</td>
+            <td>{{c.pending_limit}}</td>
+            <td><a class='button' href='{{c.key.id}}/edit/'>editovat</a></td>
+        </tr>
+    {% endfor %}
+    </table>
+{% else %}
+    no course<br>
+{% endif %}
+
 
 {% endblock %}
 

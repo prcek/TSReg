@@ -12,7 +12,7 @@ import logging
 class CourseForm(forms.ModelForm):
     class Meta:
         model = Course
-        fields = ( 'code','name','group_mode','print_line_1', 'print_line_2', 'hidden' )
+        fields = ( 'active', 'order_value', 'code','name', 'category', 'group_mode', 'capacity', 'pending_limit' )
 
     def clean_code(self):
         data = self.cleaned_data['code']
@@ -21,8 +21,9 @@ class CourseForm(forms.ModelForm):
         return data
 
 def index(request):
-    cfg_list=cfg.getConfigList()
-    return render_to_response('admin/courses_index.html', RequestContext(request, { 'config_list': cfg_list }))
+    course_list=Course.list()
+
+    return render_to_response('admin/courses_index.html', RequestContext(request, { 'course_list': course_list }))
 
 
 
