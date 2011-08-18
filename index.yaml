@@ -13,16 +13,5 @@ indexes:
 - kind: Course
   properties:
   - name: hidden
-  - name: order_number
-
-- kind: Course
-  properties:
-  - name: hidden
-  - name: order_number
-  - name: code
-
-- kind: Course
-  properties:
-  - name: hidden
   - name: order_value
   - name: code
