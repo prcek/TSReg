@@ -12,7 +12,7 @@ import logging
 class CourseForm(forms.ModelForm):
     class Meta:
         model = Course
-        fields = ( 'active', 'order_value', 'code','name', 'category', 'group_mode', 'capacity', 'pending_limit' )
+        fields = ( 'active', 'order_value', 'code','name', 'category', 'period', 'first_period', 'group_mode', 'capacity', 'pending_limit' )
 
     def clean_code(self):
         data = self.cleaned_data['code']
