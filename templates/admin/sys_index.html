@@ -4,10 +4,22 @@
 {% block title %} Systémová nastavení  {% endblock %}
 
 {% block content %}
+    <a class='button' href='setup'>default setup</a>
     <a class='button' href='add'>přidat proměnnou</a>
     <a class='button' href='.'>přenačíst</a>
 
-    <br>Přehled proměnných<br>
+    <br><br>Přehled proměnných<br>
+
+{% if config_list %}
+    <table>
+    <tr><th>active</th><th>name</th><th>value</th><th>actions</th></tr>
+    {% for config in config_list %}
+        <tr><td>{{config.active}}</td><td>{{config.name}}</td><td>{{config.value}}</td><td><a class='button' href='{{config.key.id}}/edit/'>edit</a></td></tr>
+    {% endfor %}
+    </table>
+{% else %}
+    no config<br>
+{% endif %}
 
 {% endblock %}
 

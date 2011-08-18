@@ -2,7 +2,7 @@
 from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext,Context, loader
-
+import utils.config as cfg
 
 import logging
 
@@ -13,5 +13,9 @@ def opt_index(request):
     return render_to_response('admin/opt_index.html', RequestContext(request))
 
 def sys_index(request):
-    return render_to_response('admin/sys_index.html', RequestContext(request))
+    cfg_list=cfg.getConfigList()
+    return render_to_response('admin/sys_index.html', RequestContext(request, { 'config_list': cfg_list }))
 
+def sys_setup(request):
+    cfg.setupConfig()
+    return redirect('/admin/sys/')
