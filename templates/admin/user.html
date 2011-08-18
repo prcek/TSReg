@@ -1,0 +1,17 @@
+<div class="user">
+    {% if request.auth_info.auth %} 
+        {% if request.auth_info.admin %}
+            <span><strong>ADMIN</strong></span>
+        {% endif %}
+        <span> <a href="/admin/user/"><strong>{{ request.auth_info.name }}</strong></a> </span>
+        <span class="separator">|</span>
+        <span> <a href="{{ request.auth_info.logout_url }}"><strong>odhlásit</strong></a> </span>
+        <span class="separator">|</span>
+        <span> <a href="/admin/help/"><strong>nápověda</strong></a> </span>
+    {% else %}
+        <span> <a href="{{ lrequest.auth_info.login_url }}"><strong>přihlásit</strong></a> </span>
+        <span class="separator">|</span>
+        <span> <a href="/admin/help/"><strong>nápověda</strong></a> </span>
+    {% endif %}
+</div>
+

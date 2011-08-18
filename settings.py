@@ -82,7 +82,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'google.appengine.ext.appstats.recording.AppStatsDjangoMiddleware',
 #    'utils.middleware.Cron',
-#    'utils.middleware.Auth',
+    'utils.middleware.Auth',
 
 #    'django.contrib.sessions.middleware.SessionMiddleware',
 #    'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -108,6 +108,8 @@ TEMPLATE_DIRS = (
 INSTALLED_APPS = (
      'appengine_django',
      'enroll',
+     'admin',
+     'utils',
 #     'emails',
 #     'utils',
 #     'reports',

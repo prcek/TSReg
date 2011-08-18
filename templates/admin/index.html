@@ -1,7 +1,13 @@
-<html>
-<head>
-</head>
-<body>
-    admin index
-</body>
-</html>
+
+{% extends "admin/base.html" %}
+
+{% block title %} Administrace zápisu {% endblock %}
+
+{% block content %}
+    <a class='button' href='add'>přidat kurz</a>
+    <a class='button' href='.'>přenačíst</a>
+
+    <br>Přehled kurzů<br>
+
+{% endblock %}
+

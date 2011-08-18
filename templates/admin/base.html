@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <link href="/static/main.css" type="text/css" rel="stylesheet" media="all"></link>
+    <title>{% block title %}no title defined{% endblock %}</title>
+</head>
+<body>
+    <div id="head">
+{% block head %}
+    {% include "admin/user.html" %}
+    {% include "admin/menu.html" %}
+{% endblock %}
+    </div>
+    <div id="content">
+{% block content %}
+    no block content
+{% endblock %}
+    </div>
+    <div id="footer">
+{% block footer %}
+        Footer &copy;
+{% endblock %}
+    </div>
+</body>
+</html>

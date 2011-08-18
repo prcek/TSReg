@@ -1,0 +1,15 @@
+
+        <div id="top-tabs">
+            <ul>
+                <li><a href="/admin/">Kurzy</a></li>
+
+{% if request.auth_info.admin %}
+                <li><a href="/admin/sys/">Nastavení</a></li>
+{% endif %}
+        
+            </ul>&nbsp;
+            <div class="clear"></div>
+        </div>
+        
+
+
