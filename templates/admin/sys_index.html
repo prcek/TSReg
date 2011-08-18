@@ -1,7 +1,13 @@
-<html>
-<head>
-</head>
-<body>
-    sys admin index
-</body>
-</html>
+
+{% extends "admin/base.html" %}
+
+{% block title %} Systémová nastavení  {% endblock %}
+
+{% block content %}
+    <a class='button' href='add'>přidat proměnnou</a>
+    <a class='button' href='.'>přenačíst</a>
+
+    <br>Přehled proměnných<br>
+
+{% endblock %}
+
