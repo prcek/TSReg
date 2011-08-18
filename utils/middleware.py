@@ -53,13 +53,13 @@ class AuthInfo:
 class Auth(object):
   def process_request(self, request):
     request.__class__.auth_info = AuthInfo(request)
-    if not request.auth_info.auth:
-        logging.info('unauthorised access')
+    if request.auth_info.auth:
+        logging.info('authorised access')
 #        if request.auth_info.wrong:
 #            logging.info('wrong user')
 #            return render_to_response('relogin.html', RequestContext(request, { }))
             
-        return HttpResponseRedirect(request.auth_info.login_url)
+#        return HttpResponseRedirect(request.auth_info.login_url)
     return None
 
 #class Cron(object):
