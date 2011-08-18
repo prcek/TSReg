@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django import forms
 from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response, redirect, get_object_or_404
@@ -8,8 +10,25 @@ import utils.config as cfg
 import logging
 
 
+GROUP_MODE_CHOICES = (
+    ('Single','jednotlivci'),
+    ('Pair','po párech'),
+)
+
 
 class CourseForm(forms.ModelForm):
+    active = forms.BooleanField(label='aktivní')
+    order_value = forms.IntegerField(label='řazení')
+    code = forms.CharField(label='kód')
+    name = forms.CharField(label='název')
+    category = forms.CharField(label='kategorie')
+    period = forms.CharField(label='termín')
+    first_period = forms.CharField(label='první lekce')
+    group_mode = forms.CharField(label='režim', widget = forms.Select(choices=GROUP_MODE_CHOICES)) 
+    capacity = forms.IntegerField(label='kapacita')
+    pending_limit = forms.IntegerField(label='fronta')
+
+
     class Meta:
         model = Course
         fields = ( 'active', 'order_value', 'code','name', 'category', 'period', 'first_period', 'group_mode', 'capacity', 'pending_limit' )

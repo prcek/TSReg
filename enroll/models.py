@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from appengine_django.models import BaseModel
 from google.appengine.ext import db
 import datetime
@@ -22,6 +24,13 @@ class Course(BaseModel):
     @staticmethod
     def list():
         return Course.all().filter('hidden',False).order('order_value').order('code')
+
+    def group_mode_loc(self):
+        if self.group_mode == 'Single':
+            return 'jednotlivci'
+        elif self.group_mode == 'Pair':
+            return 'po párech'
+        return '?'
 
 
 

@@ -28,12 +28,12 @@
     </tr>
     {% for c in course_list %}
         <tr>
-            <td>{{c.active}}</td>
+            <td>{{c.active|anone }}</td>
             <td>{{c.order_value}}</td>
             <td>{{c.code}}</td>
             <td>{{c.name}}</td>
             <td>{{c.category}}</td>
-            <td>{{c.group_mode}}</td>
+            <td>{{c.group_mode_loc}}</td>
             <td>{{c.period}}</td>
             <td>{{c.first_period}}</td>
             <td>{{c.capacity}}</td>
