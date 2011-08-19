@@ -29,7 +29,6 @@ class Course(BaseModel):
     def get_code_by_key(course_key):
         if course_key is None:
             return None
-        logging.info('get_code_by_key: %s'%course_key)
         c = Course.get(course_key)
         if c is None:
             return None
@@ -41,7 +40,6 @@ class Course(BaseModel):
         res = []
         for c in clist:
             res.append((c.key(),c.code))
-        logging.info(res)
         return res 
 
     def group_mode_loc(self):
