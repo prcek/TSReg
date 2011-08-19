@@ -32,5 +32,47 @@ class Course(BaseModel):
             return 'po párech'
         return '?'
 
+class Student(BaseModel):
+    hidden = db.BooleanProperty(default=False)
+    status = db.StringProperty(choices=['-','n','nc'], default='-')
+    reg_datetime = db.DateTimeProperty()
+    addressing = db.StringProperty(choices=['-','p','s','d'], default='-')
+    name = db.StringProperty(default='')
+    surname = db.StringProperty(default='')
+    year = db.IntegerProperty(default=0)
+    email = db.StringProperty(default='') 
+    phone = db.StringProperty(default='')  
+    street = db.StringProperty(default='')
+    street_no = db.StringProperty(default='')
+    city = db.StringProperty(default='')
+    post_code = db.StringProperty(default='')
+    comment = db.StringProperty(default='')
 
+
+    @staticmethod
+    def list():
+        return Student.all().filter('hidden',False).order('reg_datetime')
+
+
+
+    def addressing_loc(self):
+        if self.addressing == '-':
+            return ''
+        elif self.addressing == 'p':
+            return 'Pan'
+        elif self.addressing == 's':
+            return 'Slečna'
+        elif self.addressing == 'd':
+            return 'Paní'
+        return '?'
+
+    def status_loc(self):
+        if self.status == '-':
+            return ''
+        elif self.status == 'n':
+            return 'nový' 
+        elif self.status == 'nc':
+            return 'platný nový'
+        return '?' 
+ 
 

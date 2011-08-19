@@ -15,3 +15,8 @@ indexes:
   - name: hidden
   - name: order_value
   - name: code
+
+- kind: Student
+  properties:
+  - name: hidden
+  - name: reg_datetime
