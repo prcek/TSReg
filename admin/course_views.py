@@ -14,19 +14,20 @@ GROUP_MODE_CHOICES = (
     ('Single','jednotlivci'),
     ('Pair','po párech'),
 )
+ERROR_MESSAGES={'required': 'Prosím vyplň tuto položku', 'invalid': 'Neplatná hodnota'}
 
 
 class CourseForm(forms.ModelForm):
-    active = forms.BooleanField(label='aktivní', required=False)
-    order_value = forms.IntegerField(label='řazení')
-    code = forms.CharField(label='kód')
-    name = forms.CharField(label='název')
-    category = forms.CharField(label='kategorie')
-    period = forms.CharField(label='termín')
-    first_period = forms.CharField(label='první lekce')
-    group_mode = forms.CharField(label='režim', widget = forms.Select(choices=GROUP_MODE_CHOICES)) 
-    capacity = forms.IntegerField(label='kapacita')
-    pending_limit = forms.IntegerField(label='fronta')
+    active = forms.BooleanField(label='aktivní', required=False, help_text='je-li kurz aktivní, bude nabízen pro zápis')
+    order_value = forms.IntegerField(label='řazení',error_messages=ERROR_MESSAGES, help_text='kurzy budou tříděny podle tohodle čísla v zestupném pořadí')
+    code = forms.CharField(label='kód', error_messages=ERROR_MESSAGES)
+    name = forms.CharField(label='název', error_messages=ERROR_MESSAGES)
+    category = forms.CharField(label='kategorie', error_messages=ERROR_MESSAGES)
+    period = forms.CharField(label='termín', error_messages=ERROR_MESSAGES)
+    first_period = forms.CharField(label='první lekce', error_messages=ERROR_MESSAGES)
+    group_mode = forms.CharField(label='režim', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=GROUP_MODE_CHOICES)) 
+    capacity = forms.IntegerField(label='kapacita', error_messages=ERROR_MESSAGES)
+    pending_limit = forms.IntegerField(label='fronta', error_messages=ERROR_MESSAGES)
 
 
     class Meta:

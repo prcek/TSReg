@@ -160,6 +160,10 @@ input.number                                                { width: 50px; }
     color: #CCCCCC;
 }
 
+.errorlist {
+    color: #FF0000;
+}
+
 a.button {
     background: none repeat scroll 0 0 #666666;
     border-radius: 5px 5px 5px 5px;
