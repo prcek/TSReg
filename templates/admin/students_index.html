@@ -13,6 +13,7 @@
     <table>
     <tr>
         <th>stav</th>
+        <th>kurz</th>
         <th>oslovení</th>
         <th>jméno</th>
         <th>příjmení</th>
@@ -29,6 +30,7 @@
     {% for s in student_list %}
         <tr>
             <td>{{s.status_loc}}</td>
+            <td>{{s.course_code}}</td>
             <td>{{s.addressing_loc}}</td>
             <td>{{s.name}}</td>
             <td>{{s.surname}}</td>

@@ -25,6 +25,25 @@ class Course(BaseModel):
     def list():
         return Course.all().filter('hidden',False).order('order_value').order('code')
 
+    @staticmethod
+    def get_code_by_key(course_key):
+        if course_key is None:
+            return None
+        logging.info('get_code_by_key: %s'%course_key)
+        c = Course.get(course_key)
+        if c is None:
+            return None
+        return c.code
+
+    @staticmethod
+    def get_COURSE_CHOICES():
+        clist = Course.list()
+        res = []
+        for c in clist:
+            res.append((c.key(),c.code))
+        logging.info(res)
+        return res 
+
     def group_mode_loc(self):
         if self.group_mode == 'Single':
             return 'jednotlivci'
@@ -34,6 +53,7 @@ class Course(BaseModel):
 
 class Student(BaseModel):
     hidden = db.BooleanProperty(default=False)
+    course_key = db.ReferenceProperty(Course,collection_name='course_key')
     status = db.StringProperty(choices=['-','n','nc'], default='-')
     reg_datetime = db.DateTimeProperty()
     addressing = db.StringProperty(choices=['-','p','s','d'], default='-')
@@ -54,12 +74,15 @@ class Student(BaseModel):
         return Student.all().filter('hidden',False).order('reg_datetime')
 
 
+    def course_code(self):
+        k = Student.course_key.get_value_for_datastore(self)
+        return Course.get_code_by_key(k)
 
     def addressing_loc(self):
         if self.addressing == '-':
             return ''
         elif self.addressing == 'p':
-            return 'Pán'
+            return 'Pan'
         elif self.addressing == 's':
             return 'Slečna'
         elif self.addressing == 'd':

@@ -5,14 +5,14 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext,Context, loader
 
-from enroll.models import Student
+from enroll.models import Student,Course
 import utils.config as cfg
 import logging
 
 
 ADDRESSING_CHOICES = (
     ('-',''),
-    ('p','Pán'),
+    ('p','Pan'),
     ('s','Slečna'),
     ('d','Paní'),
 )
@@ -28,6 +28,8 @@ ERROR_MESSAGES={'required': 'Prosím vyplň tuto položku', 'invalid': 'Neplatn�
 
 
 class StudentForm(forms.ModelForm):
+#    course_key = forms.ChoiceField(label='kurz', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=Course.get_COURSE_CHOICES()))
+    course_key = forms.ChoiceField(label='kurz', error_messages=ERROR_MESSAGES, choices=Course.get_COURSE_CHOICES())
     addressing = forms.CharField(label='oslovení', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=ADDRESSING_CHOICES))
     name = forms.CharField(label='jméno', error_messages=ERROR_MESSAGES)
     surname = forms.CharField(label='příjmení', error_messages=ERROR_MESSAGES)
@@ -42,7 +44,7 @@ class StudentForm(forms.ModelForm):
 
     class Meta:
         model = Student
-        fields = ( 'addressing', 'name', 'surname', 'email', 'phone', 'year', 'street', 'street_no', 'city', 'post_code', 'comment' )
+        fields = ( 'course_key', 'addressing', 'name', 'surname', 'email', 'phone', 'year', 'street', 'street_no', 'city', 'post_code', 'comment' )
 
 def index(request):
     student_list=Student.list()
