@@ -51,6 +51,12 @@ def index(request):
 
     return render_to_response('admin/students_index.html', RequestContext(request, { 'student_list': student_list }))
 
+def index_course(request, course_id):
+    course = Course.get_by_id(int(course_id))  
+    student_list=Student.list_for_course(course.key())
+
+    return render_to_response('admin/students_index.html', RequestContext(request, { 'student_list': student_list }))
+
 
 
 def edit(request, student_id):

@@ -70,6 +70,10 @@ class Student(BaseModel):
     @staticmethod
     def list():
         return Student.all().filter('hidden',False).order('reg_datetime')
+    
+    @staticmethod
+    def list_for_course(course_key):
+        return Student.all().filter('hidden',False).filter('course_key',course_key).order('reg_datetime')
 
 
     def course_code(self):

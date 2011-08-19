@@ -9,6 +9,7 @@ urlpatterns = patterns('admin',
     (r'^kurzy/$', 'course_views.index'),
     (r'^kurzy/add/$', 'course_views.create'),
     (r'^kurzy/(?P<course_id>\d+)/edit/$', 'course_views.edit'),
+    (r'^kurzy/(?P<course_id>\d+)/zaci/$', 'student_views.index_course'),
 
 
     (r'^zaci/$', 'student_views.index'),
