@@ -40,7 +40,10 @@
             <td>{{c.usage}}</td>
             <td>{{c.pending}}</td>
             <td>{{c.pending_limit}}</td>
-            <td><a class='button' href='{{c.key.id}}/edit/'>editovat</a></td>
+            <td>
+                <a class='button' href='{{c.key.id}}/edit/'>editovat</a>
+                <a class='cbutton' href='{{c.key.id}}/del/'>smazat</a>
+            </td>
         </tr>
     {% endfor %}
     </table>

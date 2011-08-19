@@ -23,5 +23,74 @@
         Footer &copy;
 {% endblock %}
     </div>
+    <script type="text/javascript">
+        TOOLS = {}
+
+
+        TOOLS.stopEvent = function(e) {
+            var e = e || window.event;
+            if (e.stopPropagation){
+                e.stopPropagation();
+            } else { 
+                e.cancelBubble = true;
+            }
+        }
+
+
+        TOOLS.cancelDef = function(e) {
+            var e = e || window.event;
+            if(e.preventDefault) {
+                e.preventDefault();
+            } else {
+                e.returnValue = false;
+            }
+        }
+
+
+        TOOLS.addListener = function (elm,eType,func) {
+            if (document.addEventListener) {
+                if (window.opera && (elm == window)){
+                    elm = document;
+                }
+                elm.addEventListener(eType,func,false);
+            } else if (document.attachEvent) {
+                elm.attachEvent('on'+eType,func);
+            }
+            
+        }
+        TOOLS.getElementsByClass = function (searchClass,node,tag) {
+            var classElements = [];
+            var node = node || document;
+            var tag = tag || "*";
+
+            var els = node.getElementsByTagName(tag);
+            var elsLen = els.length;
+        
+            var pattern = new RegExp("(^|\\s)"+searchClass+"(\\s|$)");
+            for (var i = 0, j = 0; i < elsLen; i++) {
+                    if (pattern.test(els[i].className)) {
+                            classElements[j] = els[i];
+                            j++;
+                    }
+            }
+            return classElements;
+        }
+        TOOLS.setupConfirm = function (confirmClass, confirmFce) {
+            var hrefs = TOOLS.getElementsByClass(confirmClass,null);
+            for(var i = 0; i < hrefs.length; i++) {
+                TOOLS.addListener(hrefs[i],"click",confirmFce);
+            } 
+        }
+       
+        TOOLS.confirmDel = function (e, elm) {
+            if (!confirm("Opravdu smazat?")) {
+               TOOLS.cancelDef(e);
+               TOOLS.stopEvent(e);
+            }
+        }
+
+        TOOLS.setupConfirm("cbutton",TOOLS.confirmDel);
+
+    </script>
 </body>
 </html>
