@@ -10,15 +10,39 @@ import utils.config as cfg
 import logging
 
 
+ADDRESSING_CHOICES = (
+    ('-',''),
+    ('p','Pán'),
+    ('s','Slečna'),
+    ('d','Paní'),
+)
+
+YEAR_CHOICES = [
+    (0,'')
+]
+
+for x in range(1900,2011):
+    YEAR_CHOICES.append((x,x))
+
 ERROR_MESSAGES={'required': 'Prosím vyplň tuto položku', 'invalid': 'Neplatná hodnota'}
 
 
 class StudentForm(forms.ModelForm):
+    addressing = forms.CharField(label='oslovení', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=ADDRESSING_CHOICES))
     name = forms.CharField(label='jméno', error_messages=ERROR_MESSAGES)
+    surname = forms.CharField(label='příjmení', error_messages=ERROR_MESSAGES)
+    email = forms.EmailField(label='email', error_messages=ERROR_MESSAGES)
+    phone = forms.CharField(label='telefon', error_messages=ERROR_MESSAGES, required=False)
+    year = forms.IntegerField(label='rok', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=YEAR_CHOICES))
+    street = forms.CharField(label='ulice', error_messages=ERROR_MESSAGES, required=False)
+    street_no = forms.CharField(label='číslo', error_messages=ERROR_MESSAGES, required=False)
+    city = forms.CharField(label='město', error_messages=ERROR_MESSAGES, required=False)
+    post_code = forms.CharField(label='psč', error_messages=ERROR_MESSAGES, required=False)
+    comment = forms.CharField(label='poznámka', error_messages=ERROR_MESSAGES, required=False)
 
     class Meta:
         model = Student
-        fields = ( 'name' )
+        fields = ( 'addressing', 'name', 'surname', 'email', 'phone', 'year', 'street', 'street_no', 'city', 'post_code', 'comment' )
 
 def index(request):
     student_list=Student.list()

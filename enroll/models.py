@@ -59,7 +59,7 @@ class Student(BaseModel):
         if self.addressing == '-':
             return ''
         elif self.addressing == 'p':
-            return 'Pan'
+            return 'Pán'
         elif self.addressing == 's':
             return 'Slečna'
         elif self.addressing == 'd':

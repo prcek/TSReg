@@ -33,13 +33,13 @@
             <td>{{s.name}}</td>
             <td>{{s.surname}}</td>
             <td>{{s.email}}</td>
-            <td>{{s.phone}}</td>
-            <td>{{s.year}}</td>
-            <td>{{s.street}}</td>
-            <td>{{s.street_no}}</td>
-            <td>{{s.city}}</td>
-            <td>{{s.post_code}}</td>
-            <td>{{s.comment}}</td>
+            <td>{{s.phone|nonone}}</td>
+            <td>{% if s.year %}{{s.year}}{% else %}&nbsp;{%endif%}</td>
+            <td>{{s.street|nonone}}</td>
+            <td>{{s.street_no|nonone}}</td>
+            <td>{{s.city|nonone}}</td>
+            <td>{{s.post_code|nonone}}</td>
+            <td>{{s.comment|nonone}}</td>
             <td>
                 <a class='button' href='{{s.key.id}}/edit/'>editovat</a>
                 <a class='cbutton' href='{{s.key.id}}/del/'>smazat</a>

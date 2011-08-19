@@ -12,3 +12,9 @@ def anone(v):
         return 'Ne'
     return None 
 
+@register.filter
+def nonone(v):
+    if v is None:
+        return ""
+    return v
+
