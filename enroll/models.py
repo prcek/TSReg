@@ -40,6 +40,7 @@ class Course(BaseModel):
         res = []
         for c in clist:
             res.append((c.key(),c.code))
+        logging.info('get_COURSE_CHOICES: %s'%res)
         return res 
 
     def group_mode_loc(self):
