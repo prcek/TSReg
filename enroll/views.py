@@ -72,7 +72,6 @@ def attend(request,course_id):
         form = EnrollForm(request.POST)
 
         if form.is_valid():
-
             check_ok = False
             if config.getConfigBool('CAPTCHA_ON',False):
                 if captcha.check(request.POST['recaptcha_challenge_field'], request.POST['recaptcha_response_field'], os.environ['REMOTE_ADDR'],  config.getConfigString('CAPTCHA_PRIVATE_KEY','')):

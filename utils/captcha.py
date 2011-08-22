@@ -1,5 +1,5 @@
 import urllib2, urllib
-import logging
+#import logging
 
 API_SSL_SERVER="https://www.google.com/recaptcha/api"
 API_SERVER="http://www.google.com/recaptcha/api"
@@ -95,7 +95,7 @@ def submit (recaptcha_challenge_field,
         return RecaptchaResponse (is_valid=False, error_code = return_values [1])
 
 def check(c,r,ip,key):
-    logging.info('c:%s, r:%s, key:%s, ip:%s'%(c,r,key,ip))
+#    logging.info('c:%s, r:%s, key:%s, ip:%s'%(c,r,key,ip))
     resp = submit(c, r, key, ip)
     if resp.is_valid:
         return True
