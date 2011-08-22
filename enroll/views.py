@@ -59,6 +59,7 @@ def attend(request,course_id):
 
 
 
+
     course = Course.get_by_id(int(course_id))
     if course is None:
         raise Http404
@@ -69,17 +70,6 @@ def attend(request,course_id):
 
     if request.method == 'POST':
         form = EnrollForm(request.POST)
-
-        captcha.check(request.POST['recaptcha_challenge_field'], request.POST['recaptcha_response_field'], os.environ['REMOTE_ADDR'], config.getConfigString('CAPTCHA_PRIVATE_KEY',''))
-
-#        logging.info("challenge=%s, response=%s, remoteip=%s"%(challenge,response,remoteip))
-#        resp = submit(challenge, response, getConfig('CAPTCHA_PRIVATE_KEY',''), remoteip)
-#        if resp.is_valid:
-#            logging.info('OK')
-#            last_result = 'OK'
-#        else:
-#            logging.info('ERROR')
-#            last_result = 'ERROR'
 
         if form.is_valid():
 

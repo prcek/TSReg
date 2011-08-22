@@ -15,6 +15,7 @@
 
 <div> Přihláska do kurzu {{ course.code }}  </div>
 <form method="post" name="form">
+
 {{ form.as_p }}
 
 {% if captcha_error %}  neplatný kód {% endif %}
