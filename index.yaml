@@ -12,6 +12,13 @@ indexes:
 
 - kind: Course
   properties:
+  - name: active
+  - name: hidden
+  - name: order_value
+  - name: code
+
+- kind: Course
+  properties:
   - name: hidden
   - name: order_value
   - name: code

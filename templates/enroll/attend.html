@@ -1,0 +1,16 @@
+{% extends "enroll/base.html" %}
+
+{% block title %} TŠ Starlet - Zápis - Přihláška {% endblock %}
+
+{% block content %}
+
+<div> Přihláska do kurzu {{ course.code }}  </div>
+<form method="post" name="form">
+{{ form.as_p }}
+<input type="submit" value="Odeslat">
+<a  href='/zapis/'>zpět</a>
+</form>
+
+
+{% endblock %}
+

@@ -21,9 +21,17 @@ class Course(BaseModel):
     hidden = db.BooleanProperty(default=False)
     
 
+    def is_open(self):
+        return (not self.hidden) and self.active
+
     @staticmethod
     def list():
         return Course.all().filter('hidden',False).order('order_value').order('code')
+
+    @staticmethod
+    def list_for_enroll():
+        return Course.all().filter('hidden',False).filter('active',True).order('order_value').order('code')
+
 
     @staticmethod
     def get_code_by_key(course_key):
@@ -49,6 +57,9 @@ class Course(BaseModel):
         elif self.group_mode == 'Pair':
             return 'po párech'
         return '?'
+
+
+
 
 class Student(BaseModel):
     hidden = db.BooleanProperty(default=False)

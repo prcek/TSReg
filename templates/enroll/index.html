@@ -1,7 +1,38 @@
-<html>
-<head>
-</head>
-<body>
-    index
-</body>
-</html>
+{% extends "enroll/base.html" %}
+
+{% block title %} TŠ Starlet - Zápis - Volba kurzu {% endblock %}
+
+{% block content %}
+
+{% if course_list %}
+<div> Volba kurzu </div>
+    <table>
+    <tr>
+        <th>kód</th>
+        <th>název</th>
+        <th>kategorie</th>
+        <th>termín</th>
+        <th>první lekce</th>
+        <th>operace</th>
+    </tr>
+    {% for c in course_list %}
+        <tr>
+            <td>{{c.code}}</td>
+            <td>{{c.name}}</td>
+            <td>{{c.category}}</td>
+            <td>{{c.period}}</td>
+            <td>{{c.first_period}}</td>
+            <td>
+                <a class='button' href='kurz/{{c.key.id}}/'>přihlásit</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+{% else %}
+<div> Žádný kurz není otevřen pro zápis </div>
+{% endif %}
+
+
+
+{% endblock %}
+
