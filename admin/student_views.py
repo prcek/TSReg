@@ -93,6 +93,7 @@ def edit(request, student_id):
 def create(request):
 
     student = Student()
+    student.init_reg()
     if request.method == 'POST':
         form = StudentForm(request.POST, instance=student)
         if form.is_valid():

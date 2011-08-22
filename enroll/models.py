@@ -67,6 +67,9 @@ class Student(BaseModel):
     post_code = db.StringProperty(default='')
     comment = db.StringProperty(default='')
 
+    def init_reg(self):
+        self.reg_datetime = datetime.datetime.utcnow()        
+        
 
     @staticmethod
     def list():
