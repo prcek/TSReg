@@ -83,6 +83,9 @@ def attend(request,course_id):
                 check_ok = True
 
             if check_ok:
+                
+            
+
                 ref_code = '12345'
                 return HttpResponseRedirect('/zapis/prihlaska/%s/'%ref_code)
 

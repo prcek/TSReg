@@ -4,6 +4,15 @@ from appengine_django.models import BaseModel
 from google.appengine.ext import db
 import datetime
 import logging
+import random
+
+
+from string import maketrans
+
+intab = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+outtab = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+transtab = maketrans(intab, outtab)
+
 
 class Course(BaseModel):
     active = db.BooleanProperty(default=False)
@@ -66,6 +75,8 @@ class Student(BaseModel):
     course_key = db.ReferenceProperty(Course,collection_name='course_key')
     status = db.StringProperty(choices=['-','n','nc'], default='-')
     reg_datetime = db.DateTimeProperty()
+    ref_base = db.StringProperty(default='')
+    ref_key = db.StringProperty(default='')
     addressing = db.StringProperty(choices=['-','p','s','d'], default='-')
     name = db.StringProperty(default='')
     surname = db.StringProperty(default='')
@@ -80,7 +91,34 @@ class Student(BaseModel):
 
     def init_reg(self):
         self.reg_datetime = datetime.datetime.utcnow()        
-        
+
+    def init_ref_base(self):
+        word = ''
+        for i in range(4):   
+            word += random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+        self.ref_base = word
+
+
+    def init_ref_key(self):
+        s1 = self.ref_base.__str__()
+        s2 = self.key().id().__str__()
+        while(len(s2)<len(s1)):
+            s2="."+s2
+
+        while(len(s1)<len(s2)):
+            s1+=s1
+
+        self.ref_key= "".join(i for j in zip(s1,s2) for i in j).translate(transtab,'.')
+
+    @staticmethod
+    def decode_ref_key(r):
+        id = None
+        try:
+            id = int(r.translate(transtab,'ABCDEFGHIJKLMNOPQRSTUVWXYZ'))
+        except:
+            pass
+        return id
+         
 
     @staticmethod
     def list():

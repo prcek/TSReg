@@ -94,12 +94,15 @@ def create(request):
 
     student = Student()
     student.init_reg()
+    student.init_ref_base()
     if request.method == 'POST':
         form = StudentForm(request.POST, instance=student)
         if form.is_valid():
             logging.info('create student before %s'% student)
             form.save(commit=False)
             logging.info('create student after %s'% student)
+            student.save()
+            student.init_ref_key()
             student.save()
             return redirect('..')
     else:
