@@ -29,7 +29,8 @@ ERROR_MESSAGES={'required': 'Prosím vyplň tuto položku', 'invalid': 'Neplatn�
 
 class StudentForm(forms.ModelForm):
 #    course_key = forms.ChoiceField(label='kurz', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=Course.get_COURSE_CHOICES()))
-    course_key = forms.ChoiceField(label='kurz', error_messages=ERROR_MESSAGES, choices=Course.get_COURSE_CHOICES())
+#    course_key = forms.ChoiceField(label='kurz', error_messages=ERROR_MESSAGES, choices=Course.get_COURSE_CHOICES())
+    course_key = forms.ChoiceField(label='kurz', error_messages=ERROR_MESSAGES)
     addressing = forms.CharField(label='oslovení', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=ADDRESSING_CHOICES))
     name = forms.CharField(label='jméno', error_messages=ERROR_MESSAGES)
     surname = forms.CharField(label='příjmení', error_messages=ERROR_MESSAGES)
@@ -45,6 +46,12 @@ class StudentForm(forms.ModelForm):
     class Meta:
         model = Student
         fields = ( 'course_key', 'addressing', 'name', 'surname', 'email', 'phone', 'year', 'street', 'street_no', 'city', 'post_code', 'comment' )
+
+    def __init__(self, **kwargs):
+        super(self.__class__,self).__init__(**kwargs)
+        self.fields['course_key'].choices=Course.get_COURSE_CHOICES()
+
+        
 
 def index(request):
     student_list=Student.list()
