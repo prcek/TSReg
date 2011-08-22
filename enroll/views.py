@@ -7,7 +7,7 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext,Context, loader
 
-from enroll.models import Course
+from enroll.models import Course,Student
 from utils import captcha
 from utils import config
 
@@ -83,10 +83,27 @@ def attend(request,course_id):
                 check_ok = True
 
             if check_ok:
-                
-            
-
-                ref_code = '12345'
+                logging.info('creating new student record')    
+                st = Student()
+                st.status = 'n'
+                st.course_key=course.key()
+                st.init_reg()
+                st.init_ref_base()
+                st.addressing = form.cleaned_data['addressing']
+                st.name = form.cleaned_data['name']
+                st.surname = form.cleaned_data['surname']
+                st.year = form.cleaned_data['year']
+                st.email = form.cleaned_data['email']
+                st.phone = form.cleaned_data['phone']
+                st.street = form.cleaned_data['street']
+                st.street_no = form.cleaned_data['street_no']
+                st.city = form.cleaned_data['city']
+                st.post_code = form.cleaned_data['post_code']
+                st.comment = form.cleaned_data['comment']
+                st.save()
+                st.init_ref_key()
+                st.save()
+                ref_code = st.ref_key
                 return HttpResponseRedirect('/zapis/prihlaska/%s/'%ref_code)
 
     else:
