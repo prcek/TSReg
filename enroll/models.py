@@ -39,7 +39,7 @@ class Course(BaseModel):
         clist = Course.list()
         res = []
         for c in clist:
-            res.append((c.key(),c.code))
+            res.append((c.key().__str__(),c.code))
         logging.info('get_COURSE_CHOICES: %s'%res)
         return res 
 
