@@ -8,8 +8,11 @@ from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext,Context, loader
 
 from enroll.models import Course
+from utils import captcha
+from utils import config
 
 import logging
+import os
 
 
 ADDRESSING_CHOICES = (
@@ -62,16 +65,50 @@ def attend(request,course_id):
     if not course.is_open():
         raise Http404
 
+    captcha_error = None
+
     if request.method == 'POST':
         form = EnrollForm(request.POST)
+
+        captcha.check(request.POST['recaptcha_challenge_field'], request.POST['recaptcha_response_field'], os.environ['REMOTE_ADDR'], config.getConfigString('CAPTCHA_PRIVATE_KEY',''))
+
+#        logging.info("challenge=%s, response=%s, remoteip=%s"%(challenge,response,remoteip))
+#        resp = submit(challenge, response, getConfig('CAPTCHA_PRIVATE_KEY',''), remoteip)
+#        if resp.is_valid:
+#            logging.info('OK')
+#            last_result = 'OK'
+#        else:
+#            logging.info('ERROR')
+#            last_result = 'ERROR'
+
         if form.is_valid():
-            ref_code = '12345'
-            return HttpResponseRedirect('/zapis/prihlaska/%s/'%ref_code)
+
+            check_ok = False
+            if config.getConfigBool('CAPTCHA_ON',False):
+                if captcha.check(request.POST['recaptcha_challenge_field'], request.POST['recaptcha_response_field'], os.environ['REMOTE_ADDR'],  config.getConfigString('CAPTCHA_PRIVATE_KEY','')):
+                    check_ok = True
+                else:
+                    captcha_error = True
+                    logging.info('captcha wrong')
+            else:
+                check_ok = True
+
+            if check_ok:
+                ref_code = '12345'
+                return HttpResponseRedirect('/zapis/prihlaska/%s/'%ref_code)
 
     else:
         form = EnrollForm()
     
-    return render_to_response('enroll/attend.html', RequestContext(request, { 'course': course, 'form':form }))
+    if (config.getConfigBool('CAPTCHA_ON',False)):
+        html_captcha = captcha.displayhtml(config.getConfigString('CAPTCHA_PUBLIC_KEY',''))
+    else:
+        html_captcha = None
+
+    return render_to_response('enroll/attend.html', RequestContext(request, { 'course': course, 'form':form , 'html_captcha': html_captcha, 'captcha_error':captcha_error}))
+
+
+
 
 def show(request,ref_code):
     course = None 

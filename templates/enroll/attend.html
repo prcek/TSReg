@@ -4,12 +4,26 @@
 
 {% block content %}
 
+{% if html_captcha %} 
+<script type="text/javascript">
+ var RecaptchaOptions = {
+    theme : 'white',
+    custom_translations : { instructions_visual : "This is my text:" }
+ };
+ </script>
+{% endif %}
+
 <div> Přihláska do kurzu {{ course.code }}  </div>
 <form method="post" name="form">
 {{ form.as_p }}
+
+{% if captcha_error %}  neplatný kód {% endif %}
+{% if html_captcha %} {{ html_captcha|safe }} {% endif %}
+    
 <input type="submit" value="Odeslat">
 <a  href='/zapis/'>zpět</a>
 </form>
+
 
 
 {% endblock %}
