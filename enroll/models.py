@@ -12,6 +12,7 @@ from string import maketrans
 intab = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 outtab = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 transtab = maketrans(intab, outtab)
+transtab_r = maketrans(outtab,intab)
 
 
 class Course(BaseModel):
@@ -112,13 +113,28 @@ class Student(BaseModel):
 
     @staticmethod
     def decode_ref_key(r):
+        r = r.__str__()
         id = None
         try:
-            id = int(r.translate(transtab,'ABCDEFGHIJKLMNOPQRSTUVWXYZ'))
+            r2 =  r.translate(transtab_r)
+            id = int(r2.translate(None,'ABCDEFGHIJKLMNOPQRSTUVWXYZ'))
         except:
             pass
         return id
-         
+
+    @staticmethod
+    def get_by_ref_key(rk):
+        logging.info('ref_key: %s'%rk)
+        id = Student.decode_ref_key(rk)
+        logging.info('id: %s'%id)
+        if id is None:
+            return None
+        s = Student.get_by_id(id)
+        if s is None:
+            return None
+        if s.ref_key != rk:
+            return None
+        return s
 
     @staticmethod
     def list():

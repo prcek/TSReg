@@ -120,8 +120,11 @@ def attend(request,course_id):
 
 
 def show(request,ref_code):
-    course = None 
-    student = None
+    student = Student.get_by_ref_key(ref_code)
+    if student:
+        course = Course.get_by_id(int(student.course_key.key().id())) 
+    else:
+        course = None
     return render_to_response('enroll/show.html', RequestContext(request, { 'course': course, 'student':student, 'ref_code':ref_code }))
     
         
