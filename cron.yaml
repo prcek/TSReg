@@ -1,0 +1,6 @@
+cron:
+- description: clean expired enrolls
+  url: /cron/clean_expired_enrolls
+  schedule: every 10 minutes synchronized
+  timezone: Europe/Prague
+

@@ -46,6 +46,15 @@ handlers:
 #  script: inmail.py
 #  login: admin
 
+
+- url: /cron/.*
+  script: main.py
+  login: admin
+
+- url: /task/.*
+  script: main.py
+  login: admin
+
 - url: /admin/sys/.*
   script: main.py
   login: admin
