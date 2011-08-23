@@ -6,7 +6,7 @@
 {% block content %}
     <a class='button' href='.'>přenačíst</a>
 
-    <br>Přehled nastavení<br>
+    <br><br>Přehled nastavení<br><br>
 
 {% for f in forms %}
     <form method="post">
@@ -14,6 +14,7 @@
     {{ f.as_p }}<br>
     <input class="button" type="submit" value="uložit">
     </form>
+    <br><br>
 {% endfor %}
 
 {% endblock %}

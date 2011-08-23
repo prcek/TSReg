@@ -23,14 +23,16 @@ def index(request):
 
 
 
-    items = {'t_check_email':None, 't_confirm_email':None, 'b_enroll_on':None }
-    labels = {'t_check_email':'ověřovací email', 't_confirm_email':'potvrzovací email', 'b_enroll_on':'globální povolení zápisu' }
+   # items = {'t_check_email':None, 't_confirm_email':None, 'b_enroll_on':None }
+    items = {}
+    keys = ['b_enroll_on', 't_check_email', 't_confirm_email', 't_enroll_yes_email', 't_enroll_no_email' ]
+    labels = {'t_check_email':'ověřovací email', 't_confirm_email':'potvrzovací email', 'b_enroll_on':'globální povolení zápisu', 't_enroll_yes_email':'přijímací email', 't_enroll_no_email':'odmítací email' }
 
     if request.method == 'POST':
         logging.info(request.POST)
         k = request.POST['action'] 
         logging.info('action=%s',k)
-        if k in items.keys():
+        if k in keys:
             cfg_name = 'ENROLL_' + k[2:].upper()
             if k.startswith('t'):
                 items[k] = TextForm(request.POST)
@@ -48,8 +50,8 @@ def index(request):
 
 
     logging.info("items: %s"%items)    
-    for k in items.keys():
-        if items[k] is None:
+    for k in keys:
+        if not (k in items):
             cfg_name = 'ENROLL_' + k[2:].upper()
             if k.startswith('t'):
                 v=cfg.getConfigString(cfg_name,None)
@@ -63,7 +65,7 @@ def index(request):
             pass
    
     logging.info("items: %s"%items)    
-    forms = [ items[k] for k in items.keys()]
+    forms = [ items[k] for k in keys]
 
     return render_to_response('admin/opt_index.html', RequestContext(request, {'forms':forms}))
 
