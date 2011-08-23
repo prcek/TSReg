@@ -101,7 +101,7 @@ def attend(request,course_id):
                 st.post_code = form.cleaned_data['post_code']
                 st.comment = form.cleaned_data['comment']
                 st.save()
-                st.init_ref_key()
+                st.init_ref_codes()
                 st.save()
                 ref_code = st.ref_key
                 return HttpResponseRedirect('/zapis/prihlaska/%s/'%ref_code)

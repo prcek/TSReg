@@ -102,7 +102,7 @@ def create(request):
             form.save(commit=False)
             logging.info('create student after %s'% student)
             student.save()
-            student.init_ref_key()
+            student.init_ref_codes()
             student.save()
             return redirect('..')
     else:

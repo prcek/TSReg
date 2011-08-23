@@ -95,21 +95,27 @@ class Student(BaseModel):
 
     def init_ref_base(self):
         word = ''
-        for i in range(4):   
+        for i in range(16):   
             word += random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
         self.ref_base = word
 
 
-    def init_ref_key(self):
-        s1 = self.ref_base.__str__()
+    def init_ref_codes(self):
         s2 = self.key().id().__str__()
-        while(len(s2)<len(s1)):
-            s2="."+s2
+        if(len(s2)<4):
+            s2="."*(4-len(s2))+s2
 
-        while(len(s1)<len(s2)):
-            s1+=s1
+        s3 = self.key().id().__str__()
+        if(len(s3)<8):
+            s3="."*(8-len(s3))+s3
 
+
+        s1 = self.ref_base[:len(s2)]
+        s4 = self.ref_base[8:]
         self.ref_key= "".join(i for j in zip(s1,s2) for i in j).translate(transtab,'.')
+        self.confirm_key = "".join(i for j in zip(s3,s4) for i in j).translate(transtab,'.')
+
+        #logging.info("id:%s bk:%s s1:%s s2:%s s3:%s s4:%s ck:%s rk:%s"%(self.key().id(),self.ref_base,s1,s2,s3,s4,self.confirm_key,  self.ref_key))
 
     @staticmethod
     def decode_ref_key(r):
