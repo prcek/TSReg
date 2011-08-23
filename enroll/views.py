@@ -142,6 +142,14 @@ def confirm(request,confirm_code):
     else:
         status = True
 
+    if status:
+        if student.status == 'n':
+            student.status = 'nc'
+            student.save()
+            taskqueue.add(url='/task/send_confirm_email/', params={'student_id':student.key().id()})         
+        elif student.status != 'nc':
+            status = False
+
     return render_to_response('enroll/confirm.html', RequestContext(request, { 'course': course, 'student':student, 'confirm_code':confirm_code, 'status':status }))
     
         

@@ -30,3 +30,24 @@ def send_check_email(request):
     logging.info('send ok')
 
     return HttpResponse('ok')
+
+def send_confirm_email(request):
+    logging.info(request.POST)
+    student_id = request.POST['student_id']
+    student = Student.get_by_id(int(student_id))
+    
+    if student is None:
+        raise Http404
+    course = student.get_course()
+
+    (subject,body) = mail.prepare_confirm_email_text(student,course)
+    sender = cfg.getConfigString('ENROLL_EMAIL',None)
+    recipient = student.email.__str__()
+    
+    logging.info('sending from "%s", to "%s", subject "%s", body "%s"'%(sender,recipient,subject,body))
+   
+    gmail.send_mail(sender, recipient, subject,body) 
+    
+    logging.info('send ok')
+
+    return HttpResponse('ok')
