@@ -129,5 +129,19 @@ def show(request,ref_code):
     else:
         course = None
     return render_to_response('enroll/show.html', RequestContext(request, { 'course': course, 'student':student, 'ref_code':ref_code }))
+
+def confirm(request,confirm_code):
+    student = Student.get_by_confirm_key(confirm_code)
+    if student:
+        course = Course.get_by_id(int(student.course_key.key().id())) 
+    else:
+        course = None
+
+    if (student is None) or (course is None):
+        status = False
+    else:
+        status = True
+
+    return render_to_response('enroll/confirm.html', RequestContext(request, { 'course': course, 'student':student, 'confirm_code':confirm_code, 'status':status }))
     
         

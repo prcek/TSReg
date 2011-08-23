@@ -131,6 +131,19 @@ class Student(BaseModel):
         return id
 
     @staticmethod
+    def decode_confirm_key(r):
+        r = r.__str__()
+        id = None
+        try:
+            r2 =  r.translate(transtab_r)
+            id = int(r2.translate(None,'ABCDEFGHIJKLMNOPQRSTUVWXYZ'))
+        except:
+            pass
+        return id
+
+
+
+    @staticmethod
     def get_by_ref_key(rk):
         logging.info('ref_key: %s'%rk)
         id = Student.decode_ref_key(rk)
@@ -143,6 +156,22 @@ class Student(BaseModel):
         if s.ref_key != rk:
             return None
         return s
+
+    @staticmethod
+    def get_by_confirm_key(ck):
+        logging.info('confirm_key: %s'%ck)
+        id = Student.decode_confirm_key(ck)
+        logging.info('id: %s'%id)
+        if id is None:
+            return None
+        s = Student.get_by_id(id)
+        if s is None:
+            return None
+        if s.confirm_key != ck:
+            return None
+        return s
+
+
 
     @staticmethod
     def list():
