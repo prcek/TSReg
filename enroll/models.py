@@ -79,6 +79,7 @@ class Student(BaseModel):
     reg_datetime = db.DateTimeProperty()
     ref_base = db.StringProperty(default='')
     ref_key = db.StringProperty(default='')
+    confirm_key = db.StringProperty(default='')
     addressing = db.StringProperty(choices=['-','p','s','d'], default='-')
     name = db.StringProperty(default='')
     surname = db.StringProperty(default='')
@@ -155,6 +156,12 @@ class Student(BaseModel):
     def course_code(self):
         k = Student.course_key.get_value_for_datastore(self)
         return Course.get_code_by_key(k)
+
+    def get_course(self):
+        k = Student.course_key.get_value_for_datastore(self)
+        return Course.get(k)
+
+       
 
     def addressing_loc(self):
         if self.addressing == '-':

@@ -49,6 +49,11 @@
             <td>
                 <a class='button' href='{{s.key.id}}/edit/'>editovat</a>
                 <a class='cbutton' href='{{s.key.id}}/del/'>smazat</a>
+
+{% if request.auth_info.admin %}
+                <a class='button' href='{{s.key.id}}/email/'>email</a>
+{% endif %}
+
             </td>
         </tr>
     {% endfor %}

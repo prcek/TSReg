@@ -19,6 +19,7 @@ urlpatterns = patterns('',
     (r'^$', 'enroll.views.goto_index'),
     (r'^zapis/', include('enroll.urls')),
     (r'^admin/', include('admin.urls')), 
+    (r'^task/', include('admin.task_urls')),
     # Uncomment this for admin:
 #     (r'^admin/', include('django.contrib.admin.urls')),
 )

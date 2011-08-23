@@ -1,0 +1,14 @@
+{% extends "admin/base.html" %}
+
+{% block title %} Náhled emailu {% endblock %}
+
+
+{% block content %}
+
+Ověřovací email:<br><textarea  rows="20" cols="160" name="text">{{ check_text}}</textarea><br><br>
+Potvzení ověření:<br><textarea  rows="20" cols="160" name="text">{{ confirm_text}}</textarea><br><br>
+Informace o úspěšném zápisu<br><textarea  rows="20" cols="160" name="text">{{ enroll_yes_text}}</textarea><br><br>
+Informace o neúspěšném zápisu<br><textarea  rows="20" cols="160" name="text">{{ enroll_no_text}}</textarea><br><br>
+
+{% endblock %}
+

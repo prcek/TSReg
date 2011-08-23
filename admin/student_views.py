@@ -7,6 +7,7 @@ from django.template import RequestContext,Context, loader
 
 from enroll.models import Student,Course
 import utils.config as cfg
+import utils.mail as mail
 import logging
 
 
@@ -111,3 +112,15 @@ def create(request):
     return render_to_response('admin/students_create.html', RequestContext(request, {'form':form}))
 
 
+def email(request,student_id):
+    student = Student.get_by_id(int(student_id))
+    if student is None:
+        raise Http404
+    course = student.get_course()
+
+    check_text = mail.prepare_check_email_text(student,course)
+    confirm_text = mail.prepare_confirm_email_text(student,course)
+    enroll_yes_text = mail.prepare_enroll_yes_email_text(student,course)
+    enroll_no_text = mail.prepare_enroll_no_email_text(student,course)
+
+    return render_to_response('admin/students_email.html', RequestContext(request, {'check_text':check_text,'confirm_text':confirm_text,'enroll_yes_text':enroll_yes_text,'enroll_no_text':enroll_no_text}))
