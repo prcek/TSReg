@@ -123,6 +123,13 @@ def recount_capacity(request):
         else:
             course.suspend = False
 
+    if (course.capacity!=0):
+        if (course.usage>=course.capacity):
+            course.suspend = True
+        else:
+            course.suspend = False
+
+
     course.save()
     logging.info(course)
  
