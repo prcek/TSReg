@@ -168,3 +168,4 @@ def kick(request,student_id,course_id=None):
  
     return redirect('../..')
  
+

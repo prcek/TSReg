@@ -107,6 +107,7 @@ def setupConfig():
     createConfig('ENROLL_ENROLL_ON', '0')
     createConfig('ENROLL_CHECK_URL_BASE', 'http://localhost:8080/zapis/potvrdit/')
     createConfig('ENROLL_EMAIL','info@appid.appspotmail.com')
+    createConfig('ENROLL_CHECK_TIMEOUT_MINUTES','60')
 
     createConfig('ENROLL_CONFIRM_EMAIL_SUBJECT',u'Přihláška $ref byla potvrzena')
     createConfig('ENROLL_CONFIRM_EMAIL_BODY',u'Přihláška $ref byla potvrzena')
