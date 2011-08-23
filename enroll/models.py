@@ -75,7 +75,7 @@ class Course(BaseModel):
 class Student(BaseModel):
     hidden = db.BooleanProperty(default=False)
     course_key = db.ReferenceProperty(Course,collection_name='course_key')
-    status = db.StringProperty(choices=['-','n','nc'], default='-')
+    status = db.StringProperty(choices=['-','n','nc','e','k'], default='-')
     reg_by_admin = db.BooleanProperty(default=False)
     reg_datetime = db.DateTimeProperty()
     ref_base = db.StringProperty(default='')
@@ -182,6 +182,17 @@ class Student(BaseModel):
     def list_for_course(course_key):
         return Student.all().filter('hidden',False).filter('course_key',course_key).order('reg_datetime')
 
+    @staticmethod
+    def list_for_course_to_enroll(course_key):
+        return Student.all().filter('hidden',False).filter('course_key',course_key).filter('status','nc').order('reg_datetime')
+
+    @staticmethod
+    def list_for_course_enrolled(course_key):
+        return Student.all().filter('hidden',False).filter('course_key',course_key).filter('status','e').order('reg_datetime')
+
+
+
+
 
     def course_code(self):
         k = Student.course_key.get_value_for_datastore(self)
@@ -211,6 +222,10 @@ class Student(BaseModel):
             return 'nový' 
         elif self.status == 'nc':
             return 'platný nový'
+        elif self.status == 'e':
+            return 'zapsán'
+        elif self.status == 'k':
+            return 'vyřazen'
         return '?' 
  
 

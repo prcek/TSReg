@@ -4,6 +4,7 @@ from django import forms
 from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext,Context, loader
+from google.appengine.api import taskqueue
 
 from enroll.models import Student,Course
 import utils.config as cfg
@@ -68,13 +69,17 @@ def index(request):
 
 def index_course(request, course_id):
     course = Course.get_by_id(int(course_id))  
-    student_list=Student.list_for_course(course.key())
+    student_list_to_enroll=Student.list_for_course_to_enroll(course.key())
+    student_list_enrolled=Student.list_for_course_enrolled(course.key())
 
-    return render_to_response('admin/students_index.html', RequestContext(request, { 'student_list': student_list }))
+    return render_to_response('admin/course_students.html', RequestContext(request, { 
+        'student_list_to_enroll': student_list_to_enroll,  
+        'student_list_enrolled': student_list_enrolled,  
+    }))
 
 
 
-def edit(request, student_id):
+def edit(request, student_id,course_id=None):
 
     student = Student.get_by_id(int(student_id))
 
@@ -91,12 +96,13 @@ def edit(request, student_id):
 
     return render_to_response('admin/students_edit.html', RequestContext(request, {'form':form}))
 
-def create(request):
+def create(request, course_id=None):
 
     student = Student()
     student.init_reg()
     student.init_ref_base()
     student.reg_by_admin = True
+    student.status = 'nc'
     if request.method == 'POST':
         form = StudentForm(request.POST, instance=student)
         if form.is_valid():
@@ -133,3 +139,32 @@ def email(request,student_id):
         'enroll_no_subject':enroll_no_subject,
         'enroll_no_text':enroll_no_text,
     }))
+
+def enroll(request,student_id,course_id=None):
+    student = Student.get_by_id(int(student_id))
+    if student is None:
+        raise Http404
+
+    if student.status == 'nc':
+        student.status = 'e'
+        student.save()
+        taskqueue.add(url='/task/send_enroll_yes_email/', params={'student_id':student.key().id()})
+        if not (course_id is None):
+            taskqueue.add(url='/task/recount_capacity/', params={'course_id':course_id})
+ 
+    return redirect('../..')
+    
+def kick(request,student_id,course_id=None):
+    student = Student.get_by_id(int(student_id))
+    if student is None:
+        raise Http404
+
+    if (student.status == 'nc') or (student.status == 'e'):
+        student.status = 'k'
+        student.save()
+        taskqueue.add(url='/task/send_enroll_no_email/', params={'student_id':student.key().id()})
+        if not (course_id is None):
+            taskqueue.add(url='/task/recount_capacity/', params={'course_id':course_id})
+ 
+    return redirect('../..')
+ 

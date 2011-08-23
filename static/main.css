@@ -186,6 +186,18 @@ a.cbutton {
     margin: 1px 1px;
 }
 
+a.kbutton {
+    background: none repeat scroll 0 0 #666666;
+    border-radius: 5px 5px 5px 5px;
+    color: #FF2222;
+    font-size: 85%;
+    font-weight: bold;
+    padding: 2px 8px;
+    text-decoration: none;
+    margin: 1px 1px;
+}
+
+
 
 
 input.button {

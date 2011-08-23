@@ -88,8 +88,16 @@
                TOOLS.stopEvent(e);
             }
         }
+        TOOLS.confirmKick = function (e, elm) {
+            if (!confirm("Opravdu vyřadit/odmítnout?")) {
+               TOOLS.cancelDef(e);
+               TOOLS.stopEvent(e);
+            }
+        }
+
 
         TOOLS.setupConfirm("cbutton",TOOLS.confirmDel);
+        TOOLS.setupConfirm("kbutton",TOOLS.confirmKick);
 
     </script>
 </body>

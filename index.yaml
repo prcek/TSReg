@@ -31,5 +31,12 @@ indexes:
 
 - kind: Student
   properties:
+  - name: course_key
+  - name: hidden
+  - name: status
+  - name: reg_datetime
+
+- kind: Student
+  properties:
   - name: hidden
   - name: reg_datetime
