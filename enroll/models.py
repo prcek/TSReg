@@ -108,17 +108,17 @@ class Student(BaseModel):
         if(len(s2)<4):
             s2="."*(4-len(s2))+s2
 
-        s3 = self.key().id().__str__()
-        if(len(s3)<8):
-            s3="."*(8-len(s3))+s3
+        s4 = self.key().id().__str__()
+        if(len(s4)<8):
+            s4="."*(8-len(s4))+s4
 
 
         s1 = self.ref_base[:len(s2)]
-        s4 = self.ref_base[8:]
+        s3 = self.ref_base[8:]
         self.ref_key= "".join(i for j in zip(s1,s2) for i in j).translate(transtab,'.')
         self.confirm_key = "".join(i for j in zip(s3,s4) for i in j).translate(transtab,'.')
 
-        #logging.info("id:%s bk:%s s1:%s s2:%s s3:%s s4:%s ck:%s rk:%s"%(self.key().id(),self.ref_base,s1,s2,s3,s4,self.confirm_key,  self.ref_key))
+        logging.info("id:%s bk:%s s1:%s s2:%s s3:%s s4:%s ck:%s rk:%s"%(self.key().id(),self.ref_base,s1,s2,s3,s4,self.confirm_key,  self.ref_key))
 
     @staticmethod
     def decode_ref_key(r):
@@ -126,7 +126,9 @@ class Student(BaseModel):
         id = None
         try:
             r2 =  r.translate(transtab_r)
-            id = int(r2.translate(None,'ABCDEFGHIJKLMNOPQRSTUVWXYZ'))
+            ids = r2.translate(None,'ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+            logging.info('r:%s k2:%s ids:%s'%(r,r2,ids))
+            id = int(ids)
         except:
             pass
         return id
@@ -137,11 +139,15 @@ class Student(BaseModel):
         id = None
         try:
             r2 =  r.translate(transtab_r)
-            id = int(r2.translate(None,'ABCDEFGHIJKLMNOPQRSTUVWXYZ'))
+            ids = r2.translate(None,'ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+            logging.info('r:%s k2:%s ids:%s'%(r,r2,ids))
+            id = int(ids)
         except:
             pass
         return id
 
+#r:R590I k2:HVZQ8 ids:8
+#id:8 bk:HVZQDEYUIWSOKTSS s1:HVZQ s2:...8 s3:.......8 s4:IWSOKTSS ck:S62YU32I2 rk:R590I
 
 
     @staticmethod
