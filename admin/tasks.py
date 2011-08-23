@@ -51,3 +51,16 @@ def send_confirm_email(request):
     logging.info('send ok')
 
     return HttpResponse('ok')
+
+
+def recount_capacity(request):
+    logging.info(request.POST)
+    course_id = request.POST['course_id']
+    course = Course.get_by_id(int(course_id))
+    
+    if course is None:
+        raise Http404
+
+    list = Student.list_for_course(course.key())
+ 
+    return HttpResponse('ok')

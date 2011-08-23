@@ -5,6 +5,9 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext,Context, loader
 
+from google.appengine.api import taskqueue
+
+
 from enroll.models import Course
 import utils.config as cfg
 import logging
@@ -79,4 +82,13 @@ def create(request):
         form = CourseForm(instance=course)
     return render_to_response('admin/courses_create.html', RequestContext(request, {'form':form}))
 
+def recount(request, course_id):
+
+    course = Course.get_by_id(int(course_id))
+    if course is None:
+        raise Http404
+
+    taskqueue.add(url='/task/recount_capacity/', params={'course_id':course.key().id()})
+
+    return redirect("../..")
 

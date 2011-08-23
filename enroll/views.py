@@ -147,6 +147,7 @@ def confirm(request,confirm_code):
             student.status = 'nc'
             student.save()
             taskqueue.add(url='/task/send_confirm_email/', params={'student_id':student.key().id()})         
+            taskqueue.add(url='/task/recount_capacity/', params={'course_id':course.key().id()})
         elif student.status != 'nc':
             status = False
 
