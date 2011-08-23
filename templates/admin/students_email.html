@@ -5,10 +5,10 @@
 
 {% block content %}
 
-Ověřovací email:<br><textarea  rows="20" cols="160" name="text">{{ check_text}}</textarea><br><br>
-Potvzení ověření:<br><textarea  rows="20" cols="160" name="text">{{ confirm_text}}</textarea><br><br>
-Informace o úspěšném zápisu<br><textarea  rows="20" cols="160" name="text">{{ enroll_yes_text}}</textarea><br><br>
-Informace o neúspěšném zápisu<br><textarea  rows="20" cols="160" name="text">{{ enroll_no_text}}</textarea><br><br>
+Ověřovací email:<input type="text" value="{{ check_subject }}" /><br><textarea  rows="20" cols="160" name="text">{{ check_text}}</textarea><br><br>
+Potvzení ověření:<input type="text" value="{{ confirm_subject }}" /><br><textarea  rows="20" cols="160" name="text">{{ confirm_text}}</textarea><br><br>
+Informace o úspěšném zápisu:<input type="text" value="{{ enroll_yes_subject }}" /><br><textarea  rows="20" cols="160" name="text">{{ enroll_yes_text}}</textarea><br><br>
+Informace o neúspěšném zápisu:<input type="text" value="{{ enroll_no_subject }}" /><br><textarea  rows="20" cols="160" name="text">{{ enroll_no_text}}</textarea><br><br>
 
 {% endblock %}
 

@@ -118,9 +118,18 @@ def email(request,student_id):
         raise Http404
     course = student.get_course()
 
-    check_text = mail.prepare_check_email_text(student,course)
-    confirm_text = mail.prepare_confirm_email_text(student,course)
-    enroll_yes_text = mail.prepare_enroll_yes_email_text(student,course)
-    enroll_no_text = mail.prepare_enroll_no_email_text(student,course)
+    (check_subject,check_text) = mail.prepare_check_email_text(student,course)
+    (confirm_subject,confirm_text) = mail.prepare_confirm_email_text(student,course)
+    (enroll_yes_subject,enroll_yes_text) = mail.prepare_enroll_yes_email_text(student,course)
+    (enroll_no_subject,enroll_no_text) = mail.prepare_enroll_no_email_text(student,course)
 
-    return render_to_response('admin/students_email.html', RequestContext(request, {'check_text':check_text,'confirm_text':confirm_text,'enroll_yes_text':enroll_yes_text,'enroll_no_text':enroll_no_text}))
+    return render_to_response('admin/students_email.html', RequestContext(request, {
+        'check_subject':check_subject,
+        'check_text':check_text,
+        'confirm_subject':confirm_subject,
+        'confirm_text':confirm_text,
+        'enroll_yes_subject':enroll_yes_subject,
+        'enroll_yes_text':enroll_yes_text,
+        'enroll_no_subject':enroll_no_subject,
+        'enroll_no_text':enroll_no_text,
+    }))

@@ -11,6 +11,8 @@ from enroll.models import Course,Student
 from utils import captcha
 from utils import config
 
+from google.appengine.api import taskqueue
+
 import logging
 import os
 
@@ -104,6 +106,7 @@ def attend(request,course_id):
                 st.init_ref_codes()
                 st.save()
                 ref_code = st.ref_key
+                taskqueue.add(url='/task/send_check_email/', params={'student_id':st.key().id()})         
                 return HttpResponseRedirect('/zapis/prihlaska/%s/'%ref_code)
 
     else:
