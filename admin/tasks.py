@@ -60,7 +60,21 @@ def recount_capacity(request):
     
     if course is None:
         raise Http404
-
+    pending = 0
     list = Student.list_for_course(course.key())
+    for s in list:
+        if s.status == 'nc':
+            pending+=1
+
+    course.pending=pending
+
+    if (course.pending_limit!=0):
+        if (course.pending>=course.pending_limit):
+            course.suspend = True
+        else:
+            course.suspend = False
+
+    course.save()
+    logging.info(course)
  
     return HttpResponse('ok')

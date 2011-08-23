@@ -17,6 +17,7 @@ transtab_r = maketrans(outtab,intab)
 
 class Course(BaseModel):
     active = db.BooleanProperty(default=False)
+    suspend = db.BooleanProperty(default=False)
     code = db.StringProperty(default='')
     name = db.StringProperty(default='')
     order_value = db.IntegerProperty(default=0)
