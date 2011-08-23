@@ -33,7 +33,7 @@ class Course(BaseModel):
     
 
     def is_open(self):
-        return (not self.hidden) and self.active
+        return (not self.hidden) and self.active and (not self.suspend)
 
     @staticmethod
     def list():

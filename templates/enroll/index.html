@@ -23,7 +23,11 @@
             <td>{{c.period}}</td>
             <td>{{c.first_period}}</td>
             <td>
-                <a class='button' href='kurz/{{c.key.id}}/'>přihlásit</a>
+                {% if c.suspend %}
+                    zápis pozastaven
+                {% else %}
+                    <a class='button' href='kurz/{{c.key.id}}/'>přihlásit</a>
+                {% endif %}
             </td>
         </tr>
     {% endfor %}
