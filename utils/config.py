@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 from appengine_django.models import BaseModel
 from google.appengine.ext import db
 from django import forms
@@ -25,7 +26,7 @@ def getConfigString(name, dv=None):
     c = Config.objects.all().filter('name =',name).filter('active = ',True).get()
     if c:
         logging.info('Config: %s=%s'%(name,c.value))
-        return str(c.value)
+        return unicode(c.value)
     return dv 
 
 def setConfigString(name, value):
@@ -102,4 +103,10 @@ def setupConfig():
     createConfig('CAPTCHA_PUBLIC_KEY','1234567890')
     createConfig('CAPTCHA_PRIVATE_KEY','1234567890')
     createConfig('CAPTCHA_ON','1')
+
+    createConfig('ENROLL_CHECK_EMAIL',u'Potvrdit přihlásku {{REF}} zde {{URL}}')
+    createConfig('ENROLL_CONFIRM_EMAIL',u'Přihláška {{REF}} byla potvrzena')
+    createConfig('ENROLL_ENROLL_YES_EMAIL', u'Přihláska {{REF}} byla zařazena do kurzu {{KURZ}}')
+    createConfig('ENROLL_ENROLL_NO_EMAIL', u'Přihláška {{REF}} byla zamítnuta')
+    createConfig('ENROLL_ENROLL_ON', '0')
     
