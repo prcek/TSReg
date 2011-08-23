@@ -95,6 +95,7 @@ def create(request):
     student = Student()
     student.init_reg()
     student.init_ref_base()
+    student.reg_by_admin = True
     if request.method == 'POST':
         form = StudentForm(request.POST, instance=student)
         if form.is_valid():

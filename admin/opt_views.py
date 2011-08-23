@@ -1,11 +1,69 @@
-# Create your views here.
+# -*- coding: utf-8 -*-
+
 from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext,Context, loader
+from django import forms
 import utils.config as cfg
 
 import logging
 
+
+
+class TextForm(forms.Form):
+    action = forms.CharField(widget=forms.HiddenInput)
+    text = forms.CharField(required=True, widget=forms.Textarea(attrs={'cols':160, 'rows':20}))
+
+class BoolForm(forms.Form):
+    action = forms.CharField(widget=forms.HiddenInput)
+    opt = forms.BooleanField(required=False)
+
+
 def index(request):
-    return render_to_response('admin/opt_index.html', RequestContext(request))
+
+
+
+    items = {'t_check_email':None, 't_confirm_email':None, 'b_enroll_on':None }
+    labels = {'t_check_email':'ověřovací email', 't_confirm_email':'potvrzovací email', 'b_enroll_on':'globální povolení zápisu' }
+
+    if request.method == 'POST':
+        logging.info(request.POST)
+        k = request.POST['action'] 
+        logging.info('action=%s',k)
+        if k in items.keys():
+            cfg_name = 'ENROLL_' + k[2:].upper()
+            if k.startswith('t'):
+                items[k] = TextForm(request.POST)
+                items[k].fields['action'].label = labels[k]
+                if items[k].is_valid():
+                    cfg.setConfigString(cfg_name,items[k].cleaned_data['text'])
+            elif k.startswith('b'):
+                items[k] = BoolForm(request.POST)
+                items[k].fields['action'].label = labels[k]
+                if items[k].is_valid():
+                    cfg.setConfigBool(cfg_name,items[k].cleaned_data['opt'])
+    
+            
+    
+
+
+    logging.info("items: %s"%items)    
+    for k in items.keys():
+        if items[k] is None:
+            cfg_name = 'ENROLL_' + k[2:].upper()
+            if k.startswith('t'):
+                v=cfg.getConfigString(cfg_name,None)
+                items[k] = TextForm(data={'text':v,'action':k})
+                items[k].fields['action'].label = labels[k]
+            elif k.startswith('b'):
+                v=cfg.getConfigBool(cfg_name,False)
+                items[k] = BoolForm(data={'opt':v, 'action':k})
+                items[k].fields['action'].label = labels[k]
+        else:
+            pass
+   
+    logging.info("items: %s"%items)    
+    forms = [ items[k] for k in items.keys()]
+
+    return render_to_response('admin/opt_index.html', RequestContext(request, {'forms':forms}))
 

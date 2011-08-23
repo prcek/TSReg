@@ -75,6 +75,7 @@ class Student(BaseModel):
     hidden = db.BooleanProperty(default=False)
     course_key = db.ReferenceProperty(Course,collection_name='course_key')
     status = db.StringProperty(choices=['-','n','nc'], default='-')
+    reg_by_admin = db.BooleanProperty(default=False)
     reg_datetime = db.DateTimeProperty()
     ref_base = db.StringProperty(default='')
     ref_key = db.StringProperty(default='')

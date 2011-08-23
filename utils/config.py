@@ -28,6 +28,21 @@ def getConfigString(name, dv=None):
         return str(c.value)
     return dv 
 
+def setConfigString(name, value):
+    c = Config.objects.all().filter('name =',name).get()
+    if c is None:
+        c = Config()
+        c.name = name
+        c.value = value
+        c.active = True
+        c.save()
+    else:
+        c.value = value
+        c.active = True
+        c.save()
+ 
+
+
 def getConfigBool(name, dv=None):
     c = Config.objects.all().filter('name =',name).filter('active = ',True).get()
     if c:
@@ -38,6 +53,14 @@ def getConfigBool(name, dv=None):
             return False
     
     return dv
+
+
+def setConfigBool(name, value):
+    if value:
+        setConfigString(name,'1')
+    else:
+        setConfigString(name,'0')
+
 
 def getConfigInt(name, dv=None):
     c = Config.objects.all().filter('name =',name).filter('active = ',True).get()

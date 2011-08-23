@@ -8,5 +8,13 @@
 
     <br>Přehled nastavení<br>
 
+{% for f in forms %}
+    <form method="post">
+    {{ f.fields.action.label }}<br>
+    {{ f.as_p }}<br>
+    <input class="button" type="submit" value="uložit">
+    </form>
+{% endfor %}
+
 {% endblock %}
 
