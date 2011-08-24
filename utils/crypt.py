@@ -13,22 +13,24 @@ def maketrans(i,o):
     return t
 
 def transtab():
-    it = config.getConfigString("CRYPTO_TABLE_I",'0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ')
-    ot = config.getConfigString("CRYPTO_TABLE_O",'0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+    it = unicode(config.getConfigString("CRYPTO_TABLE_I",'0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'))
+    ot = unicode(config.getConfigString("CRYPTO_TABLE_O",'0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'))
     return maketrans(it,ot)    
 
 def transtab_r():
-    it = config.getConfigString("CRYPTO_TABLE_I",'0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ')
-    ot = config.getConfigString("CRYPTO_TABLE_O",'0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+    it = unicode(config.getConfigString("CRYPTO_TABLE_I",'0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'))
+    ot = unicode(config.getConfigString("CRYPTO_TABLE_O",'0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'))
     return maketrans(ot,it)    
 
 
 def _crypt(t):
+    t = unicode(t)
     ct = t.translate(transtab())
     logging.info("_crypt %s %s"%(t,ct))
     return ct
 
 def _decrypt(t):
+    t = unicode(t)
     dt = t.translate(transtab_r())
     logging.info("_decrypt %s %s"%(t,dt))
     return dt
@@ -79,6 +81,7 @@ def encode_id_long(id,key):
     
 
 def decode_id(d):
+    d = unicode(d)
     d = _decrypt(d)
     d = _extract(d,'0123456789')
     return d
