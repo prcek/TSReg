@@ -50,11 +50,12 @@ class StudentForm(forms.ModelForm):
     street_no = forms.CharField(label='číslo', error_messages=ERROR_MESSAGES, required=False)
     city = forms.CharField(label='město', error_messages=ERROR_MESSAGES, required=False)
     post_code = forms.CharField(label='psč', error_messages=ERROR_MESSAGES, required=False)
+    partner_ref_code = forms.CharField(label='kód partnera', error_messages=ERROR_MESSAGES, required=False)
     comment = forms.CharField(label='poznámka', error_messages=ERROR_MESSAGES, required=False)
 
     class Meta:
         model = Student
-        fields = ( 'course_key', 'addressing', 'name', 'surname', 'email', 'phone', 'year', 'street', 'street_no', 'city', 'post_code', 'comment' )
+        fields = ( 'course_key', 'addressing', 'name', 'surname', 'email', 'phone', 'year', 'street', 'street_no', 'city', 'post_code', 'partner_ref_code', 'comment' )
 
     def __init__(self,data = None, **kwargs):
         super(self.__class__,self).__init__(data, **kwargs)

@@ -45,6 +45,7 @@ class EnrollForm(forms.Form):
     street_no = forms.CharField(label='číslo', error_messages=ERROR_MESSAGES, required=False)
     city = forms.CharField(label='město', error_messages=ERROR_MESSAGES, required=False)
     post_code = forms.CharField(label='psč', error_messages=ERROR_MESSAGES, required=False)
+    partner = forms.CharField(label='ref. kód partnera', error_messages=ERROR_MESSAGES, required=False)
     comment = forms.CharField(label='poznámka', error_messages=ERROR_MESSAGES, required=False)
 
 
@@ -108,6 +109,7 @@ def attend(request,course_id):
                 st.city = form.cleaned_data['city']
                 st.post_code = form.cleaned_data['post_code']
                 st.comment = form.cleaned_data['comment']
+                st.partner_ref_code = form.cleaned_data['partner']
                 st.save()
                 st.init_ref_codes()
                 st.save()

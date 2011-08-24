@@ -92,6 +92,7 @@ class Student(BaseModel):
     street_no = db.StringProperty(default='')
     city = db.StringProperty(default='')
     post_code = db.StringProperty(default='')
+    partner_ref_code = db.StringProperty(default='')
     comment = db.StringProperty(default='')
 
     def init_reg(self):
