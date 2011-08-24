@@ -52,6 +52,11 @@ def goto_index(request):
     return redirect('/zapis/')
 
 def index(request):
+    if not config.getConfigBool('ENROLL_ENROLL_ON',False):
+        return render_to_response('enroll/index_off.html', RequestContext(request))
+
+
+
     course_list=Course.list_for_enroll().fetch(200)
     if len(course_list) == 0:
         course_list=None
@@ -60,7 +65,8 @@ def index(request):
 def attend(request,course_id):
 
 
-
+    if not config.getConfigBool('ENROLL_ENROLL_ON',False):
+        raise Http404
 
     course = Course.get_by_id(int(course_id))
     if course is None:
