@@ -207,6 +207,11 @@ class Student(BaseModel):
     def list():
         return Student.all().filter('hidden',False).order('reg_datetime')
 
+
+    @staticmethod
+    def list_by_surname(s):
+        return Student.all().filter('hidden',False).filter('surname',s).order('-reg_datetime')
+
     @staticmethod
     def list_for_cleanup(time_limit):
         return Student.all().filter('hidden',False).filter('status','n').filter('reg_datetime <',time_limit).order('reg_datetime')

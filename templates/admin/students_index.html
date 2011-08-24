@@ -4,12 +4,15 @@
 {% block title %} Administrace zápisu {% endblock %}
 
 {% block content %}
-    <a class='button' href='add'>přidat žáka</a>
-    <a class='button' href='.'>přenačíst</a>
 
-    <br><br>Přehled žáků<br>
+
+<form method="post" name="form">
+{{ form.as_p }}
+<input class="button" type="submit" value="hledat">
+</form>
 
 {% if student_list %}
+    <br><br>Nalezení žáci<br>
     <table>
     <tr>
         <th>stav</th>
@@ -58,8 +61,10 @@
         </tr>
     {% endfor %}
     </table>
-{% else %}
-    no student<br>
+{% endif %}
+
+{% if not_found %}
+    <br><br><div> nenalezeno </div>
 {% endif %}
 
 

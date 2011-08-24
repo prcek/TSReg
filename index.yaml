@@ -46,3 +46,10 @@ indexes:
   - name: hidden
   - name: status
   - name: reg_datetime
+
+- kind: Student
+  properties:
+  - name: hidden
+  - name: surname
+  - name: reg_datetime
+    direction: desc

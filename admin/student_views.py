@@ -60,12 +60,47 @@ class StudentForm(forms.ModelForm):
         super(self.__class__,self).__init__(data, **kwargs)
         self.fields['course_key']._set_choices(Course.get_COURSE_CHOICES())
 
+class FindForm(forms.Form):
+    ref_code = forms.CharField(label='referenční číslo', error_messages=ERROR_MESSAGES,required=False)
+    surname = forms.CharField(label='příjmení', error_messages=ERROR_MESSAGES,required=False)
         
 
 def index(request):
-    student_list=Student.list()
 
-    return render_to_response('admin/students_index.html', RequestContext(request, { 'student_list': student_list }))
+    if request.method == 'POST':
+        student_list = [] 
+        form = FindForm(request.POST)
+        if form.is_valid():
+            ref_code=form.cleaned_data['ref_code'].upper()
+            surname = form.cleaned_data['surname']
+            logging.info("find: '%s' '%s'"%(ref_code,surname)) 
+            rs = None
+            if ref_code != '':
+                rs = Student.get_by_ref_key(ref_code)
+            
+            if surname != '':
+                student_list = Student.list_by_surname(surname).fetch(100) 
+                
+                  
+            if rs:
+                for s in student_list:
+                    if s.key().id()==rs.key().id():
+                        rs = None 
+                if rs:
+                    student_list.insert(0,rs)
+            
+    else:
+        student_list = None
+        form = FindForm()
+
+  
+    if len(student_list) == 0:
+        not_found = True
+    else:
+        not_found = False
+
+
+    return render_to_response('admin/students_index.html', RequestContext(request, { 'student_list': student_list, 'form':form , 'not_found':not_found}))
 
 def index_course(request, course_id):
     course = Course.get_by_id(int(course_id))  
