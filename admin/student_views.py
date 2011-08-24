@@ -93,7 +93,7 @@ def index(request):
         form = FindForm()
 
   
-    if len(student_list) == 0:
+    if student_list != None and len(student_list) == 0:
         not_found = True
     else:
         not_found = False
