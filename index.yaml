@@ -38,6 +38,13 @@ indexes:
 
 - kind: Student
   properties:
+  - name: email
+  - name: hidden
+  - name: reg_datetime
+    direction: desc
+
+- kind: Student
+  properties:
   - name: hidden
   - name: reg_datetime
 

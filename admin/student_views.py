@@ -63,6 +63,7 @@ class StudentForm(forms.ModelForm):
 class FindForm(forms.Form):
     ref_code = forms.CharField(label='referenční číslo', error_messages=ERROR_MESSAGES,required=False)
     surname = forms.CharField(label='příjmení', error_messages=ERROR_MESSAGES,required=False)
+    email = forms.EmailField(label='email', error_messages=ERROR_MESSAGES,required=False)
         
 
 def index(request):
@@ -73,21 +74,19 @@ def index(request):
         if form.is_valid():
             ref_code=form.cleaned_data['ref_code'].upper()
             surname = form.cleaned_data['surname']
-            logging.info("find: '%s' '%s'"%(ref_code,surname)) 
-            rs = None
+            email = form.cleaned_data['email']
+            logging.info("find: '%s' '%s' '%s'"%(ref_code,surname,email)) 
             if ref_code != '':
                 rs = Student.get_by_ref_key(ref_code)
+                if rs:
+                    student_list.append(rs)
             
             if surname != '':
-                student_list = Student.list_by_surname(surname).fetch(100) 
+                student_list.extend(Student.list_by_surname(surname).fetch(100))
                 
+            if email != '':
+                student_list.extend(Student.list_by_email(email).fetch(100))
                   
-            if rs:
-                for s in student_list:
-                    if s.key().id()==rs.key().id():
-                        rs = None 
-                if rs:
-                    student_list.insert(0,rs)
             
     else:
         student_list = None
