@@ -84,7 +84,7 @@ def createConfig(name,value):
         c = Config()
         c.name = name
         c.value = value
-        c.active = False 
+        c.active = True
         c.save()
 
 def setupConfig():
@@ -102,7 +102,7 @@ def setupConfig():
 #    createConfig('ENABLE_MAIL_TEST','0')
     createConfig('CAPTCHA_PUBLIC_KEY','1234567890')
     createConfig('CAPTCHA_PRIVATE_KEY','1234567890')
-    createConfig('CAPTCHA_ON','1')
+    createConfig('CAPTCHA_ON','0')
 
     createConfig('ENROLL_ENROLL_ON', '0')
     createConfig('ENROLL_CHECK_URL_BASE', 'http://localhost:8080/zapis/potvrdit/')
@@ -117,4 +117,7 @@ def setupConfig():
     createConfig('ENROLL_ENROLL_YES_EMAIL_BODY', u'Přihláska $ref byla zařazena do kurzu $kurz')
     createConfig('ENROLL_ENROLL_NO_EMAIL_SUBJECT', u'Přihláška $ref byla zamítnuta')
     createConfig('ENROLL_ENROLL_NO_EMAIL_BODY', u'Přihláška $ref byla zamítnuta')
-    
+   
+    createConfig('CRYPTO_TABLE_I','0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ') 
+    createConfig('CRYPTO_TABLE_O','0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ') 
+
