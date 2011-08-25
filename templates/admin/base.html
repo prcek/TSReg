@@ -20,7 +20,9 @@
     </div>
     <div id="footer">
 {% block footer %}
+    {% if request.gae_info.live %}
     <img src="/static/appengine-noborder-120x30.gif" alt="Powered by Google App Engine" />
+    {% endif %}
 {% endblock %}
     </div>
     <script type="text/javascript">

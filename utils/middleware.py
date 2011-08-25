@@ -5,6 +5,14 @@ from django.template import RequestContext, Context, loader
 from google.appengine.api import users
 #from utils.models import User
 import logging
+import os
+
+class GaeInfo:
+    live = False
+    def __init__(self, request):
+        self.live = not os.environ['SERVER_SOFTWARE'].startswith('Development') 
+
+    
 
    
 class AuthInfo:
@@ -48,7 +56,11 @@ class AuthInfo:
             logging.info('auth: gae admin')
             self.admin = True
         
-     
+class Gae(object):
+  def process_request(self, request):
+    request.__class__.gae_info = GaeInfo(request)
+    return None
+    
 
 class Auth(object):
   def process_request(self, request):

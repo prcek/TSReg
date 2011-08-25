@@ -83,6 +83,7 @@ MIDDLEWARE_CLASSES = (
     'google.appengine.ext.appstats.recording.AppStatsDjangoMiddleware',
 #    'utils.middleware.Cron',
     'utils.middleware.Auth',
+    'utils.middleware.Gae',
 
 #    'django.contrib.sessions.middleware.SessionMiddleware',
 #    'django.contrib.auth.middleware.AuthenticationMiddleware',
