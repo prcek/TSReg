@@ -1,0 +1,12 @@
+{% extends "admin/base.html" %}
+
+{% block title %} Založení kategorie {% endblock %}
+
+{% block content %}
+<form method="post" name="form">
+{{ form.as_p }}
+<input class="button" type="submit" value="založit kategorii">
+<a class='button' href='..'>zpět</a>
+</form>
+{% endblock %}
+

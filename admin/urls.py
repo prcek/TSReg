@@ -17,6 +17,11 @@ urlpatterns = patterns('admin',
     (r'^kurzy/(?P<course_id>\d+)/zaci/add/$', 'student_views.create'),
 
 
+    (r'^kategorie/$', 'folder_views.index'),
+    (r'^kategorie/add/$', 'folder_views.create'),
+    (r'^kategorie/(?P<folder_id>\d+)/edit/$', 'folder_views.edit'),
+ 
+
     (r'^zaci/$', 'student_views.index'),
     (r'^zaci/add/$', 'student_views.create'),
     (r'^zaci/(?P<student_id>\d+)/edit/$', 'student_views.edit'),

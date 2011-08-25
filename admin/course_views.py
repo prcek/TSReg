@@ -8,7 +8,7 @@ from django.template import RequestContext,Context, loader
 from google.appengine.api import taskqueue
 
 
-from enroll.models import Course
+from enroll.models import Course,Folder
 import utils.config as cfg
 import logging
 
@@ -19,13 +19,19 @@ GROUP_MODE_CHOICES = (
 )
 ERROR_MESSAGES={'required': 'Prosím vyplň tuto položku', 'invalid': 'Neplatná hodnota'}
 
+class FolderField(forms.ChoiceField):
+    def valid_value(self, value):
+        self._set_choices(Folder.get_FOLDER_CHOICES())
+        return super(FolderField,self).valid_value(value)
+
+
 
 class CourseForm(forms.ModelForm):
     active = forms.BooleanField(label='aktivní', required=False, help_text='je-li kurz aktivní, bude nabízen pro zápis')
     order_value = forms.IntegerField(label='řazení',error_messages=ERROR_MESSAGES, help_text='kurzy budou tříděny podle tohodle čísla v zestupném pořadí')
     code = forms.CharField(label='kód', error_messages=ERROR_MESSAGES)
     name = forms.CharField(label='název', error_messages=ERROR_MESSAGES)
-    category = forms.CharField(label='kategorie', error_messages=ERROR_MESSAGES)
+    folder_key = FolderField(label='kategorie', error_messages=ERROR_MESSAGES)
     period = forms.CharField(label='termín', error_messages=ERROR_MESSAGES)
     first_period = forms.CharField(label='první lekce', error_messages=ERROR_MESSAGES)
     group_mode = forms.CharField(label='režim', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=GROUP_MODE_CHOICES)) 
@@ -35,13 +41,19 @@ class CourseForm(forms.ModelForm):
 
     class Meta:
         model = Course
-        fields = ( 'active', 'order_value', 'code','name', 'category', 'period', 'first_period', 'group_mode', 'capacity', 'pending_limit' )
+        fields = ( 'folder_key', 'active', 'order_value', 'code','name', 'period', 'first_period', 'group_mode', 'capacity', 'pending_limit' )
 
     def clean_code(self):
         data = self.cleaned_data['code']
         if len(data)==0:
             raise forms.ValidationError('missing value')
         return data
+
+    def __init__(self,data = None, **kwargs):
+        super(self.__class__,self).__init__(data, **kwargs)
+        self.fields['folder_key']._set_choices(Folder.get_FOLDER_CHOICES())
+
+
 
 def index(request):
     course_list=Course.list()

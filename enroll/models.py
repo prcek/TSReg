@@ -10,19 +10,50 @@ from utils import crypt
 
 from string import maketrans
 
-intab = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-outtab = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-transtab = maketrans(intab, outtab)
-transtab_r = maketrans(outtab,intab)
+#intab = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+#outtab = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+#transtab = maketrans(intab, outtab)
+#transtab_r = maketrans(outtab,intab)
+
+class Folder(BaseModel):
+    name = db.StringProperty(default='')
+    public_name = db.StringProperty(default='')
+    order_value = db.IntegerProperty(default=0)
+
+    @staticmethod
+    def get_name_by_key(folder_key):
+        if folder_key is None:
+            return None
+        f = Folder.get(folder_key)
+        if f is None:
+            return None
+        return f.name
+
+    @staticmethod
+    def list():
+        return Folder.all().order('order_value').order('name')
+
+    @staticmethod
+    def get_FOLDER_CHOICES():
+        clist = Folder.list()
+        res = []
+        for c in clist:
+            res.append((c.key().__str__(),c.name))
+        logging.info('get_FOLDER_CHOICES: %s'%res)
+        return res 
+
+
+
+
 
 
 class Course(BaseModel):
     active = db.BooleanProperty(default=False)
     suspend = db.BooleanProperty(default=False)
+    folder_key = db.ReferenceProperty(Folder,collection_name='folder_key')
     code = db.StringProperty(default='')
     name = db.StringProperty(default='')
     order_value = db.IntegerProperty(default=0)
-    category = db.StringProperty(default='')
     period = db.StringProperty(default='')
     first_period = db.StringProperty(default='')
     group_mode = db.StringProperty(choices=['Single','Pair'], default='Single')
@@ -31,7 +62,14 @@ class Course(BaseModel):
     pending = db.IntegerProperty(default=0)
     pending_limit = db.IntegerProperty(default=0)
     hidden = db.BooleanProperty(default=False)
-    
+
+    def folder_name(self):
+        k = Course.folder_key.get_value_for_datastore(self)
+        return Folder.get_name_by_key(k)
+
+    def get_folder(self):
+        k = Course.folder_key.get_value_for_datastore(self)
+        return Folder.get(k)
 
     def is_open(self):
         return (not self.hidden) and self.active and (not self.suspend)
@@ -236,8 +274,7 @@ class Student(BaseModel):
 
 
 
-
-
+    
     def course_code(self):
         k = Student.course_key.get_value_for_datastore(self)
         return Course.get_code_by_key(k)

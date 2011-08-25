@@ -23,6 +23,11 @@ indexes:
   - name: order_value
   - name: code
 
+- kind: Folder
+  properties:
+  - name: order_value
+  - name: name
+
 - kind: Student
   properties:
   - name: course_key

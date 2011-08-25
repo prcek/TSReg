@@ -1,0 +1,38 @@
+
+{% extends "admin/base.html" %}
+
+{% block title %} Administrace zápisu {% endblock %}
+
+{% block content %}
+    <a class='button' href='add'>přidat kategorii</a>
+    <a class='button' href='.'>přenačíst</a>
+
+    <br><br>Přehled kategorií<br>
+
+{% if folder_list %}
+    <table>
+    <tr>
+        <th>řazení</th>
+        <th>název</th>
+        <th>veřejný název</th>
+        <th>operace</th>
+    </tr>
+    {% for f in folder_list %}
+        <tr>
+            <td>{{f.order_value}}</td>
+            <td>{{f.name}}</td>
+            <td>{{f.public_name}}</td>
+            <td>
+                <a class='button' href='{{f.key.id}}/edit/'>editovat</a>
+                <a class='cbutton' href='{{f.key.id}}/del/'>smazat</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+{% else %}
+    žádná kategorie <br>
+{% endif %}
+
+
+{% endblock %}
+
