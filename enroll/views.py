@@ -7,7 +7,7 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext,Context, loader
 
-from enroll.models import Course,Student
+from enroll.models import Folder,Course,Student
 from utils import captcha
 from utils import config
 
@@ -52,16 +52,41 @@ class EnrollForm(forms.Form):
 def goto_index(request):
     return redirect('/zapis/')
 
+def get_offer_list():
+    folders_query=Folder.list()
+    courses_query=Course.list_for_enroll()  
+
+    folders= set([])
+    courses = []
+    result = []
+    for course in courses_query:
+        folders.add(course.folder_id())
+        courses.append(course)
+
+    for folder in folders_query:
+        if folder.key().id() in folders:
+            sub_list = [c for c in courses if c.folder_id()==folder.key().id()] 
+            result.append({'folder':folder, 'courses':sub_list })
+
+    return result
+
 def index(request):
     if not config.getConfigBool('ENROLL_ENROLL_ON',False):
         return render_to_response('enroll/index_off.html', RequestContext(request))
 
+    folder_list=Folder.list().fetch(200)
 
+    if len(folder_list) == 0:
+        folder_list = None
 
     course_list=Course.list_for_enroll().fetch(200)
     if len(course_list) == 0:
         course_list=None
-    return render_to_response('enroll/index.html', RequestContext(request, { 'course_list': course_list }))
+
+    offer = get_offer_list()
+    logging.info('offer=%s'%offer)
+
+    return render_to_response('enroll/index.html', RequestContext(request, { 'course_list': course_list, 'offer':offer }))
 
 def attend(request,course_id):
 

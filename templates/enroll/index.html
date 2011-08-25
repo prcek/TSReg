@@ -4,7 +4,9 @@
 
 {% block content %}
 
+{% if 0 %}
 {% if course_list %}
+<hr>
 <div> Volba kurzu </div>
     <table>
     <tr>
@@ -33,7 +35,37 @@
 {% else %}
 <div> Žádný kurz není otevřen pro zápis </div>
 {% endif %}
+{% endif %}
 
+
+
+{% if offer %}
+    <h1> Volba kurzu </h1>
+    <table>
+     {% for f in offer %} 
+        <tr> <td colspan=5> <h2> {{f.folder.public_name}} </h2> </td> </tr>
+        <tr> <th>kód</th> <th>název</th> <th>termín</th> <th>první lekce</th> <th>&nbsp;</th> </tr>
+        {% for c in f.courses %}
+            <tr>
+                <td>{{c.code}}</td>
+                <td>{{c.name}}</td>
+                <td>{{c.period}}</td>
+                <td>{{c.first_period}}</td>
+                <td>
+                    {% if c.suspend %}
+                        zápis pozastaven
+                    {% else %}
+                        <a class='button' href='kurz/{{c.key.id}}/'>přihlásit</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    {% endfor %}
+
+    </table>
+{% else %}
+<div> Žádný kurz není otevřen pro zápis </div>
+{% endif %}
 
 
 {% endblock %}

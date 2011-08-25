@@ -67,6 +67,13 @@ class Course(BaseModel):
         k = Course.folder_key.get_value_for_datastore(self)
         return Folder.get_name_by_key(k)
 
+    def folder_id(self):
+        k = Course.folder_key.get_value_for_datastore(self)
+        if k is None:
+            return None
+        return k.id()
+
+
     def get_folder(self):
         k = Course.folder_key.get_value_for_datastore(self)
         return Folder.get(k)
