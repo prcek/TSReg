@@ -74,19 +74,21 @@ def index(request):
     if not config.getConfigBool('ENROLL_ENROLL_ON',False):
         return render_to_response('enroll/index_off.html', RequestContext(request))
 
-    folder_list=Folder.list().fetch(200)
-
-    if len(folder_list) == 0:
-        folder_list = None
-
-    course_list=Course.list_for_enroll().fetch(200)
-    if len(course_list) == 0:
-        course_list=None
+#    folder_list=Folder.list().fetch(200)
+#
+#    if len(folder_list) == 0:
+#        folder_list = None
+#
+#    course_list=Course.list_for_enroll().fetch(200)
+#    if len(course_list) == 0:
+#        course_list=None
 
     offer = get_offer_list()
     logging.info('offer=%s'%offer)
+    if len(offer) == 0:
+        offer = None
 
-    return render_to_response('enroll/index.html', RequestContext(request, { 'course_list': course_list, 'offer':offer }))
+    return render_to_response('enroll/index.html', RequestContext(request, { 'offer':offer }))
 
 def attend(request,course_id):
 
