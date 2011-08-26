@@ -203,4 +203,14 @@ def kick(request,student_id,course_id=None):
  
     return redirect('../..')
  
+def course_emails(request, course_id):
+    course = Course.get_by_id(int(course_id))  
+    student_list_to_enroll=Student.list_for_course_to_enroll(course.key())
+    student_list_enrolled=Student.list_for_course_enrolled(course.key())
+
+    return render_to_response('admin/course_emails.html', RequestContext(request, { 
+        'student_list_to_enroll': student_list_to_enroll,  
+        'student_list_enrolled': student_list_enrolled,  
+    }))
+
 
