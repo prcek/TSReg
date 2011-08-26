@@ -37,6 +37,8 @@ def index(request):
 def edit(request, folder_id):
 
     folder  = Folder.get_by_id(int(folder_id))
+    if folder is None:
+        raise Http404
 
     if request.method == 'POST':
         form = FolderForm(request.POST, instance=folder)
@@ -65,6 +67,16 @@ def create(request):
     else:
         form = FolderForm(instance=folder)
     return render_to_response('admin/folders_create.html', RequestContext(request, {'form':form}))
+
+
+def delete(request, folder_id):
+
+    folder  = Folder.get_by_id(int(folder_id))
+    if folder is None:
+        raise Http404
+
+    folder.delete()
+    return redirect('../..')
 
 
 
