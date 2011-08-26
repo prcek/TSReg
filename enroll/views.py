@@ -60,13 +60,20 @@ def get_offer_list():
     courses = []
     result = []
     for course in courses_query:
-        folders.add(course.folder_id())
+        folders.add(course.folder_key)
         courses.append(course)
 
+    logging.info(folders)
+    logging.info(courses)
+
     for folder in folders_query:
-        if folder.key().id() in folders:
-            sub_list = [c for c in courses if c.folder_id()==folder.key().id()] 
+        fk = str(folder.key())
+        logging.info('fk:%s'%fk)
+        if fk in folders:
+            logging.info('in')
+            sub_list = [c for c in courses if fk==c.folder_key] 
             result.append({'folder':folder, 'courses':sub_list })
+            pass
 
     return result
 
@@ -122,7 +129,7 @@ def attend(request,course_id):
                 logging.info('creating new student record')    
                 st = Student()
                 st.status = 'n'
-                st.course_key=course.key()
+                st.course_key=str(course.key())
                 st.init_reg()
                 st.init_ref_base()
                 st.addressing = form.cleaned_data['addressing']
@@ -160,7 +167,7 @@ def attend(request,course_id):
 def show(request,ref_code):
     student = Student.get_by_ref_key(ref_code)
     if student:
-        course = Course.get_by_id(int(student.course_key.key().id())) 
+        course = Course.get(student.course_key) 
     else:
         course = None
     return render_to_response('enroll/show.html', RequestContext(request, { 'course': course, 'student':student, 'ref_code':ref_code }))
@@ -168,7 +175,7 @@ def show(request,ref_code):
 def confirm(request,confirm_code):
     student = Student.get_by_confirm_key(confirm_code)
     if student:
-        course = Course.get_by_id(int(student.course_key.key().id())) 
+        course = Course.get(student.course_key) 
     else:
         course = None
 

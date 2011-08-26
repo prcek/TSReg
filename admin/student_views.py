@@ -79,7 +79,7 @@ def index(request):
             logging.info("find: '%s' '%s' '%s'"%(ref_code,surname,email)) 
             if ref_code != '':
                 rs = Student.get_by_ref_key(ref_code)
-                if rs:
+                if rs: 
                     student_list.append(rs)
             
             if surname != '':

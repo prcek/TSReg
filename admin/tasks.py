@@ -134,3 +134,19 @@ def recount_capacity(request):
     logging.info(course)
  
     return HttpResponse('ok')
+
+
+def hide_course_students(request):
+    logging.info(request.POST)
+    course_id = request.POST['course_id']
+    course = Course.get_by_id(int(course_id))
+    
+    if course is None:
+        raise Http404
+ 
+    list = Student.list_for_course(course.key())
+    for s in list:
+        s.hidden = True
+        s.save()
+ 
+    return HttpResponse('ok')

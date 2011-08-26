@@ -50,7 +50,7 @@ class Folder(BaseModel):
 class Course(BaseModel):
     active = db.BooleanProperty(default=False)
     suspend = db.BooleanProperty(default=False)
-    folder_key = db.ReferenceProperty(Folder,collection_name='folder_key')
+    folder_key = db.StringProperty()
     code = db.StringProperty(default='')
     name = db.StringProperty(default='')
     order_value = db.IntegerProperty(default=0)
@@ -64,19 +64,10 @@ class Course(BaseModel):
     hidden = db.BooleanProperty(default=False)
 
     def folder_name(self):
-        k = Course.folder_key.get_value_for_datastore(self)
-        return Folder.get_name_by_key(k)
-
-    def folder_id(self):
-        k = Course.folder_key.get_value_for_datastore(self)
-        if k is None:
-            return None
-        return k.id()
-
+        return Folder.get_name_by_key(self.folder_key)
 
     def get_folder(self):
-        k = Course.folder_key.get_value_for_datastore(self)
-        return Folder.get(k)
+        return Folder.get(self.folder_key)
 
     def is_open(self):
         return (not self.hidden) and self.active and (not self.suspend)
@@ -120,13 +111,13 @@ class Course(BaseModel):
 
 class Student(BaseModel):
     hidden = db.BooleanProperty(default=False)
-    course_key = db.ReferenceProperty(Course,collection_name='course_key')
+    course_key = db.StringProperty()
     status = db.StringProperty(choices=['-','n','nc','e','k'], default='-')
     reg_by_admin = db.BooleanProperty(default=False)
     reg_datetime = db.DateTimeProperty()
     ref_base = db.StringProperty(default='')
     ref_key = db.StringProperty(default='')
-    confirm_key = db.StringProperty(default='')
+    confirm_key = db.StringProperty()
     addressing = db.StringProperty(choices=['-','p','s','d'], default='-')
     name = db.StringProperty(default='')
     surname = db.StringProperty(default='')
@@ -231,6 +222,8 @@ class Student(BaseModel):
             return None
         if s.ref_key != rk:
             return None
+        if s.hidden:
+            return None
         return s
 
     @staticmethod
@@ -244,6 +237,8 @@ class Student(BaseModel):
         if s is None:
             return None
         if s.confirm_key != ck:
+            return None
+        if s.hidden:
             return None
         return s
 
@@ -269,26 +264,24 @@ class Student(BaseModel):
 
     @staticmethod
     def list_for_course(course_key):
-        return Student.all().filter('hidden',False).filter('course_key',course_key).order('reg_datetime')
+        return Student.all().filter('hidden',False).filter('course_key',str(course_key)).order('reg_datetime')
 
     @staticmethod
     def list_for_course_to_enroll(course_key):
-        return Student.all().filter('hidden',False).filter('course_key',course_key).filter('status','nc').order('reg_datetime')
+        return Student.all().filter('hidden',False).filter('course_key',str(course_key)).filter('status','nc').order('reg_datetime')
 
     @staticmethod
     def list_for_course_enrolled(course_key):
-        return Student.all().filter('hidden',False).filter('course_key',course_key).filter('status','e').order('reg_datetime')
+        return Student.all().filter('hidden',False).filter('course_key',str(course_key)).filter('status','e').order('reg_datetime')
 
 
 
     
     def course_code(self):
-        k = Student.course_key.get_value_for_datastore(self)
-        return Course.get_code_by_key(k)
+        return Course.get_code_by_key(self.course_key)
 
     def get_course(self):
-        k = Student.course_key.get_value_for_datastore(self)
-        return Course.get(k)
+        return Course.get(self.course_key)
 
        
 

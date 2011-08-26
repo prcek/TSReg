@@ -66,6 +66,9 @@ def edit(request, course_id):
 
     course = Course.get_by_id(int(course_id))
 
+    if course is None:
+        raise Http404
+
     if request.method == 'POST':
         form = CourseForm(request.POST, instance=course)
         if form.is_valid():
@@ -103,4 +106,22 @@ def recount(request, course_id):
     taskqueue.add(url='/task/recount_capacity/', params={'course_id':course.key().id()})
 
     return redirect("../..")
+
+
+def delete(request, course_id):
+
+    course = Course.get_by_id(int(course_id))
+
+    if course is None:
+        raise Http404
+
+    taskqueue.add(url='/task/hide_course_students/', params={'course_id':course.key().id()})
+
+    course.hidden = True
+    course.save()
+
+    return redirect("../..")
+
+
+    
 
