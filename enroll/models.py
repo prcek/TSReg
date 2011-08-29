@@ -126,6 +126,7 @@ class Student(BaseModel):
     addressing = db.StringProperty(choices=['-','p','s','d'], default='-')
     name = db.StringProperty(default='')
     surname = db.StringProperty(default='')
+    student = db.BooleanProperty(default=False)
     year = db.IntegerProperty(default=0)
     email = db.StringProperty(default='') 
     phone = db.StringProperty(default='')  

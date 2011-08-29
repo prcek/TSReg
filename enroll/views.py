@@ -40,12 +40,15 @@ class EnrollForm(forms.Form):
     surname = forms.CharField(label='příjmení', error_messages=ERROR_MESSAGES)
     email = forms.EmailField(label='email', error_messages=ERROR_MESSAGES)
     phone = forms.CharField(label='telefon', error_messages=ERROR_MESSAGES, required=False)
+    student = forms.BooleanField(label='student', error_messages=ERROR_MESSAGES, required=False)
     year = forms.IntegerField(label='rok', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=YEAR_CHOICES))
     street = forms.CharField(label='ulice', error_messages=ERROR_MESSAGES, required=False)
     street_no = forms.CharField(label='číslo', error_messages=ERROR_MESSAGES, required=False)
     city = forms.CharField(label='město', error_messages=ERROR_MESSAGES, required=False)
     post_code = forms.CharField(label='psč', error_messages=ERROR_MESSAGES, required=False)
     partner = forms.CharField(label='ref. kód partnera', error_messages=ERROR_MESSAGES, required=False)
+
+
     comment = forms.CharField(label='poznámka', error_messages=ERROR_MESSAGES, required=False)
 
 
@@ -135,6 +138,7 @@ def attend(request,course_id):
                 st.addressing = form.cleaned_data['addressing']
                 st.name = form.cleaned_data['name']
                 st.surname = form.cleaned_data['surname']
+                st.student = orm.cleaned_data['student']
                 st.year = form.cleaned_data['year']
                 st.email = form.cleaned_data['email']
                 st.phone = form.cleaned_data['phone']

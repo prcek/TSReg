@@ -44,6 +44,7 @@ class StudentForm(forms.ModelForm):
     name = forms.CharField(label='jméno', error_messages=ERROR_MESSAGES)
     surname = forms.CharField(label='příjmení', error_messages=ERROR_MESSAGES)
     email = forms.EmailField(label='email', error_messages=ERROR_MESSAGES)
+    student = forms.BooleanField(label='student', error_messages=ERROR_MESSAGES, required=False)
     phone = forms.CharField(label='telefon', error_messages=ERROR_MESSAGES, required=False)
     year = forms.IntegerField(label='rok', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=YEAR_CHOICES))
     street = forms.CharField(label='ulice', error_messages=ERROR_MESSAGES, required=False)
@@ -55,7 +56,7 @@ class StudentForm(forms.ModelForm):
 
     class Meta:
         model = Student
-        fields = ( 'course_key', 'addressing', 'name', 'surname', 'email', 'phone', 'year', 'street', 'street_no', 'city', 'post_code', 'partner_ref_code', 'comment' )
+        fields = ( 'course_key', 'addressing', 'name', 'surname', 'email', 'student', 'phone', 'year', 'street', 'street_no', 'city', 'post_code', 'partner_ref_code', 'comment' )
 
     def __init__(self,data = None, **kwargs):
         super(self.__class__,self).__init__(data, **kwargs)
