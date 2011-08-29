@@ -4,6 +4,10 @@
 
 {% block content %}
 
+{% if preview %}
+    <h1>Náhled zápisu - první strana</h1> <a href="../../kurzy/">zpět</a><hr>
+{% endif %}
+
 {% if 0 %}
 {% if course_list %}
 <hr>
@@ -26,7 +30,11 @@
                 {% if c.suspend %}
                     zápis pozastaven
                 {% else %}
+                    {% if not preview %}
                     <a class='button' href='kurz/{{c.key.id}}/'>přihlásit</a>
+                    {% else %}
+                    <a class='button' href=''>přihlásit</a>
+                    {% endif %}
                 {% endif %}
             </td>
         </tr>
@@ -55,7 +63,11 @@
                     {% if c.suspend %}
                         zápis pozastaven
                     {% else %}
+                        {% if not preview %}
                         <a class='button' href='kurz/{{c.key.id}}/'>přihlásit</a>
+                        {% else %}
+                        <a class='button' href=''>přihlásit</a>
+                        {% endif %}
                     {% endif %}
                 </td>
             </tr>

@@ -30,6 +30,8 @@ urlpatterns = patterns('admin',
     (r'^zaci/(?P<student_id>\d+)/edit/$', 'student_views.edit'),
     (r'^zaci/(?P<student_id>\d+)/email/$', 'student_views.email'),
 
+    
+    (r'^nahled/zapis/$', 'preview_views.enroll'), 
 
     (r'^opt/$', 'opt_views.index'),
 )
