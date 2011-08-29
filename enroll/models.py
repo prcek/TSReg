@@ -64,6 +64,7 @@ class Course(BaseModel):
     group_mode = db.StringProperty(choices=['Single','Pair'], default='Single')
     capacity = db.IntegerProperty(default=0)
     usage = db.IntegerProperty(default=0)
+    pending_payment = db.IntegerProperty(default=0)
     pending = db.IntegerProperty(default=0)
     pending_limit = db.IntegerProperty(default=0)
     hidden = db.BooleanProperty(default=False)
@@ -290,6 +291,12 @@ class Student(BaseModel):
 
     def get_course(self):
         return Course.get(self.course_key)
+
+    def get_course_id(self):
+        c =  Course.get(self.course_key)
+        if c is None:
+            return None
+        return c.key().id()
 
        
 

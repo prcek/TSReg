@@ -128,6 +128,11 @@ def edit(request, student_id,course_id=None):
             form.save(commit=False)
             logging.info('edit student after %s'% student)
             student.save()
+
+            course_id = student.get_course_id()
+            if not (course_id is None):
+                taskqueue.add(url='/task/recount_capacity/', params={'course_id':course_id})
+
             return redirect('../..')
     else:
         form = StudentForm(instance=student)
@@ -150,6 +155,11 @@ def create(request, course_id=None):
             student.save()
             student.init_ref_codes()
             student.save()
+
+            course_id = student.get_course_id()
+            if not (course_id is None):
+                taskqueue.add(url='/task/recount_capacity/', params={'course_id':course_id})
+
             return redirect('..')
     else:
         form = StudentForm(instance=student)

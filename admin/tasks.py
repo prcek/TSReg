@@ -106,15 +106,20 @@ def recount_capacity(request):
         raise Http404
     pending = 0
     enrolled = 0
+    pending_payment = 0
     list = Student.list_for_course(course.key())
     for s in list:
         if s.status == 'nc':
             pending+=1
         elif s.status == 'e':
-            enrolled+=1
+            if s.paid_ok:
+                enrolled+=1
+            else:
+                pending_payment+=1
 
 
     course.pending=pending
+    course.pending_payment=pending_payment
     course.usage=enrolled
 
     if (course.pending_limit!=0):
