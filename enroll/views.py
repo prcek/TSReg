@@ -138,7 +138,7 @@ def attend(request,course_id):
                 st.addressing = form.cleaned_data['addressing']
                 st.name = form.cleaned_data['name']
                 st.surname = form.cleaned_data['surname']
-                st.student = orm.cleaned_data['student']
+                st.student = form.cleaned_data['student']
                 st.year = form.cleaned_data['year']
                 st.email = form.cleaned_data['email']
                 st.phone = form.cleaned_data['phone']
@@ -148,6 +148,13 @@ def attend(request,course_id):
                 st.post_code = form.cleaned_data['post_code']
                 st.comment = form.cleaned_data['comment']
                 st.partner_ref_code = form.cleaned_data['partner']
+
+
+                if (st.student):
+                    st.to_pay = course.cost_student
+                else:
+                    st.to_pay = course.cost_full
+
                 st.save()
                 st.init_ref_codes()
                 st.save()
