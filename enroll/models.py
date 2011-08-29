@@ -56,6 +56,8 @@ class Course(BaseModel):
     order_value = db.IntegerProperty(default=0)
     period = db.StringProperty(default='')
     first_period = db.StringProperty(default='')
+    place = db.StringProperty(default='')
+    teacher = db.StringProperty(default='')
     group_mode = db.StringProperty(choices=['Single','Pair'], default='Single')
     capacity = db.IntegerProperty(default=0)
     usage = db.IntegerProperty(default=0)

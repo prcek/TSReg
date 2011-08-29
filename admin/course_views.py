@@ -34,6 +34,8 @@ class CourseForm(forms.ModelForm):
     folder_key = FolderField(label='kategorie', error_messages=ERROR_MESSAGES)
     period = forms.CharField(label='termín', error_messages=ERROR_MESSAGES)
     first_period = forms.CharField(label='první lekce', error_messages=ERROR_MESSAGES)
+    place = forms.CharField(label='místo', error_messages=ERROR_MESSAGES)
+    teacher = forms.CharField(label='lektor', error_messages=ERROR_MESSAGES)
     group_mode = forms.CharField(label='režim', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=GROUP_MODE_CHOICES)) 
     capacity = forms.IntegerField(label='kapacita', error_messages=ERROR_MESSAGES)
     pending_limit = forms.IntegerField(label='fronta', error_messages=ERROR_MESSAGES)
@@ -41,7 +43,7 @@ class CourseForm(forms.ModelForm):
 
     class Meta:
         model = Course
-        fields = ( 'folder_key', 'active', 'order_value', 'code','name', 'period', 'first_period', 'group_mode', 'capacity', 'pending_limit' )
+        fields = ( 'folder_key', 'active', 'order_value', 'code','name', 'period', 'first_period', 'place', 'teacher', 'group_mode', 'capacity', 'pending_limit' )
 
     def clean_code(self):
         data = self.cleaned_data['code']
