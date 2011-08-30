@@ -11,6 +11,7 @@ import utils.config as cfg
 import utils.mail as mail
 import utils.pdf as pdf
 import logging
+import urllib
 
 
 ADDRESSING_CHOICES = (
@@ -237,7 +238,11 @@ def course_as_csv(request, course_id):
 
 def course_as_pdf(request, course_id):
     r =  HttpResponse(mimetype='application/pdf')
-    r['Content-Disposition'] = 'attachment; filename=pdf_test.pdf'
+    file_name = "neni t389024 áíéěščřýščáíěř o fakt divná vec ? ř.pdf" 
+    logging.info(file_name)
+    file_name = urllib.quote(file_name)
+    logging.info(file_name)
+    r['Content-Disposition'] = "attachment; filename*=UTF-8''%s"%file_name
     from utils.pdf import pdftest
     pdftest(r)
     return r
