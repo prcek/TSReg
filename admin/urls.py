@@ -17,6 +17,8 @@ urlpatterns = patterns('admin',
     (r'^kurzy/(?P<course_id>\d+)/zaci/(?P<student_id>\d+)/kick/$', 'student_views.kick'),
     (r'^kurzy/(?P<course_id>\d+)/zaci/add/$', 'student_views.create'),
     (r'^kurzy/(?P<course_id>\d+)/zaci/email/$', 'student_views.course_emails'),
+    (r'^kurzy/(?P<course_id>\d+)/zaci/csv/$', 'student_views.course_as_csv'),
+    (r'^kurzy/(?P<course_id>\d+)/zaci/pdf/$', 'student_views.course_as_pdf'),
 
 
     (r'^kategorie/$', 'folder_views.index'),

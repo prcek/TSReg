@@ -323,5 +323,8 @@ class Student(BaseModel):
         elif self.status == 'k':
             return 'vyřazen'
         return '?' 
+
+    def as_csv_row(self):
+        return [self.key().id(), self.name, self.surname]
  
 

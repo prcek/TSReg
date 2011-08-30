@@ -226,4 +226,9 @@ def course_emails(request, course_id):
         'student_list_enrolled': student_list_enrolled,  
     }))
 
+def course_as_csv(request, course_id):
+    return HttpResponse('csv')
+
+def course_as_pdf(request, course_id):
+    return HttpResponse('pdf')
 
