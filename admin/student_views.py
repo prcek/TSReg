@@ -9,6 +9,7 @@ from google.appengine.api import taskqueue
 from enroll.models import Student,Course
 import utils.config as cfg
 import utils.mail as mail
+import utils.pdf as pdf
 import logging
 
 
@@ -230,5 +231,9 @@ def course_as_csv(request, course_id):
     return HttpResponse('csv')
 
 def course_as_pdf(request, course_id):
-    return HttpResponse('pdf')
+    r =  HttpResponse(pdf,mimetype='application/pdf')
+    r['Content-Disposition'] = 'attachment; filename=pdf_test.pdf'
+    from utils.pdf import pdftest
+    pdftest(r)
+    return r
 
