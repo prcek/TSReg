@@ -72,11 +72,11 @@ class UnicodeReader:
 
 
 
-def dump_to_csv(query,out):
+def dump_to_csv(data,out):
     wr = UnicodeWriter(out,delimiter=',', quotechar='"', quoting=csv.QUOTE_NONNUMERIC)        
-    for obj in query:
-        logging.info(obj.as_csv_row())
-        wr.writerow(obj.as_csv_row())
+    for row in data:
+        logging.info(row)
+        wr.writerow(row)
  
 #def read_csv(f, X):
 #    ret = []

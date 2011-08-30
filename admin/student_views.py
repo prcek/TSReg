@@ -228,10 +228,15 @@ def course_emails(request, course_id):
     }))
 
 def course_as_csv(request, course_id):
-    return HttpResponse('csv')
+    r =  HttpResponse(mimetype='application/vnd.ms-excel')
+    r['Content-Disposition'] = 'attachment; filename=csv_test.csv'
+    from utils.data import dump_to_csv
+    data = [ ['a','b'], ['c','d'] ] 
+    dump_to_csv(data,r)
+    return r
 
 def course_as_pdf(request, course_id):
-    r =  HttpResponse(pdf,mimetype='application/pdf')
+    r =  HttpResponse(mimetype='application/pdf')
     r['Content-Disposition'] = 'attachment; filename=pdf_test.pdf'
     from utils.pdf import pdftest
     pdftest(r)
