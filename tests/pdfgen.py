@@ -9,10 +9,11 @@ sys.path.insert(0, os.path.join(pathname,'../libs/reportlab.zip'))
 
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
-from reportlab.lib.colors import HexColor
+from reportlab.lib import colors
 from reportlab.lib.units import inch,mm,cm
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 
 
 import reportlab
@@ -23,6 +24,25 @@ pdfmetrics.registerFont(TTFont('DejaVuSansBold', os.path.join(folderFonts,'DejaV
 
 
 TEST_TEXT = "Příliš žluťoučký kůň úpěl ďábelské ódy"
+
+def table_pdf():
+    doc = SimpleDocTemplate("simple_table.pdf", pagesize=A4)
+    elements = []
+    data= [['00', '01', '02', '03', TEST_TEXT],
+       ['10', '11', '12', '13', '14'],
+       ['20', TEST_TEXT, '22', '23', '24'],
+       ['30', '31', '32', TEST_TEXT, '34']]
+    t=Table(data)
+  #  t.setFont('DejaVuSansBold', 30)
+    t.setStyle(TableStyle([
+        ('BACKGROUND',(1,1),(-2,-2),colors.green),
+        ('TEXTCOLOR',(0,0),(1,-1),colors.red),
+        ('FONT', (0,0), (-1,-1), 'DejaVuSansBold'),
+        ('FONTSIZE', (0,-1), (-1,-1), 8)
+    ]))
+    elements.append(t)
+    # write the document to disk
+    doc.build(elements)
 
 
 def hello_pdf():
@@ -56,3 +76,4 @@ def hello_pdf():
 
 if __name__ == "__main__":
     hello_pdf()
+    table_pdf()
