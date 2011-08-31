@@ -8,7 +8,7 @@ from django.template import RequestContext,Context, loader
 from google.appengine.api import taskqueue
 
 
-from enroll.models import Course,Folder
+from enroll.models import Course,Folder,Season
 import utils.config as cfg
 import logging
 
@@ -24,6 +24,12 @@ class FolderField(forms.ChoiceField):
         self._set_choices(Folder.get_FOLDER_CHOICES())
         return super(FolderField,self).valid_value(value)
 
+class SeasonField(forms.ChoiceField):
+    def valid_value(self, value):
+        self._set_choices(Season.get_SEASON_CHOICES())
+        return super(SeasonField,self).valid_value(value)
+
+
 
 
 class CourseForm(forms.ModelForm):
@@ -31,6 +37,7 @@ class CourseForm(forms.ModelForm):
     order_value = forms.IntegerField(label='řazení',error_messages=ERROR_MESSAGES, help_text='kurzy budou tříděny podle tohodle čísla v zestupném pořadí')
     code = forms.CharField(label='kód', error_messages=ERROR_MESSAGES)
     name = forms.CharField(label='název', error_messages=ERROR_MESSAGES)
+    season_key = SeasonField(label='sezóna', error_messages=ERROR_MESSAGES)
     folder_key = FolderField(label='kategorie', error_messages=ERROR_MESSAGES)
     period = forms.CharField(label='termín', error_messages=ERROR_MESSAGES)
     first_period = forms.CharField(label='první lekce', error_messages=ERROR_MESSAGES)
@@ -46,7 +53,7 @@ class CourseForm(forms.ModelForm):
 
     class Meta:
         model = Course
-        fields = ( 'folder_key', 'active', 'order_value', 'code','name', 'period', 'first_period', 'place', 'teacher', 'cost_full', 'cost_student', 'cost_pair', 'group_mode', 'capacity', 'pending_limit' )
+        fields = ( 'folder_key','season_key', 'active', 'order_value', 'code','name', 'period', 'first_period', 'place', 'teacher', 'cost_full', 'cost_student', 'cost_pair', 'group_mode', 'capacity', 'pending_limit' )
 
     def clean_code(self):
         data = self.cleaned_data['code']
@@ -57,6 +64,7 @@ class CourseForm(forms.ModelForm):
     def __init__(self,data = None, **kwargs):
         super(self.__class__,self).__init__(data, **kwargs)
         self.fields['folder_key']._set_choices(Folder.get_FOLDER_CHOICES())
+        self.fields['season_key']._set_choices(Season.get_SEASON_CHOICES())
 
 
 

@@ -17,7 +17,7 @@ ERROR_MESSAGES={'required': 'Prosím vyplň tuto položku', 'invalid': 'Neplatn�
 
 
 class FolderForm(forms.ModelForm):
-    order_value = forms.IntegerField(label='řazení',error_messages=ERROR_MESSAGES, help_text='kurzy budou tříděny podle tohodle čísla v zestupném pořadí')
+    order_value = forms.IntegerField(label='řazení',error_messages=ERROR_MESSAGES, help_text='kategorie budou tříděny podle tohodle čísla v zestupném pořadí')
     name = forms.CharField(label='název', error_messages=ERROR_MESSAGES)
     public_name = forms.CharField(label='veřejný název', error_messages=ERROR_MESSAGES)
 

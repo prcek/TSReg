@@ -15,6 +15,34 @@ from string import maketrans
 #transtab = maketrans(intab, outtab)
 #transtab_r = maketrans(outtab,intab)
 
+class Season(BaseModel):
+    name = db.StringProperty(default='')
+    public_name = db.StringProperty(default='')
+    order_value = db.IntegerProperty(default=0)
+
+    @staticmethod
+    def get_name_by_key(season_key):
+        if season_key is None:
+            return None
+        s = Season.get(season_key)
+        if s is None:
+            return None
+        return s.name
+
+    @staticmethod
+    def list():
+        return Season.all().order('order_value').order('name')
+
+    @staticmethod
+    def get_SEASON_CHOICES():
+        clist = Season.list()
+        res = []
+        for c in clist:
+            res.append((c.key().__str__(),c.name))
+        logging.info('get_SEASON_CHOICES: %s'%res)
+        return res 
+
+
 class Folder(BaseModel):
     name = db.StringProperty(default='')
     public_name = db.StringProperty(default='')
@@ -51,6 +79,7 @@ class Course(BaseModel):
     active = db.BooleanProperty(default=False)
     suspend = db.BooleanProperty(default=False)
     folder_key = db.StringProperty()
+    season_key = db.StringProperty()
     code = db.StringProperty(default='')
     name = db.StringProperty(default='')
     order_value = db.IntegerProperty(default=0)
@@ -74,6 +103,14 @@ class Course(BaseModel):
 
     def get_folder(self):
         return Folder.get(self.folder_key)
+
+    def season_name(self):
+        return Season.get_name_by_key(self.season_key)
+
+    def get_season(self):
+        return Season.get(self.season_key)
+
+
 
     def is_open(self):
         return (not self.hidden) and self.active and (not self.suspend)
