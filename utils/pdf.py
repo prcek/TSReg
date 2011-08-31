@@ -28,6 +28,8 @@ import logging
 import StringIO
 import datetime
 
+from xml.sax.saxutils import escape
+
 def getNow():
     t = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     return t
@@ -69,11 +71,11 @@ def students_table(output,course,students):
 
     elements = []
 
-    elements.append(Paragraph(u"Přihlášky kurzu %s"%course.code,styleH))
+    elements.append(Paragraph(u"Přihlášky kurzu %s"%escape(course.code),styleH))
     elements.append(Paragraph(u"vygenerováno %s"%getNow(),styleN))
 
 
-    data = [ ['p.č.','ref kód','přijmení','jméno'] ]
+    data = [ ['č.','ref kód','přijmení','jméno'] ]
     i=1;
     for s in students:
         data.append([i,s.ref_key,s.surname,s.name])
