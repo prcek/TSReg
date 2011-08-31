@@ -229,23 +229,18 @@ def course_emails(request, course_id):
     }))
 
 def course_as_csv(request, course_id):
-    r =  HttpResponse(mimetype='application/vnd.ms-excel')
-    r['Content-Disposition'] = 'attachment; filename=csv_test.csv'
-    from utils.data import dump_to_csv
-    data = [ ['a','b'], ['c','d'] ] 
-    dump_to_csv(data,r)
-    return r
+    course = Course.get_by_id(int(course_id))  
 
-def course_as_pdf(request, course_id):
-    r =  HttpResponse(mimetype='application/pdf')
-    file_name = "neni t389024 áíéěščřýščáíěř o fakt divná vec ? ř.pdf" 
-    logging.info(file_name)
-    file_name = urllib.quote(file_name)
+    if course is None:
+        raise Http404
+
+
+    r =  HttpResponse(mimetype='application/vnd.ms-excel')
+    file_name = urllib.quote("kurz_%s.csv"%course.code)
     logging.info(file_name)
     r['Content-Disposition'] = "attachment; filename*=UTF-8''%s"%file_name
-    from utils.pdf import students_table
+    from utils.data import dump_to_csv
 
-    course = Course.get_by_id(int(course_id))  
     student_list_to_enroll=Student.list_for_course_to_enroll(course.key())
     student_list_enrolled=Student.list_for_course_enrolled(course.key())
 
@@ -253,6 +248,31 @@ def course_as_pdf(request, course_id):
     students.extend(student_list_enrolled)
     students.extend(student_list_to_enroll)
 
+    data = [ ['#export kurz',course.code]]
+    for s in students:
+        data.append([s.ref_key,s.surname,s.name])
+    dump_to_csv(data,r)
+    return r
+
+def course_as_pdf(request, course_id):
+
+    course = Course.get_by_id(int(course_id))  
+
+    if course is None:
+        raise Http404
+
+    r =  HttpResponse(mimetype='application/pdf')
+    file_name = urllib.quote("kurz_%s.pdf"%course.code)
+    logging.info(file_name)
+    r['Content-Disposition'] = "attachment; filename*=UTF-8''%s"%file_name
+    from utils.pdf import students_table
+
+    student_list_to_enroll=Student.list_for_course_to_enroll(course.key())
+    student_list_enrolled=Student.list_for_course_enrolled(course.key())
+
+    students = []
+    students.extend(student_list_enrolled)
+    students.extend(student_list_to_enroll)
 
     students_table(r,course,students)
     return r

@@ -27,10 +27,12 @@ TEST_TEXT = "Příliš žluťoučký kůň úpěl ďábelské ódy"
 import logging
 import StringIO
 import datetime
+from settings import TIME_ZONE
 
 from xml.sax.saxutils import escape
 
 def getNow():
+    os.environ['TZ'] = TIME_ZONE
     t = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     return t
 
