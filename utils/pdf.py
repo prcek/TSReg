@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 
 import sys
@@ -5,8 +6,9 @@ sys.path.insert(0, 'libs/reportlab.zip')
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
+from reportlab.lib.enums import TA_LEFT, TA_CENTER
 from reportlab.lib.units import inch,mm,cm
-from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.styles import StyleSheet1, ParagraphStyle
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle,Paragraph
@@ -24,17 +26,51 @@ TEST_TEXT = "Příliš žluťoučký kůň úpěl ďábelské ódy"
 
 import logging
 import StringIO
+import datetime
+
+def getNow():
+    t = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return t
+
+def getStyleSheet():
+    stylesheet = StyleSheet1()
+    stylesheet.add(ParagraphStyle(name='Normal',
+                                  fontName='DejaVuSansMono',
+                                  fontSize=10,
+                                  leading=12)
+                   )
+
+    stylesheet.add(ParagraphStyle(name='Heading',
+                                  parent=stylesheet['Normal'],
+                                  fontName = 'DejaVuSansBold',
+                                  fontSize=18,
+                                  leading=22,
+                                  spaceAfter=6),
+                   )
+ 
+    stylesheet.add(ParagraphStyle(name='Title',
+                                  parent=stylesheet['Normal'],
+                                  fontName = 'DejaVuSansBold',
+                                  fontSize=18,
+                                  leading=22,
+                                  alignment=TA_CENTER,
+                                  spaceAfter=6),
+                   )
+    return stylesheet
+
 
 def students_table(output,course,students):
     doc = SimpleDocTemplate(output, pagesize=A4) 
-    styles = getSampleStyleSheet()
+    styles = getStyleSheet()
     styleN = styles['Normal']
-    styleH = styles['Heading1']
+    styleH = styles['Heading']
+    styleT = styles['Title']
 
 
     elements = []
 
-    elements.append(Paragraph("This is a Heading",styleH))
+    elements.append(Paragraph(u"Přihlášky kurzu %s"%course.code,styleH))
+    elements.append(Paragraph(u"vygenerováno %s"%getNow(),styleN))
 
 
     data = [ ['p.č.','ref kód','přijmení','jméno'] ]
