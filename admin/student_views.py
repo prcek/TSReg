@@ -243,7 +243,17 @@ def course_as_pdf(request, course_id):
     file_name = urllib.quote(file_name)
     logging.info(file_name)
     r['Content-Disposition'] = "attachment; filename*=UTF-8''%s"%file_name
-    from utils.pdf import pdftest
-    pdftest(r)
+    from utils.pdf import students_table
+
+    course = Course.get_by_id(int(course_id))  
+    student_list_to_enroll=Student.list_for_course_to_enroll(course.key())
+    student_list_enrolled=Student.list_for_course_enrolled(course.key())
+
+    students = []
+    students.extend(student_list_enrolled)
+    students.extend(student_list_to_enroll)
+
+
+    students_table(r,course,students)
     return r
 

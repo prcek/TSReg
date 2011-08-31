@@ -3,8 +3,13 @@
 import sys
 sys.path.insert(0, 'libs/reportlab.zip')
 from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from reportlab.lib import colors
+from reportlab.lib.units import inch,mm,cm
+from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle,Paragraph
 
 import os
 import reportlab
@@ -19,6 +24,35 @@ TEST_TEXT = "Příliš žluťoučký kůň úpěl ďábelské ódy"
 
 import logging
 import StringIO
+
+def students_table(output,course,students):
+    doc = SimpleDocTemplate(output, pagesize=A4) 
+    styles = getSampleStyleSheet()
+    styleN = styles['Normal']
+    styleH = styles['Heading1']
+
+
+    elements = []
+
+    elements.append(Paragraph("This is a Heading",styleH))
+
+
+    data = [ ['p.č.','ref kód','přijmení','jméno'] ]
+    i=1;
+    for s in students:
+        data.append([i,s.ref_key,s.surname,s.name])
+        i+=1
+   # logging.info(data) 
+    t=Table(data)
+    t.setStyle(TableStyle([
+#        ('BACKGROUND',(1,1),(-2,-2),colors.green),
+#        ('TEXTCOLOR',(0,0),(1,-1),colors.red),
+        ('FONT', (0,0), (-1,-1), 'DejaVuSansBold'),
+        ('FONTSIZE', (0,-1), (-1,-1), 8)
+    ]))
+ 
+    elements.append(t)
+    doc.build(elements)
 
 def pdftest(output):
     logging.info('pdftest')
