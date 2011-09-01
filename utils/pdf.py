@@ -3,6 +3,8 @@
 
 import sys
 sys.path.insert(0, 'libs/reportlab.zip')
+#sys.path.insert(0, 'libs')
+
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
@@ -28,20 +30,18 @@ import logging
 import StringIO
 import datetime
 
+from utils.locale import local_timezone
+
+#from pytz.gae import pytz
+
 from xml.sax.saxutils import escape
 
 def getNow():
-#    from main import getTimeZone
-#    tz = getTimeZone()
-#    logging.info(tz)
-#    n = datetime.datetime.utcnow()
-#    loc = tz.localize(n)
-#    x = loc.astimezone(tz)
-#    t = x.strftime("%Y-%m-%d %H:%M:%S")
-#    logging.info(loc)
-#    logging.info(x)
-#    logging.info(t)
-    return datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+#    tz = pytz.timezone('Europe/Prague') 
+    now = datetime.datetime.utcnow() 
+    local_now = local_timezone.fromutc(now)
+
+    return local_now.strftime("%Y-%m-%d %H:%M:%S")
 
 def getStyleSheet():
     stylesheet = StyleSheet1()

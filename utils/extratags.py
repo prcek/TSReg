@@ -1,5 +1,6 @@
 from django import template
 from django.utils import html
+from utils.locale import local_timezone
 register = template.Library()
 
 @register.filter
@@ -18,3 +19,9 @@ def nonone(v):
         return ""
     return v
 
+@register.filter
+def localdatetime(v):
+    if v is None:
+        return None
+    return local_timezone.fromutc(v)
+    

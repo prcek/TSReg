@@ -1,9 +1,4 @@
 
-import sys
-if 'libs' not in sys.path:
-    sys.path.insert(0,'libs')
-
-from pytz.gae import pytz
 
 from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response, redirect, get_object_or_404
@@ -12,10 +7,11 @@ import utils.config as cfg
 
 import logging
 import datetime
+from utils.locale import local_timezone
 
 def index(request):
 
-    tz = pytz.timezone('Europe/Prague') 
+    tz = local_timezone #pytz.timezone('Europe/Prague') 
    
     now = datetime.datetime.utcnow() 
 
