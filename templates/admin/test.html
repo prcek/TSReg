@@ -15,5 +15,31 @@
     localize by filter: {{now|localdatetime}}
     </div>
 
+     <h1>select form test</h1>
+    <div class='box'>
+     <form action="." method="POST">   
+    <table>
+        <tr><th></th><th>x</th></tr>
+        {% for l in lines %}
+        <tr>
+            <td> <input class="check-action" type="checkbox" value="{{ l.key }}" name="categories" /> </td>
+            <td> {{ l.value }} </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div><input id="select-all" type="checkbox" /><label for="select-all">vše</label></div>
+
+    <div>
+    <label for="operation">Akce:</label>
+    <select id="operation" name="operation">
+        <option value="action_1">Akce1</option>
+        <option value="action_2">Akce2</option>
+    </select>
+    </div>
+    <input class="button" type="submit" value="test">
+    </form>
+    </div>
+
 {% endblock %}
 

@@ -23,5 +23,14 @@ def index(request):
     local_s = local_now.strftime("%Y-%m-%d %H:%M:%S")
     logging.info(local_s)
 
-    return render_to_response('admin/test.html', RequestContext(request, { 'now': now, 'localized_now': localized_now, 'local_now': local_now, 'local_s': local_s }))
+    lines = []
+    for i in range(10):
+        lines.append({'key':i,'value':'v_%d'%i})
+
+
+
+    if request.method == 'POST':
+        logging.info(request.POST)
+
+    return render_to_response('admin/test.html', RequestContext(request, { 'now': now, 'localized_now': localized_now, 'local_now': local_now, 'local_s': local_s, 'lines':lines }))
 
