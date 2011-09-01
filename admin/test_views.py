@@ -21,7 +21,7 @@ def index(request):
 
     logging.info(now)
     logging.info(tz)
-    local_now = tz.localize(now)
+    local_now = tz.fromutc(now)
 
     logging.info(local_now)
 
