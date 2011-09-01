@@ -17,17 +17,15 @@ def index(request):
 
     tz = pytz.timezone('Europe/Prague') 
    
-    now = datetime.datetime.now() 
+    now = datetime.datetime.utcnow() 
 
     logging.info(now)
     logging.info(tz)
+    localized_now = tz.localize(now)
     local_now = tz.fromutc(now)
-
     logging.info(local_now)
+    local_s = local_now.strftime("%Y-%m-%d %H:%M:%S")
+    logging.info(local_s)
 
-    s = local_now.strftime("%Y-%m-%d %H:%M:%S")
-
-    logging.info(s)
-
-    return render_to_response('admin/test.html', RequestContext(request))
+    return render_to_response('admin/test.html', RequestContext(request, { 'now': now, 'localized_now': localized_now, 'local_now': local_now, 'local_s': local_s }))
 
