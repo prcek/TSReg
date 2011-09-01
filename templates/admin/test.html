@@ -22,7 +22,7 @@
         <tr><th></th><th>x</th></tr>
         {% for l in lines %}
         <tr>
-            <td> <input class="check-action" type="checkbox" value="{{ l.key }}" name="categories" /> </td>
+            <td> <input class="check-action" type="checkbox" value="{{ l.key }}" {% if l.selected %}checked{% endif %} name="categories" /> </td>
             <td> {{ l.value }} </td>
         </tr>
         {% endfor %}
