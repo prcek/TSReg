@@ -27,14 +27,21 @@ TEST_TEXT = "Příliš žluťoučký kůň úpěl ďábelské ódy"
 import logging
 import StringIO
 import datetime
-from settings import TIME_ZONE
 
 from xml.sax.saxutils import escape
 
 def getNow():
-    os.environ['TZ'] = TIME_ZONE
-    t = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    return t
+#    from main import getTimeZone
+#    tz = getTimeZone()
+#    logging.info(tz)
+#    n = datetime.datetime.utcnow()
+#    loc = tz.localize(n)
+#    x = loc.astimezone(tz)
+#    t = x.strftime("%Y-%m-%d %H:%M:%S")
+#    logging.info(loc)
+#    logging.info(x)
+#    logging.info(t)
+    return datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
 
 def getStyleSheet():
     stylesheet = StyleSheet1()

@@ -5,6 +5,7 @@ urlpatterns = patterns('admin',
     (r'^sys/add/$', 'sys_views.config_create'),
     (r'^sys/(?P<config_id>\d+)/', 'sys_views.config_edit'),
     (r'^sys/setup/$', 'sys_views.config_setup'),
+    (r'^sys/test/$', 'test_views.index'),
 
     (r'^kurzy/$', 'course_views.index'),
     (r'^kurzy/add/$', 'course_views.create'),

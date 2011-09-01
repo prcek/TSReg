@@ -59,6 +59,10 @@ handlers:
   script: main.py
   login: admin
 
+- url: /admin/test/.*
+  script: main.py
+  login: admin
+
 - url: /admin/.*
   script: main.py
   login: required
