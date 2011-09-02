@@ -47,6 +47,7 @@ class StudentForm(forms.ModelForm):
     surname = forms.CharField(label='příjmení', error_messages=ERROR_MESSAGES)
     email = forms.EmailField(label='email', error_messages=ERROR_MESSAGES)
     student = forms.BooleanField(label='student', error_messages=ERROR_MESSAGES, required=False)
+    long_period = forms.BooleanField(label='celoroční', error_messages=ERROR_MESSAGES, required=False)
     to_pay = forms.IntegerField(label='cena', error_messages=ERROR_MESSAGES)
     paid_ok = forms.BooleanField(label='zaplaceno', error_messages=ERROR_MESSAGES, required=False)
     phone = forms.CharField(label='telefon', error_messages=ERROR_MESSAGES, required=False)
@@ -58,9 +59,16 @@ class StudentForm(forms.ModelForm):
     partner_ref_code = forms.CharField(label='kód partnera', error_messages=ERROR_MESSAGES, required=False)
     comment = forms.CharField(label='poznámka', error_messages=ERROR_MESSAGES, required=False)
 
+
+    def clean_addressing(self):
+        data = self.cleaned_data['addressing']
+        if not data in ['p','s','d']:
+            raise forms.ValidationError(ERROR_MESSAGES['required'])
+        return data
+
     class Meta:
         model = Student
-        fields = ( 'course_key', 'addressing', 'name', 'surname', 'email', 'student','to_pay', 'paid_ok', 'phone', 'year', 'street', 'street_no', 'city', 'post_code', 'partner_ref_code', 'comment' )
+        fields = ( 'course_key', 'addressing', 'name', 'surname', 'email', 'student','long_period', 'to_pay', 'paid_ok', 'phone', 'year', 'street', 'street_no', 'city', 'post_code', 'partner_ref_code', 'comment' )
 
     def __init__(self,data = None, **kwargs):
         super(self.__class__,self).__init__(data, **kwargs)

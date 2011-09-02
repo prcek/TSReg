@@ -41,16 +41,20 @@ class EnrollForm(forms.Form):
     email = forms.EmailField(label='email', error_messages=ERROR_MESSAGES)
     phone = forms.CharField(label='telefon', error_messages=ERROR_MESSAGES, required=False)
     student = forms.BooleanField(label='student', error_messages=ERROR_MESSAGES, required=False)
+    long_period = forms.BooleanField(label='celoroční', error_messages=ERROR_MESSAGES, required=False)
     year = forms.IntegerField(label='rok', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=YEAR_CHOICES))
     street = forms.CharField(label='ulice', error_messages=ERROR_MESSAGES, required=False)
     street_no = forms.CharField(label='číslo', error_messages=ERROR_MESSAGES, required=False)
     city = forms.CharField(label='město', error_messages=ERROR_MESSAGES, required=False)
     post_code = forms.CharField(label='psč', error_messages=ERROR_MESSAGES, required=False)
-    partner = forms.CharField(label='ref. kód partnera', error_messages=ERROR_MESSAGES, required=False)
-
-
+#    partner = forms.CharField(label='ref. kód partnera', error_messages=ERROR_MESSAGES, required=False)
     comment = forms.CharField(label='poznámka', error_messages=ERROR_MESSAGES, required=False)
 
+    def clean_addressing(self):
+        data = self.cleaned_data['addressing']
+        if not data in ['p','s','d']:
+            raise forms.ValidationError(ERROR_MESSAGES['required'])
+        return data
 
 def goto_index(request):
     return redirect('/zapis/')
@@ -139,6 +143,7 @@ def attend(request,course_id):
                 st.name = form.cleaned_data['name']
                 st.surname = form.cleaned_data['surname']
                 st.student = form.cleaned_data['student']
+                st.long_period = form.cleaned_data['long_period']
                 st.year = form.cleaned_data['year']
                 st.email = form.cleaned_data['email']
                 st.phone = form.cleaned_data['phone']
@@ -147,13 +152,28 @@ def attend(request,course_id):
                 st.city = form.cleaned_data['city']
                 st.post_code = form.cleaned_data['post_code']
                 st.comment = form.cleaned_data['comment']
-                st.partner_ref_code = form.cleaned_data['partner']
+#                st.partner_ref_code = form.cleaned_data['partner']
 
-
-                if (st.student):
-                    st.to_pay = course.cost_student
+                if course.cost_sale:
+                    a = course.cost_sa
+                    b = course.cost_sb
                 else:
-                    st.to_pay = course.cost_full
+                    a = course.cost_a
+                    b = course.cost_b
+
+                if course.cost_mode == 'Normal':
+                    if (st.student):
+                        st.to_pay = b
+                    else:
+                        st.to_pay = a
+                elif course.cost_mode == 'Period':
+                    if (st.long_period):
+                        st.to_pay = a 
+                    else:
+                        st.to_pay = b
+                elif course.cost_mode == 'Fix':
+                    st.to_pay = a
+
 
                 st.save()
                 st.init_ref_codes()
