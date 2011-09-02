@@ -13,7 +13,7 @@
 {% if offer %}
     <h1> Volba kategorie </h1>
     {% for f in offer %} 
-        {{f.folder.public_name}} - <a href='kategorie/{{f.folder.key.id}}/'>zvolit</a>
+        {{f.folder.public_name}} - <a href='kategorie/{{f.folder.key.id}}/'>zvolit</a><br>
     {% endfor %}
 {% else %}
 <div> Žádný kurz není otevřen pro zápis </div>
