@@ -59,8 +59,16 @@ class EnrollForm(forms.Form):
 def goto_index(request):
     return redirect('/zapis/')
 
-def get_offer_list():
-    folders_query=Folder.list()
+def get_offer_list(folder_id = None):
+
+    if folder_id is None:
+        folders_query=Folder.list()
+    else:
+        folders_query = []
+        f = Folder.get_by_id(int(folder_id))
+        if f:
+            folders_query.append(f)
+    
     courses_query=Course.list_for_enroll()  
 
     folders= set([])
@@ -81,21 +89,13 @@ def get_offer_list():
             sub_list = [c for c in courses if fk==c.folder_key] 
             result.append({'folder':folder, 'courses':sub_list })
             pass
-
     return result
+
+
 
 def index(request):
     if not config.getConfigBool('ENROLL_ENROLL_ON',False):
         return render_to_response('enroll/index_off.html', RequestContext(request))
-
-#    folder_list=Folder.list().fetch(200)
-#
-#    if len(folder_list) == 0:
-#        folder_list = None
-#
-#    course_list=Course.list_for_enroll().fetch(200)
-#    if len(course_list) == 0:
-#        course_list=None
 
     offer = get_offer_list()
     logging.info('offer=%s'%offer)
@@ -103,6 +103,19 @@ def index(request):
         offer = None
 
     return render_to_response('enroll/index.html', RequestContext(request, { 'offer':offer }))
+
+def folder_index(request,folder_id):
+    if not config.getConfigBool('ENROLL_ENROLL_ON',False):
+        return render_to_response('enroll/index_off.html', RequestContext(request))
+
+    offer = get_offer_list(folder_id)
+    logging.info('offer=%s'%offer)
+    if len(offer) == 0:
+        offer = None
+
+    return render_to_response('enroll/folder_index.html', RequestContext(request, { 'offer':offer }))
+
+
 
 def attend(request,course_id):
 

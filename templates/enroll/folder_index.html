@@ -1,0 +1,48 @@
+{% extends "enroll/base.html" %}
+
+{% block title %} TŠ Starlet - Zápis - Volba kurzu {% endblock %}
+
+{% block content %}
+
+{% if preview %}
+    <h1>Náhled zápisu - první strana</h1> <a href="../../kurzy/">zpět</a><hr>
+{% endif %}
+
+
+{% if offer %}
+    <h1> Volba kurzu </h1>
+    <table>
+     {% for f in offer %} 
+        <tr> <td colspan=5> <h2> {{f.folder.public_name}} </h2> </td> </tr>
+        <tr> <th>kód</th> <th>název</th> <th>termín</th> <th>první lekce</th> <th>místo</th> <th> lektor </th> <th>&nbsp;</th> </tr>
+        {% for c in f.courses %}
+            <tr>
+                <td>{{c.code}}</td>
+                <td>{{c.name}}</td>
+                <td>{{c.period}}</td>
+                <td>{{c.first_period}}</td>
+                <td>{{c.place}}</td>
+                <td>{{c.teacher}}</td>
+                <td>
+                    {% if c.suspend %}
+                        zápis pozastaven
+                    {% else %}
+                        {% if not preview %}
+                        <a href='../../kurz/{{c.key.id}}/'>přihlásit</a>
+                        {% else %}
+                        <a href=''>přihlásit</a>
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    {% endfor %}
+
+    </table>
+{% else %}
+<div> Žádný kurz není otevřen pro zápis </div>
+{% endif %}
+
+
+{% endblock %}
+
