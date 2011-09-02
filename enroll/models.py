@@ -87,10 +87,13 @@ class Course(BaseModel):
     first_period = db.StringProperty(default='')
     place = db.StringProperty(default='')
     teacher = db.StringProperty(default='')
-    cost_full = db.IntegerProperty(default=0)
-    cost_student = db.IntegerProperty(default=0)
-    cost_pair = db.IntegerProperty(default=0)
+    cost_a = db.IntegerProperty(default=0)
+    cost_b = db.IntegerProperty(default=0)
+    cost_sa = db.IntegerProperty(default=0)
+    cost_sb = db.IntegerProperty(default=0)
     group_mode = db.StringProperty(choices=['Single','Pair'], default='Single')
+    cost_mode = db.StringProperty(choices=['Normal','Period','Fix'], default='Normal')
+    cost_sale = db.BooleanProperty(default=False)
     capacity = db.IntegerProperty(default=0)
     usage = db.IntegerProperty(default=0)
     pending_payment = db.IntegerProperty(default=0)
@@ -147,6 +150,15 @@ class Course(BaseModel):
             return 'jednotlivci'
         elif self.group_mode == 'Pair':
             return 'po párech'
+        return '?'
+
+    def cost_mode_loc(self):
+        if self.cost_mode == 'Normal':
+            return 'N'
+        elif self.cost_mode == 'Period':
+            return 'P'
+        elif self.cost_mode == 'Fix':
+            return 'F'
         return '?'
 
 

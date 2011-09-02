@@ -17,6 +17,14 @@ GROUP_MODE_CHOICES = (
     ('Single','jednotlivci'),
     ('Pair','po párech'),
 )
+
+COST_MODE_CHOICES = (
+    ('Normal','student/dospělý'),
+    ('Period','polo/celo-roční'),
+    ('Fix','pevná'),
+)
+
+
 ERROR_MESSAGES={'required': 'Prosím vyplň tuto položku', 'invalid': 'Neplatná hodnota'}
 
 class FolderField(forms.ChoiceField):
@@ -43,17 +51,21 @@ class CourseForm(forms.ModelForm):
     first_period = forms.CharField(label='první lekce', error_messages=ERROR_MESSAGES)
     place = forms.CharField(label='místo', error_messages=ERROR_MESSAGES)
     teacher = forms.CharField(label='lektor', error_messages=ERROR_MESSAGES)
-    cost_full = forms.IntegerField(label='cena', error_messages=ERROR_MESSAGES)
-    cost_student = forms.IntegerField(label='cena student', error_messages=ERROR_MESSAGES)
-    cost_pair = forms.IntegerField(label='cena v páru', error_messages=ERROR_MESSAGES, help_text='cena za jednoho z páru')
-    group_mode = forms.CharField(label='režim', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=GROUP_MODE_CHOICES)) 
+    cost_a = forms.IntegerField(label='cena A', error_messages=ERROR_MESSAGES)
+    cost_b = forms.IntegerField(label='cena B', error_messages=ERROR_MESSAGES)
+    cost_sa = forms.IntegerField(label='cena SA', error_messages=ERROR_MESSAGES)
+    cost_sb = forms.IntegerField(label='cena SB', error_messages=ERROR_MESSAGES)
+    cost_mode = forms.CharField(label='režim ceny', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=COST_MODE_CHOICES)) 
+    cost_sale = forms.BooleanField(label='aktivní sleva', required=False)
+    group_mode = forms.CharField(label='režim zápisu', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=GROUP_MODE_CHOICES)) 
     capacity = forms.IntegerField(label='kapacita', error_messages=ERROR_MESSAGES)
-    pending_limit = forms.IntegerField(label='fronta', error_messages=ERROR_MESSAGES)
+    pending_limit = forms.IntegerField(label='náhradníci', error_messages=ERROR_MESSAGES)
 
 
     class Meta:
         model = Course
-        fields = ( 'folder_key','season_key', 'active', 'order_value', 'code','name', 'period', 'first_period', 'place', 'teacher', 'cost_full', 'cost_student', 'cost_pair', 'group_mode', 'capacity', 'pending_limit' )
+        fields = ( 'folder_key','season_key', 'active', 'order_value', 'code','name', 'period', 'first_period', 'place', 'teacher', 
+                'cost_a', 'cost_b', 'cost_sa', 'cost_sb', 'cost_sale', 'cost_mode', 'group_mode', 'capacity', 'pending_limit' )
 
     def clean_code(self):
         data = self.cleaned_data['code']

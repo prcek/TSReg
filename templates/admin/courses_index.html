@@ -25,14 +25,17 @@
         <th>první lekce</th>
         <th>místo</th>
         <th>lektor</th>
-        <th>cena</th>
-        <th>cena student</th>
-        <th>cena v páru</th>
+        <th>cena A</th>
+        <th>cena B</th>
+        <th>cena SA</th>
+        <th>cena SB</th>
+        <th>mód ceny</th>
+        <th>sleva</th>
         <th>kapacita</th>
         <th>obsazeno</th>
         <th>k zaplacení</th>
-        <th>k zápisu</th>
-        <th>limit k zápisu</th>
+        <th>náhradníci</th>
+        <th>limit náhradníků</th>
         <th>operace</th>
     </tr>
     {% for c in course_list %}
@@ -49,9 +52,12 @@
             <td>{{c.first_period}}</td>
             <td>{{c.place}}</td>
             <td>{{c.teacher}}</td>
-            <td>{{c.cost_full}}</td>
-            <td>{{c.cost_student}}</td>
-            <td>{{c.cost_pair}}</td>
+            <td>{{c.cost_a}}</td>
+            <td>{{c.cost_b}}</td>
+            <td>{{c.cost_sa}}</td>
+            <td>{{c.cost_sb}}</td>
+            <td>{{c.cost_mode_loc}}</td>
+            <td>{{c.cost_sale|anone}}</td>
             <td>{{c.capacity}}</td>
             <td>{{c.usage}}</td>
             <td>{{c.pending_payment}}</td>
