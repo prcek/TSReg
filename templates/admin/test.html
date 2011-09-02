@@ -22,22 +22,28 @@
         <tr><th></th><th>x</th></tr>
         {% for l in lines %}
         <tr>
-            <td> <input class="check-action" type="checkbox" value="{{ l.key }}" {% if l.selected %}checked{% endif %} name="categories" /> </td>
+            <td> 
+              <div class="check-area">  <input class="check-action" type="checkbox" value="{{ l.key }}" {% if l.selected %}checked{% endif %} name="categories" /> </div>
+            </td>
             <td> {{ l.value }} </td>
         </tr>
         {% endfor %}
     </table>
+    <div class="form-table-opt">
 
-    <div><input id="select-all" type="checkbox" /><label for="select-all">vše</label></div>
+        <div class="check-area">
+            <input id="select-all" type="checkbox" />
+            <label for="select-all">vše</label>
+        </div>
+    
 
-    <div>
-    <label for="operation">Akce:</label>
-    <select id="operation" name="operation">
-        <option value="action_1">Akce1</option>
-        <option value="action_2">Akce2</option>
-    </select>
+        <label class="blind" for="operation">Akce:</label>
+        <select id="operation" name="operation">
+            <option value="action_1">Akce1</option>
+            <option value="action_2">Akce2</option>
+        </select>
+        <input class="button" type="submit" value="test">
     </div>
-    <input class="button" type="submit" value="test">
     </form>
     </div>
 

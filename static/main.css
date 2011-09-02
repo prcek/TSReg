@@ -233,3 +233,14 @@ ul.navi, li.navi {
 a.navi {
     color: #FF00FF;
 }
+
+.form-table-opt * {
+    float: left;
+    margin-right: 5px;
+}
+
+.form-table-opt {
+    padding: 9px 9px 9px 5px;
+    margin-bottom: 20px;
+}
+
