@@ -112,9 +112,8 @@ def recount_capacity(request):
         if s.status == 'nc':
             pending+=1
         elif s.status == 'e':
-            if s.paid_ok:
-                enrolled+=1
-            else:
+            enrolled+=1
+            if not s.paid_ok:
                 pending_payment+=1
 
 
@@ -122,17 +121,17 @@ def recount_capacity(request):
     course.pending_payment=pending_payment
     course.usage=enrolled
 
-    if (course.pending_limit!=0):
+    if (course.pending_limit!=-1):
         if (course.pending>=course.pending_limit):
             course.suspend = True
         else:
             course.suspend = False
 
-    if (course.capacity!=0):
-        if (course.usage>=course.capacity):
-            course.suspend = True
-        else:
-            course.suspend = False
+#    if (course.capacity!=0):
+#        if (course.usage>=course.capacity):
+#            course.suspend = True
+#        else:
+#            course.suspend = False
 
 
     course.save()
