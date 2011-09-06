@@ -21,6 +21,11 @@ def send_check_email(request):
 
     (subject,body) = mail.prepare_check_email_text(student,course)
     sender = cfg.getConfigString('ENROLL_EMAIL',None)
+
+    if sender is None:
+        logging.info('no sender, skip')
+        return HttpResponse('ok')
+
     recipient = student.email.__str__()
     
     logging.info('sending from "%s", to "%s", subject "%s", body "%s"'%(sender,recipient,subject,body))
@@ -42,6 +47,11 @@ def send_confirm_email(request):
 
     (subject,body) = mail.prepare_confirm_email_text(student,course)
     sender = cfg.getConfigString('ENROLL_EMAIL',None)
+    if sender is None:
+        logging.info('no sender, skip')
+        return HttpResponse('ok')
+
+
     recipient = student.email.__str__()
     
     logging.info('sending from "%s", to "%s", subject "%s", body "%s"'%(sender,recipient,subject,body))
@@ -64,6 +74,11 @@ def send_enroll_yes_email(request):
 
     (subject,body) = mail.prepare_enroll_yes_email_text(student,course)
     sender = cfg.getConfigString('ENROLL_EMAIL',None)
+    if sender is None:
+        logging.info('no sender, skip')
+        return HttpResponse('ok')
+
+
     recipient = student.email.__str__()
     
     logging.info('sending from "%s", to "%s", subject "%s", body "%s"'%(sender,recipient,subject,body))
@@ -86,6 +101,11 @@ def send_enroll_no_email(request):
 
     (subject,body) = mail.prepare_enroll_no_email_text(student,course)
     sender = cfg.getConfigString('ENROLL_EMAIL',None)
+    if sender is None:
+        logging.info('no sender, skip')
+        return HttpResponse('ok')
+
+
     recipient = student.email.__str__()
     
     logging.info('sending from "%s", to "%s", subject "%s", body "%s"'%(sender,recipient,subject,body))
