@@ -29,7 +29,7 @@
     {% for s in student_list_to_enroll %}
         <tr>
             <td> 
-              <div class="check-area">  <input class="check-action" id='select-all-slave' type="checkbox" value="{{ s.key.id }}" {% if l.selected %}checked{% endif %} name="spare_select" /> </div>
+              <div class="check-area">  <input class="check-action" id='select-s-slave' type="checkbox" value="{{ s.key.id }}" {% if l.selected %}checked{% endif %} name="spare_select" /> </div>
             </td>
  
             <td>{{forloop.counter}}</td>
@@ -44,8 +44,8 @@
     <tr>
         <td colspan=2>
             <div class="check-area">
-                <input id="select-all" type="checkbox" />
-                <label for="select-all">vše</label>
+                <input id="select-s" type="checkbox" />
+                <label for="select-s">vše</label>
             </div>
         </td>
         {% with '' as text %}
@@ -84,7 +84,7 @@
         <tr>
 
             <td> 
-              <div class="check-area">  <input class="check-action" id='select-all-slave' type="checkbox" value="{{ s.key.id }}" {% if l.selected %}checked{% endif %} name="enroll_select" /> </div>
+              <div class="check-area">  <input class="check-action" id='select-e-slave' type="checkbox" value="{{ s.key.id }}" {% if l.selected %}checked{% endif %} name="enroll_select" /> </div>
             </td>
  
             <td>{{forloop.counter}}</td>
@@ -99,8 +99,8 @@
     <tr>
         <td colspan=2>
             <div class="check-area">
-                <input id="select-all" type="checkbox" />
-                <label for="select-all">vše</label>
+                <input id="select-e" type="checkbox" />
+                <label for="select-e">vše</label>
             </div>
         </td>
         {% with '' as text %}
@@ -118,6 +118,13 @@
     </tr>
 {% endif %}
     </table>
+
+<script type="text/javascript">
+
+        TOOLS.bindSelect('select-s','select-s-slave');     
+        TOOLS.bindSelect('select-e','select-e-slave');     
+
+</script>
 
 {% endblock %}
 

@@ -10,6 +10,18 @@
                 return false;
         }
 
+        function err() {
+                var args = (arguments.length > 1) ? Array.prototype.join.call(arguments, " ") : arguments[0];
+                try { 
+                    console.error(args);
+                return true;
+                } catch(e) {  
+    
+                }
+                return false;
+        }
+
+
 
         TOOLS = {}
 
@@ -34,7 +46,16 @@
         }
 
 
-        TOOLS.addListener = function (elm,eType,func) {
+        TOOLS._getMethod = function(obj,func,elm){
+            if (typeof(func) == "string") {
+                return function(e){return obj[func].apply(obj,[e,elm])};
+            } else {
+                return function(e){return func.apply(obj,[e,elm])};
+            }
+        }
+
+
+        TOOLS._addListener = function (elm,eType,func) {
             if (document.addEventListener) {
                 if (window.opera && (elm == window)){
                     elm = document;
@@ -44,6 +65,25 @@
                 elm.attachEvent('on'+eType,func);
             }
             
+        }
+
+
+        TOOLS.addListener = function(elm, eType, obj, func) {
+            if (typeof(obj) == "function"){ 
+                log('addListener fce mode');
+                TOOLS._addListener(elm,eType,obj)
+            } else if (typeof(obj) == "object") {
+                log('addListener obj.fce mode');
+               
+                if (typeof(obj[func]) == "function") {
+                    method = TOOLS._getMethod(obj,func,elm);
+                    TOOLS._addListener(elm,eType,method);            
+                } else {
+                    log('addListener obj.fce error'); 
+                }
+            } else {
+                log('addListener error');
+            }
         }
 
         TOOLS.gEl = function(ids){
@@ -89,7 +129,7 @@
                TOOLS.stopEvent(e);
             }
         }
-
+/*
         TOOLS.selectAll = function (e, elm) {
             var selects = TOOLS.getElementsByClass('check-action', null, 'input'); 
             var me = TOOLS.gEl('select-all')
@@ -102,30 +142,43 @@
             }
             
         }
+*/
 
-        TOOLS.selector = function(mark) {
+        TOOLS.selector = function(mark,slave) {
             log('new selector for mark =', mark)
             this.mark = mark;
-            this._select();
+            this.slave = slave;
+
+            if (TOOLS.gEl(mark)) {
+                TOOLS.addListener(TOOLS.gEl(mark), 'click', this, '_select');
+            } else {
+                err('mark not found!');
+            }
         }
 
 
         TOOLS.selector.prototype._select = function() {
-            log('_select function -', this.mark);
-        }
+            log('selector._select function - mark ', this.mark);
+            log('selector._select function - slave ', this.slave);
 
-        TOOLS.bindSelect = function (mark, selectFce) {
-            log('bindSelect')
-            s1 = new TOOLS.selector('a');
-            s2 = new TOOLS.selector('b');
-/*            s1._select()
-            s2._select() */
+            var me = TOOLS.gEl(this.mark);
+            checked = me.checked; 
+            log('me.checked = ',checked)
 
-            if(TOOLS.gEl(mark)) {
-                TOOLS.addListener(TOOLS.gEl(mark), 'click', selectFce);
+            var selects = TOOLS.getElementsByClass('check-action', null, 'input'); 
+             for(var i = 0; i < selects.length; i++) {
+                log('select ', selects[i], ' ' , selects[i].id);
+                if ((selects[i].disabled == false) && (selects[i].id == this.slave)) {
+                    selects[i].checked = checked;
+                    log('ap');
+                } 
             }
+            
         }
 
+        TOOLS.bindSelect = function (mark, slave) {
+            s1  = new TOOLS.selector(mark,slave);
+        }
 
 
 
