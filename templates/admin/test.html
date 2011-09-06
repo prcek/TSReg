@@ -23,7 +23,7 @@
         {% for l in lines %}
         <tr>
             <td> 
-              <div class="check-area">  <input class="check-action" type="checkbox" value="{{ l.key }}" {% if l.selected %}checked{% endif %} name="categories" /> </div>
+              <div class="check-area">  <input class="check-action" id='select-all-slave' type="checkbox" value="{{ l.key }}" {% if l.selected %}checked{% endif %} name="categories" /> </div>
             </td>
             <td> {{ l.value }} </td>
         </tr>

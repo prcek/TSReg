@@ -4,6 +4,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <link href="/static/main.css" type="text/css" rel="stylesheet" media="all"></link>
+    <script type="text/javascript" src="/static/tools.js"></script>
     <title>{% block title %}no title defined{% endblock %}</title>
 </head>
 <body>
@@ -26,103 +27,7 @@
 {% endblock %}
     </div>
     <script type="text/javascript">
-        TOOLS = {}
 
-
-        TOOLS.stopEvent = function(e) {
-            var e = e || window.event;
-            if (e.stopPropagation){
-                e.stopPropagation();
-            } else { 
-                e.cancelBubble = true;
-            }
-        }
-
-
-        TOOLS.cancelDef = function(e) {
-            var e = e || window.event;
-            if(e.preventDefault) {
-                e.preventDefault();
-            } else {
-                e.returnValue = false;
-            }
-        }
-
-
-        TOOLS.addListener = function (elm,eType,func) {
-            if (document.addEventListener) {
-                if (window.opera && (elm == window)){
-                    elm = document;
-                }
-                elm.addEventListener(eType,func,false);
-            } else if (document.attachEvent) {
-                elm.attachEvent('on'+eType,func);
-            }
-            
-        }
-
-        TOOLS.gEl = function(ids){
-            if (typeof(ids) == "string") {
-                return document.getElementById(ids);
-            } else { return ids; }
-        }
-
-
-        TOOLS.getElementsByClass = function (searchClass,node,tag) {
-            var classElements = [];
-            var node = node || document;
-            var tag = tag || "*";
-
-            var els = node.getElementsByTagName(tag);
-            var elsLen = els.length;
-        
-            var pattern = new RegExp("(^|\\s)"+searchClass+"(\\s|$)");
-            for (var i = 0, j = 0; i < elsLen; i++) {
-                    if (pattern.test(els[i].className)) {
-                            classElements[j] = els[i];
-                            j++;
-                    }
-            }
-            return classElements;
-        }
-        TOOLS.setupConfirm = function (confirmClass, confirmFce) {
-            var hrefs = TOOLS.getElementsByClass(confirmClass,null);
-            for(var i = 0; i < hrefs.length; i++) {
-                TOOLS.addListener(hrefs[i],"click",confirmFce);
-            } 
-        }
-       
-        TOOLS.confirmDel = function (e, elm) {
-            if (!confirm("Opravdu smazat?")) {
-               TOOLS.cancelDef(e);
-               TOOLS.stopEvent(e);
-            }
-        }
-        TOOLS.confirmKick = function (e, elm) {
-            if (!confirm("Opravdu vyřadit/odmítnout?")) {
-               TOOLS.cancelDef(e);
-               TOOLS.stopEvent(e);
-            }
-        }
-
-        TOOLS.selectAll = function (e, elm) {
-            var selects = TOOLS.getElementsByClass('check-action', null, 'input'); 
-            var me = TOOLS.gEl('select-all')
-            checked = me.checked;
-
-            for(var i = 0; i < selects.length; i++) {
-                if (selects[i].disabled == false) {
-                    selects[i].checked = checked;
-                }
-            }
-            
-        }
-
-        TOOLS.bindSelect = function (mark, selectFce) {
-            if(TOOLS.gEl(mark)) {
-                TOOLS.addListener(TOOLS.gEl(mark), 'click', selectFce);
-            }
-        }
 
         TOOLS.bindSelect('select-all',TOOLS.selectAll);    
 

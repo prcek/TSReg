@@ -14,19 +14,24 @@
     <table>
 {% if student_list_to_enroll %}
     <tr>
-        <td></td>
+        <td colspan=2></td>
         {% with 'Náhradníci' as text %}
         {% include "admin/st_table_sep_line.html" %}
         {% endwith %}
         <td></td>
     </tr>
     <tr>
+        <th></th>
         <th>p.č</th>
         {% include "admin/st_table_header.html" %}
         <th>operace</th>
     </tr>
     {% for s in student_list_to_enroll %}
         <tr>
+            <td> 
+              <div class="check-area">  <input class="check-action" id='select-all-slave' type="checkbox" value="{{ s.key.id }}" {% if l.selected %}checked{% endif %} name="spare_select" /> </div>
+            </td>
+ 
             <td>{{forloop.counter}}</td>
             {% include "admin/st_table_row.html" %}
             <td>
@@ -36,9 +41,22 @@
             </td>
         </tr>
     {% endfor %}
+    <tr>
+        <td colspan=2>
+            <div class="check-area">
+                <input id="select-all" type="checkbox" />
+                <label for="select-all">vše</label>
+            </div>
+        </td>
+        {% with '' as text %}
+        {% include "admin/st_table_sep_line.html" %}
+        {% endwith %}
+        <td></td>
+    </tr>
+
 {% else %}
     <tr>
-        <td></td>
+        <td colspan=2></td>
         {% with 'Žádný náhradník' as text %}
         {% include "admin/st_table_sep_line.html" %}
         {% endwith %}
@@ -50,19 +68,25 @@
 
 {% if student_list_enrolled %}
     <tr>
-        <td></td>
+        <td colspan=2></td>
         {% with 'Žáci zapsaní do kurzu' as text %}
         {% include "admin/st_table_sep_line.html" %}
         {% endwith %}
         <td></td>
     </tr>
     <tr>
+        <th></th>
         <th>p.č</th>
         {% include "admin/st_table_header.html" %}
         <th>operace</th>
     </tr>
     {% for s in student_list_enrolled %}
         <tr>
+
+            <td> 
+              <div class="check-area">  <input class="check-action" id='select-all-slave' type="checkbox" value="{{ s.key.id }}" {% if l.selected %}checked{% endif %} name="enroll_select" /> </div>
+            </td>
+ 
             <td>{{forloop.counter}}</td>
             {% include "admin/st_table_row.html" %}
             <td>
@@ -72,9 +96,21 @@
             </td>
         </tr>
     {% endfor %}
+    <tr>
+        <td colspan=2>
+            <div class="check-area">
+                <input id="select-all" type="checkbox" />
+                <label for="select-all">vše</label>
+            </div>
+        </td>
+        {% with '' as text %}
+        {% include "admin/st_table_sep_line.html" %}
+        {% endwith %}
+        <td></td>
+    </tr>
 {% else %}
     <tr>
-        <td></td>
+        <td colspan=2></td>
         {% with 'Kurz je prázdný' as text %}
         {% include "admin/st_table_sep_line.html" %}
         {% endwith %}

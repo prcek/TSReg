@@ -90,6 +90,9 @@ def students_table(output,course,students):
         data.append([i,s.ref_key,s.surname,s.name])
         i+=1
    # logging.info(data) 
+
+    #TODO: add spare students
+
     t=Table(data)
     t.setStyle(TableStyle([
 #        ('BACKGROUND',(1,1),(-2,-2),colors.green),
