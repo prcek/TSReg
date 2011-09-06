@@ -140,20 +140,25 @@ def recount_capacity(request):
         logging.info(s)
         if s.addressing == 'p':
             m=True
+            logging.info('male')
         elif s.addressing == 's' or s.addressing == 'd':
             f=True
+            logging.info('female')
 
 
         if s.status == 'nc':
             pending+=1
+            logging.info('spare')
             if m:
                 pending_m+=1
             if f:
                 pending_f+=1
             if s.paid_ok:
+                logging.info('paid')
                 pending_p+=1
                 
         elif s.status == 'e':
+            logging.info('enrolled')
             enrolled+=1
             if m:
                 enrolled_m+=1
@@ -163,6 +168,7 @@ def recount_capacity(request):
             if not s.paid_ok:
                 pending_payment+=1
             else:
+                logging.info('paid')
                 enrolled_p+=1
 
 
@@ -176,6 +182,8 @@ def recount_capacity(request):
     course.stat_s_f = pending_f
     course.stat_e_p = enrolled_p
     course.stat_s_p = pending_p
+
+    logging.info('capacity stats: %d/%d, %d/%d, %d/%d'%( enrolled_m, pending_m, enrolled_f, pending_f, enrolled_p, pending_p))
 
 
 
