@@ -117,10 +117,14 @@ def index(request):
 
 def index_course(request, course_id):
     course = Course.get_by_id(int(course_id))  
+    if course is None:
+        raise Http404
     student_list_to_enroll=Student.list_for_course_to_enroll(course.key())
     student_list_enrolled=Student.list_for_course_enrolled(course.key())
 
+
     return render_to_response('admin/course_students.html', RequestContext(request, { 
+        'course': course,
         'student_list_to_enroll': student_list_to_enroll,  
         'student_list_enrolled': student_list_enrolled,  
     }))
