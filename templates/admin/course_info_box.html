@@ -4,7 +4,7 @@
     <tr><th> {{ course.code }} </th> <th> {{ course.name }} ({{course.folder_name|nonone}}, {{course.season_name|nonone}})</th> </tr>
     <tr><td> místo;lektor;termíny </td> <td> {{course.place}};{{course.teacher}};{{course.first_period}}/{{course.period}} </td> </tr>
     <tr><td> aktivní;pozastaveno </td> <td>{{course.active|anone }};{{course.suspend|anone }}</td> </tr>
-    <tr><td> kapacita (aktuální/max) </td> <td> zapsaní: x/y, náhradníci: x/y </td> </tr>
+    <tr><td> kapacita (aktuální/max) </td> <td> zapsaní: {{course.usage}}/{{course.capacity}}, náhradníci: {{course.pending}}/{{course.pending_limit}} </td> </tr>
     <tr><td> statistika (zapsaní./náhr.) </td> <td>  pánové:  x/y, dámy: x/y, zaplaceno: x/y, nezaplaceno: x/y </td></tr>
     </table>
 
