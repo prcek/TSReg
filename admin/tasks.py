@@ -125,21 +125,59 @@ def recount_capacity(request):
     if course is None:
         raise Http404
     pending = 0
+    pending_m = 0
+    pending_f = 0
+    pending_p = 0
     enrolled = 0
+    enrolled_m = 0
+    enrolled_f = 0
+    enrolled_p = 0
     pending_payment = 0
     list = Student.list_for_course(course.key())
+    m = False
+    f = False
     for s in list:
+        logging.info(s)
+        if s.addressing == 'p':
+            m=True
+        elif s.addressing == 's' or s.addressing == 'd':
+            f=True
+
+
         if s.status == 'nc':
             pending+=1
+            if m:
+                pending_m+=1
+            if f:
+                pending_f+=1
+            if s.paid_ok:
+                pending_p+=1
+                
         elif s.status == 'e':
             enrolled+=1
+            if m:
+                enrolled_m+=1
+            if f:
+                enrolled_f+=1
+ 
             if not s.paid_ok:
                 pending_payment+=1
+            else:
+                enrolled_p+=1
 
 
     course.pending=pending
     course.pending_payment=pending_payment
     course.usage=enrolled
+
+    course.stat_e_m = enrolled_m
+    course.stat_s_m = pending_m
+    course.stat_e_f = enrolled_f
+    course.stat_s_f = pending_f
+    course.stat_e_p = enrolled_p
+    course.stat_s_p = pending_p
+
+
 
     if (course.pending_limit!=-1):
         if (course.pending>=course.pending_limit):

@@ -99,7 +99,14 @@ class Course(BaseModel):
     pending_payment = db.IntegerProperty(default=0)
     pending = db.IntegerProperty(default=0)
     pending_limit = db.IntegerProperty(default=0)
+    stat_e_m =  db.IntegerProperty(default=0)
+    stat_s_m =  db.IntegerProperty(default=0)
+    stat_e_f =  db.IntegerProperty(default=0)
+    stat_s_f =  db.IntegerProperty(default=0)
+    stat_e_p =  db.IntegerProperty(default=0)
+    stat_s_p =  db.IntegerProperty(default=0)
     hidden = db.BooleanProperty(default=False)
+
 
     def folder_name(self):
         return Folder.get_name_by_key(self.folder_key)
