@@ -226,6 +226,21 @@ def kick(request,student_id,course_id=None):
  
     return redirect('../..')
  
+def spare(request,student_id,course_id=None):
+    student = Student.get_by_id(int(student_id))
+    if student is None:
+        raise Http404
+
+    if (student.status == 'e') or (student.status == 'k'):
+        student.status = 'nc'
+        student.save()
+#        taskqueue.add(url='/task/send_enroll_no_email/', params={'student_id':student.key().id()})
+#        if not (course_id is None):
+#            taskqueue.add(url='/task/recount_capacity/', params={'course_id':course_id})
+ 
+    return redirect('../..')
+ 
+
 def course_emails(request, course_id):
     course = Course.get_by_id(int(course_id))  
     student_list_to_enroll=Student.list_for_course_to_enroll(course.key())

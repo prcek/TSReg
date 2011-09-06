@@ -10,127 +10,78 @@
     <a class='button' href='pdf'>tisknout</a>
     <a class='button' href='.'>přenačíst</a>
 
-    <br><br>Přehled žáků k zápisu<br>
-
-{% if student_list_to_enroll %}
+    <br><br>
     <table>
+{% if student_list_to_enroll %}
     <tr>
-        <th>p.č.</th>
-        <th>stav</th>
-        <th>čas přihlášky</th>
-        <th>kurz</th>
-        <th>referenční číslo</th>
-        <th>oslovení</th>
-        <th>jméno</th>
-        <th>příjmení</th>
-        <th>email</th>
-        <th>telefon</th>
-        <th>rok</th>
-        <th>student</th>
-        <th>cena</th>
-        <th>zaplaceno</th>
-        <th>ulice</th>
-        <th>číslo</th> 
-        <th>město</th>
-        <th>psč</th> 
-        <th>partner</th>
-        <th>poznámka</th> 
+        <td></td>
+        {% with 'Náhradníci' as text %}
+        {% include "admin/st_table_sep_line.html" %}
+        {% endwith %}
+        <td></td>
+    </tr>
+    <tr>
+        <th>p.č</th>
+        {% include "admin/st_table_header.html" %}
         <th>operace</th>
     </tr>
     {% for s in student_list_to_enroll %}
         <tr>
             <td>{{forloop.counter}}</td>
-            <td>{{s.status_loc}}</td>
-            <td>{{s.reg_datetime}}</td>
-            <td>{{s.course_code}}</td>
-            <td>{{s.ref_key}}</td>
-            <td>{{s.addressing_loc}}</td>
-            <td>{{s.name}}</td>
-            <td>{{s.surname}}</td>
-            <td>{{s.email}}</td>
-            <td>{{s.phone|nonone}}</td>
-            <td>{% if s.year %}{{s.year}}{% else %}&nbsp;{%endif%}</td>
-            <td>{{s.student|anone}}</td>
-            <td>{{s.to_pay|nonone}}</td>
-            <td>{{s.paid_ok|anone}}</td>
-            <td>{{s.street|nonone}}</td>
-            <td>{{s.street_no|nonone}}</td>
-            <td>{{s.city|nonone}}</td>
-            <td>{{s.post_code|nonone}}</td>
-            <td>{{s.partner_ref_code|nonone}}</td>
-            <td>{{s.comment|nonone}}</td>
+            {% include "admin/st_table_row.html" %}
             <td>
                 <a class='button' href='{{s.key.id}}/enroll/'>zapsat</a>
-                <a class='kbutton' href='{{s.key.id}}/kick/'>odmítnout</a>
                 <a class='button' href='{{s.key.id}}/edit/'>editovat</a>
+                <a class='kbutton' href='{{s.key.id}}/kick/'>vyřadit</a>
             </td>
         </tr>
     {% endfor %}
-    </table>
 {% else %}
-    žádný student k zápisu<br>
+    <tr>
+        <td></td>
+        {% with 'Žádný náhradník' as text %}
+        {% include "admin/st_table_sep_line.html" %}
+        {% endwith %}
+        <td></td>
+    </tr>
+ 
 {% endif %}
 
-    <br><br>Přehled žáků v kurzu<br>
 
 {% if student_list_enrolled %}
-    <table>
     <tr>
-        <th>p.č.</th>
-        <th>stav</th>
-        <th>čas přihlášky</th>
-        <th>kurz</th>
-        <th>referenční číslo</th>
-        <th>oslovení</th>
-        <th>jméno</th>
-        <th>příjmení</th>
-        <th>email</th>
-        <th>telefon</th>
-        <th>rok</th>
-        <th>student</th>
-        <th>cena</th>
-        <th>zaplaceno</th>
-        <th>ulice</th>
-        <th>číslo</th> 
-        <th>město</th>
-        <th>psč</th> 
-        <th>partner</th>
-        <th>poznámka</th> 
+        <td></td>
+        {% with 'Žáci zapsaní do kurzu' as text %}
+        {% include "admin/st_table_sep_line.html" %}
+        {% endwith %}
+        <td></td>
+    </tr>
+    <tr>
+        <th>p.č</th>
+        {% include "admin/st_table_header.html" %}
         <th>operace</th>
     </tr>
     {% for s in student_list_enrolled %}
         <tr>
             <td>{{forloop.counter}}</td>
-            <td>{{s.status_loc}}</td>
-            <td>{{s.reg_datetime}}</td>
-            <td>{{s.course_code}}</td>
-            <td>{{s.ref_key}}</td>
-            <td>{{s.addressing_loc}}</td>
-            <td>{{s.name}}</td>
-            <td>{{s.surname}}</td>
-            <td>{{s.email}}</td>
-            <td>{{s.phone|nonone}}</td>
-            <td>{% if s.year %}{{s.year}}{% else %}&nbsp;{%endif%}</td>
-            <td>{{s.student|anone}}</td>
-            <td>{{s.to_pay|nonone}}</td>
-            <td>{{s.paid_ok|anone}}</td>
-            <td>{{s.street|nonone}}</td>
-            <td>{{s.street_no|nonone}}</td>
-            <td>{{s.city|nonone}}</td>
-            <td>{{s.post_code|nonone}}</td>
-            <td>{{s.partner_ref_code|nonone}}</td>
-            <td>{{s.comment|nonone}}</td>
+            {% include "admin/st_table_row.html" %}
             <td>
-                <a class='kbutton' href='{{s.key.id}}/kick/'>vyřadit</a>
+                <a class='button' href='{{s.key.id}}/spare/'>náhradník</a>
                 <a class='button' href='{{s.key.id}}/edit/'>editovat</a>
+                <a class='kbutton' href='{{s.key.id}}/kick/'>vyřadit</a>
             </td>
         </tr>
     {% endfor %}
-    </table>
 {% else %}
-    žádný student v kurzu<br>
+    <tr>
+        <td></td>
+        {% with 'Kurz je prázdný' as text %}
+        {% include "admin/st_table_sep_line.html" %}
+        {% endwith %}
+        <td></td>
+    </tr>
 {% endif %}
-
+    </table>
 
 {% endblock %}
 
