@@ -1,1 +1,40 @@
-course info box
+
+{% if course %}
+    <table>
+    <tr><th> {{ course.code }} </th> <th> {{ course.name }} ({{course.folder_name|nonone}}, {{course.season_name|nonone}})</th> </tr>
+    <tr><td> místo;lektor;termíny </td> <td> {{course.place}};{{course.teacher}};{{course.first_period}}/{{course.period}} </td> </tr>
+    <tr><td> aktivní;pozastaveno </td> <td>{{course.active|anone }};{{course.suspend|anone }}</td> </tr>
+    <tr><td> kapacita (aktuální/max) </td> <td> zapsaní: x/y, náhradníci: x/y </td> </tr>
+    <tr><td> statistika (zapsaní./náhr.) </td> <td>  pánové:  x/y, dámy: x/y, zaplaceno: x/y, nezaplaceno: x/y </td></tr>
+    </table>
+
+
+{% if 0 %}
+  <td>{{c.active|anone }}</td>
+            <td>{{c.suspend|anone }}</td>
+            <td>{{c.order_value}}</td>
+            <td>{{c.code}}</td>
+            <td>{{c.name}}</td>
+            <td>{{c.season_name|nonone}}</td>
+            <td>{{c.folder_name|nonone}}</td>
+            <td>{{c.group_mode_loc}}</td>
+            <td>{{c.period}}</td>
+            <td>{{c.first_period}}</td>
+            <td>{{c.place}}</td>
+            <td>{{c.teacher}}</td>
+            <td>{{c.cost_a}}</td>
+            <td>{{c.cost_b}}</td>
+            <td>{{c.cost_sa}}</td>
+            <td>{{c.cost_sb}}</td>
+            <td>{{c.cost_mode_loc}}</td>
+            <td>{{c.cost_sale|anone}}</td>
+            <td>{{c.capacity}}</td>
+            <td>{{c.usage}}</td>
+            <td>{{c.pending}}</td>
+            <td>{{c.pending_limit}}</td>
+
+{% endif %}
+
+{% else %}
+    kurz není
+{% endif %}
