@@ -134,31 +134,31 @@ def recount_capacity(request):
     enrolled_p = 0
     pending_payment = 0
     list = Student.list_for_course(course.key())
-    m = False
-    f = False
     for s in list:
-        logging.info(s)
+#        logging.info(s)
+        m = False
+        f = False
         if s.addressing == 'p':
             m=True
-            logging.info('male')
+#            logging.info('male')
         elif s.addressing == 's' or s.addressing == 'd':
             f=True
-            logging.info('female')
+#            logging.info('female')
 
 
         if s.status == 'nc':
             pending+=1
-            logging.info('spare')
+#            logging.info('spare')
             if m:
                 pending_m+=1
             if f:
                 pending_f+=1
             if s.paid_ok:
-                logging.info('paid')
+#                logging.info('paid')
                 pending_p+=1
                 
         elif s.status == 'e':
-            logging.info('enrolled')
+#            logging.info('enrolled')
             enrolled+=1
             if m:
                 enrolled_m+=1
@@ -168,9 +168,10 @@ def recount_capacity(request):
             if not s.paid_ok:
                 pending_payment+=1
             else:
-                logging.info('paid')
+ #               logging.info('paid')
                 enrolled_p+=1
 
+  #      logging.info('iiii - capacity stats: %d/%d, %d/%d, %d/%d'%( enrolled_m, pending_m, enrolled_f, pending_f, enrolled_p, pending_p))
 
     course.pending=pending
     course.pending_payment=pending_payment
