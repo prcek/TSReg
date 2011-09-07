@@ -239,8 +239,8 @@ def spare(request,student_id,course_id=None):
         student.status = 'nc'
         student.save()
 #        taskqueue.add(url='/task/send_enroll_no_email/', params={'student_id':student.key().id()})
-#        if not (course_id is None):
-#            taskqueue.add(url='/task/recount_capacity/', params={'course_id':course_id})
+        if not (course_id is None):
+            taskqueue.add(url='/task/recount_capacity/', params={'course_id':course_id})
  
     return redirect('../..')
  
