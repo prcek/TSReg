@@ -5,10 +5,25 @@
 
 {% block content %}
 
+
+{% if 0 %}
 Ověřovací email:<input type="text" value="{{ check_subject }}" /><br><textarea  rows="20" cols="160" name="text">{{ check_text}}</textarea><br><br>
 Potvzení ověření:<input type="text" value="{{ confirm_subject }}" /><br><textarea  rows="20" cols="160" name="text">{{ confirm_text}}</textarea><br><br>
 Informace o úspěšném zápisu:<input type="text" value="{{ enroll_yes_subject }}" /><br><textarea  rows="20" cols="160" name="text">{{ enroll_yes_text}}</textarea><br><br>
 Informace o neúspěšném zápisu:<input type="text" value="{{ enroll_no_subject }}" /><br><textarea  rows="20" cols="160" name="text">{{ enroll_no_text}}</textarea><br><br>
+{% endif %}
+
+<table>
+<tr><th>ID/předmět</th><th>text</th></tr>
+{% for e in emails %}
+    <tr>
+        <td>{{ e.key }}</td><td rowspan=2><textarea  rows="20" cols="160" name="text">{{ e.body }}</textarea></td>
+    </tr>
+    <tr>
+        <td>{{ e.subject }}</td>
+    </tr>
+{% endfor %}
+</table>
 
 {% endblock %}
 

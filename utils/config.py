@@ -107,17 +107,18 @@ def setupConfig():
     createConfig('ENROLL_ENROLL_ON', '0')
     createConfig('ENROLL_CHECK_URL_BASE', 'http://localhost:8080/zapis/potvrdit/')
     createConfig('ENROLL_EMAIL','info@appid.appspotmail.com')
+    createConfig('ENROLL_EMAIL_SIGNATURE','mail signature')
     createConfig('ENROLL_CHECK_TIMEOUT_MINUTES','60')
+    
 
-    createConfig('ENROLL_CONFIRM_EMAIL_SUBJECT',u'Přihláška $ref byla potvrzena')
-    createConfig('ENROLL_CONFIRM_EMAIL_BODY',u'Přihláška $ref byla potvrzena')
-    createConfig('ENROLL_CHECK_EMAIL_SUBJECT',u'Potvrdit přihlásku $ref zde $link')
-    createConfig('ENROLL_CHECK_EMAIL_BODY',u'Potvrdit přihlásku $ref zde $link')
-    createConfig('ENROLL_ENROLL_YES_EMAIL_SUBJECT', u'Přihláska $ref byla zařazena do kurzu $kurz')
-    createConfig('ENROLL_ENROLL_YES_EMAIL_BODY', u'Přihláska $ref byla zařazena do kurzu $kurz')
-    createConfig('ENROLL_ENROLL_NO_EMAIL_SUBJECT', u'Přihláška $ref byla zamítnuta')
-    createConfig('ENROLL_ENROLL_NO_EMAIL_BODY', u'Přihláška $ref byla zamítnuta')
+    from utils.mail import MAIL_TEMPLATES
+    for k in MAIL_TEMPLATES:
+        createConfig('ENROLL_%s_SUBJECT'%k,u'Předmět - %s'%k)
+        createConfig('ENROLL_%s_BODY'%k,u'Text - %s'%k)
    
+    
+
+
     createConfig('CRYPTO_TABLE_I','0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ') 
     createConfig('CRYPTO_TABLE_O','0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ') 
 

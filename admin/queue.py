@@ -1,0 +1,37 @@
+# -*- coding: utf-8 -*-
+
+from google.appengine.api import taskqueue
+from django.http import Http404
+
+
+from enroll.models import Student,Course
+import utils.config as cfg
+import utils.mail as mail
+import utils.pdf as pdf
+import logging
+import urllib
+
+def plan_send_student_email(template_key, student, course=None):
+
+    if not template_key in mail.MAIL_TEMPLATES:
+        logging.info('plan_send_student_email - invalid template - "%s"'%template_key)
+        raise Http404
+
+    if student is None:
+        logging.info('plan_send_student_email - student is None!')
+        raise Http404
+
+    taskqueue.add(url='/task/send_student_email/', params={'template_key':template_key,'student_id':student.key().id()})
+
+
+def plan_update_course(course):
+    if not course is None:
+        if isinstance(course,Course): 
+            taskqueue.add(url='/task/recount_capacity/', params={'course_id':course.key().id()})
+        elif isinstance(course,(int,basestring)):
+            taskqueue.add(url='/task/recount_capacity/', params={'course_id':course})
+        else:            
+            logging.info('plan_recount_course - course is wrong')
+            raise Http404
+    else:
+        logging.info('plan_recount_course - course is None, skip')

@@ -4,9 +4,10 @@ from django import forms
 from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext,Context, loader
-from google.appengine.api import taskqueue
+#from google.appengine.api import taskqueue
 
 from enroll.models import Student,Course
+from admin.queue import plan_send_student_email, plan_update_course
 import utils.config as cfg
 import utils.mail as mail
 import utils.pdf as pdf
@@ -144,8 +145,7 @@ def edit(request, student_id,course_id=None):
             student.save()
 
             course_id = student.get_course_id()
-            if not (course_id is None):
-                taskqueue.add(url='/task/recount_capacity/', params={'course_id':course_id})
+            plan_update_course(course_id)
 
             return redirect('../..')
     else:
@@ -171,8 +171,7 @@ def create(request, course_id=None):
             student.save()
 
             course_id = student.get_course_id()
-            if not (course_id is None):
-                taskqueue.add(url='/task/recount_capacity/', params={'course_id':course_id})
+            plan_update_course(course_id)
 
             return redirect('..')
     else:
@@ -186,20 +185,14 @@ def email(request,student_id):
         raise Http404
     course = student.get_course()
 
-    (check_subject,check_text) = mail.prepare_check_email_text(student,course)
-    (confirm_subject,confirm_text) = mail.prepare_confirm_email_text(student,course)
-    (enroll_yes_subject,enroll_yes_text) = mail.prepare_enroll_yes_email_text(student,course)
-    (enroll_no_subject,enroll_no_text) = mail.prepare_enroll_no_email_text(student,course)
+
+    emails = []
+    for k in mail.MAIL_TEMPLATES:
+        (subject,body) = mail.prepare_email_text(k, student,course)
+        emails.append({'key':k, 'subject':subject, 'body':body}) 
 
     return render_to_response('admin/students_email.html', RequestContext(request, {
-        'check_subject':check_subject,
-        'check_text':check_text,
-        'confirm_subject':confirm_subject,
-        'confirm_text':confirm_text,
-        'enroll_yes_subject':enroll_yes_subject,
-        'enroll_yes_text':enroll_yes_text,
-        'enroll_no_subject':enroll_no_subject,
-        'enroll_no_text':enroll_no_text,
+        'emails':emails
     }))
 
 def enroll(request,student_id,course_id=None):
@@ -210,9 +203,8 @@ def enroll(request,student_id,course_id=None):
     if student.status == 'nc':
         student.status = 'e'
         student.save()
-        taskqueue.add(url='/task/send_enroll_yes_email/', params={'student_id':student.key().id()})
-        if not (course_id is None):
-            taskqueue.add(url='/task/recount_capacity/', params={'course_id':course_id})
+        plan_send_student_email('CONFIRM_ENROLL_EMAIL', student)
+        plan_update_course(course_id)
  
     return redirect('../..')
     
@@ -224,9 +216,8 @@ def kick(request,student_id,course_id=None):
     if (student.status == 'nc') or (student.status == 'e'):
         student.status = 'k'
         student.save()
-        taskqueue.add(url='/task/send_enroll_no_email/', params={'student_id':student.key().id()})
-        if not (course_id is None):
-            taskqueue.add(url='/task/recount_capacity/', params={'course_id':course_id})
+        plan_send_student_email('NOTIFY_KICK_EMAIL', student)
+        plan_update_course(course_id)
  
     return redirect('../..')
  
@@ -238,9 +229,7 @@ def spare(request,student_id,course_id=None):
     if (student.status == 'e') or (student.status == 'k'):
         student.status = 'nc'
         student.save()
-#        taskqueue.add(url='/task/send_enroll_no_email/', params={'student_id':student.key().id()})
-        if not (course_id is None):
-            taskqueue.add(url='/task/recount_capacity/', params={'course_id':course_id})
+        plan_update_course(course_id)
  
     return redirect('../..')
  

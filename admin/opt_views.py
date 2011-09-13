@@ -32,28 +32,67 @@ def index(request):
     items = {}
     keys = [
         'b_enroll_on',
+
+        't_email_signature',
         's_check_email_subject', 
         't_check_email_body',
-        's_confirm_email_subject',
-        't_confirm_email_body',
-        's_enroll_yes_email_subject',
-        't_enroll_yes_email_body',
-        's_enroll_no_email_subject',
-        't_enroll_no_email_body'
+
+        's_confirm_enroll_email_subject',
+        't_confirm_enroll_email_body',
+        's_confirm_enroll_and_pay_email_subject',
+        't_confirm_enroll_and_pay_email_body',
+        's_confirm_spare_email_subject',
+        't_confirm_spare_email_body',
+
+        's_notify_transfer_email_subject',
+        't_notify_transfer_email_body',
+
+        's_notify_paid_email_subject',
+        't_notify_paid_email_body',
+
+        's_notify_cancel_email_subject',
+        't_notify_cancel_email_body',
+ 
+        's_notify_spare_email_subject',
+        't_notify_spare_email_body',
+
+        's_notify_kick_email_subject',
+        't_notify_kick_email_body',
+
+
      ]
     labels = {
         'b_enroll_on':'globální povolení zápisu',
+
+        't_email_signature':'patička emailu',
         's_check_email_subject':'předmět ověřovacího emailu',
         't_check_email_body':'ověřovací email',
 
-        's_confirm_email_subject':'předmět potvrzovací email',
-        't_confirm_email_body':'potvrzovací email',
+        's_confirm_enroll_email_subject':'předmět potvrzovací email',
+        't_confirm_enroll_email_body':'potvrzovací email',
+        's_confirm_enroll_and_pay_email_subject':'předmět potvrzovací email s výzvou k platbě',
+        't_confirm_enroll_and_pay_email_body':'potvrzovací email s výzvou k platbě',
+        's_confirm_spare_email_subject':'předmět potvrzovací email - náhradník',
+        't_confirm_spare_email_body':'potvrzovací email - náhradník',
 
-        's_enroll_yes_email_subject':'předmět přijímací email',
-        't_enroll_yes_email_body':'přijímací email',
+          
+        's_notify_transfer_email_subject':'předmět oznámení o přeřazení',
+        't_notify_transfer_email_body':'oznámení o přerazení email',
+        
+        's_notify_paid_email_subject':'předmět oznámení o zaplacení',
+        't_notify_paid_email_body':'oznámení o zaplacení email',
+ 
+        's_notify_cancel_email_subject':'předmět oznámení o zrušení kurzu',
+        't_notify_cancel_email_body':'oznámení o zrušení kurzu email',
 
-        's_enroll_no_email_subject':'předmět odmítací email',
-        't_enroll_no_email_body':'odmítací email',
+        's_notify_spare_email_subject':'předmět oznámení o přesunu mezi náhradníky',
+        't_notify_spare_email_body':'oznámení o přesunu mezi náhradníky email',
+
+        's_notify_kick_email_subject':'předmět oznámení o vyřazení z kurzu',
+        't_notify_kick_email_body':'oznámení o vyřazení z kurzu email',
+
+
+
          }
 
     if request.method == 'POST':

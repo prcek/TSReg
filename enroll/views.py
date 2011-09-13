@@ -11,7 +11,8 @@ from enroll.models import Folder,Course,Student
 from utils import captcha
 from utils import config
 
-from google.appengine.api import taskqueue
+from admin.queue import plan_send_student_email, plan_update_course
+
 
 import logging
 import os
@@ -192,7 +193,7 @@ def attend(request,course_id):
                 st.init_ref_codes()
                 st.save()
                 ref_code = st.ref_key
-                taskqueue.add(url='/task/send_check_email/', params={'student_id':st.key().id()})         
+                plan_send_student_email('CHECK_EMAIL',st)
                 return HttpResponseRedirect('/zapis/prihlaska/%s/'%ref_code)
 
     else:
@@ -232,8 +233,8 @@ def confirm(request,confirm_code):
         if student.status == 'n':
             student.status = 'nc'
             student.save()
-            taskqueue.add(url='/task/send_confirm_email/', params={'student_id':student.key().id()})         
-            taskqueue.add(url='/task/recount_capacity/', params={'course_id':course.key().id()})
+            plan_send_student_email('CONFIRM_ENROLL_EMAIL',student)
+            plan_update_course(course)
         elif student.status != 'nc':
             status = False
 

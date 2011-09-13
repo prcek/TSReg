@@ -10,7 +10,44 @@ from google.appengine.api import mail as gmail
 
 import logging
 
-def send_check_email(request):
+
+def send_student_email(request):
+    logging.info(request.POST)
+    student_id = request.POST['student_id']
+    student = Student.get_by_id(int(student_id))
+    if student is None:
+        logging.info('student is None')
+        raise Http404
+
+    course = student.get_course()
+
+    template_key = request.POST['mail_template_key']
+    if template_key is None:
+        logging.info('template_key is None')
+        raise Http404 
+
+    if not template_key in mail.MAIL_TEMPLATES:
+        logging.info('template_key is not valid')
+        raise Http404
+
+    sender = cfg.getConfigString('ENROLL_EMAIL',None)
+
+    if sender is None:
+        logging.info('no sender, skip')
+        return HttpResponse('ok')
+
+    recipient = student.email.__str__()
+ 
+    (subject,body) = mail.prepare_email_text(template_key, student,course)
+
+    gmail.send_mail(sender, recipient, subject,body) 
+    
+    logging.info('send ok')
+
+    return HttpResponse('ok')
+
+
+def _obs_send_check_email(request):
     logging.info(request.POST)
     student_id = request.POST['student_id']
     student = Student.get_by_id(int(student_id))
@@ -36,7 +73,7 @@ def send_check_email(request):
 
     return HttpResponse('ok')
 
-def send_confirm_email(request):
+def _obs_send_confirm_email(request):
     logging.info(request.POST)
     student_id = request.POST['student_id']
     student = Student.get_by_id(int(student_id))
@@ -62,7 +99,7 @@ def send_confirm_email(request):
 
     return HttpResponse('ok')
 
-def send_enroll_yes_email(request):
+def _obs_send_enroll_yes_email(request):
 
     logging.info(request.POST)
     student_id = request.POST['student_id']
@@ -89,7 +126,7 @@ def send_enroll_yes_email(request):
 
     return HttpResponse('ok')
 
-def send_enroll_no_email(request):
+def _obs_send_enroll_no_email(request):
 
     logging.info(request.POST)
     student_id = request.POST['student_id']
