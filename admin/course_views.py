@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext,Context, loader
 
@@ -101,7 +101,7 @@ def edit(request, course_id):
             form.save(commit=False)
             logging.info('edit course after %s'% course)
             course.save()
-            return redirect('../..')
+            return HttpResponseRedirect('../..')
     else:
         form = CourseForm(instance=course)
 
@@ -117,7 +117,7 @@ def create(request):
             form.save(commit=False)
             logging.info('edit course after %s'% course)
             course.save()
-            return redirect('..')
+            return HttpResponseRedirect('..')
     else:
         form = CourseForm(instance=course)
     return render_to_response('admin/courses_create.html', RequestContext(request, {'form':form}))
@@ -130,7 +130,7 @@ def recount(request, course_id):
 
     taskqueue.add(url='/task/recount_capacity/', params={'course_id':course.key().id()})
 
-    return redirect("../..")
+    return HttpResponseRedirect("../..")
 
 
 def delete(request, course_id):

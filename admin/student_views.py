@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext,Context, loader
 #from google.appengine.api import taskqueue
@@ -13,6 +13,7 @@ import utils.mail as mail
 import utils.pdf as pdf
 import logging
 import urllib
+
 
 
 ADDRESSING_CHOICES = (
@@ -200,26 +201,26 @@ def enroll(request,student_id,course_id=None):
     if student is None:
         raise Http404
 
-    if student.status == 'nc':
+    if student.status == 's':
         student.status = 'e'
         student.save()
         plan_send_student_email('CONFIRM_ENROLL_EMAIL', student)
         plan_update_course(course_id)
- 
-    return redirect('../..')
+
+    return HttpResponseRedirect('../..')
     
 def kick(request,student_id,course_id=None):
     student = Student.get_by_id(int(student_id))
     if student is None:
         raise Http404
 
-    if (student.status == 'nc') or (student.status == 'e'):
+    if (student.status == 's') or (student.status == 'e'):
         student.status = 'k'
         student.save()
         plan_send_student_email('NOTIFY_KICK_EMAIL', student)
         plan_update_course(course_id)
  
-    return redirect('../..')
+    return HttpResponseRedirect('../..')
  
 def spare(request,student_id,course_id=None):
     student = Student.get_by_id(int(student_id))
@@ -227,11 +228,11 @@ def spare(request,student_id,course_id=None):
         raise Http404
 
     if (student.status == 'e') or (student.status == 'k'):
-        student.status = 'nc'
+        student.status = 's'
         student.save()
         plan_update_course(course_id)
  
-    return redirect('../..')
+    return HttpResponseRedirect('../..')
  
 
 def course_emails(request, course_id):

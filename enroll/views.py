@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-
 from django import forms
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse, Http404
@@ -58,7 +57,8 @@ class EnrollForm(forms.Form):
         return data
 
 def goto_index(request):
-    return redirect('/zapis/')
+    return HttpResponse('ok')
+    return HttpResponseRedirect('/zapis/')
 
 def get_offer_list(folder_id = None):
 
@@ -95,6 +95,9 @@ def get_offer_list(folder_id = None):
 
 
 def index(request):
+
+    return HttpResponse('ok')
+
     if not config.getConfigBool('ENROLL_ENROLL_ON',False):
         return render_to_response('enroll/index_off.html', RequestContext(request))
 
@@ -231,11 +234,21 @@ def confirm(request,confirm_code):
 
     if status:
         if student.status == 'n':
-            student.status = 'nc'
-            student.save()
-            plan_send_student_email('CONFIRM_ENROLL_EMAIL',student)
+            if course.can_enroll():
+                student.status = 'e'
+                student.save()
+                if student.paid_ok:
+                    plan_send_student_email('CONFIRM_ENROLL_EMAIL',student)
+                else:
+                    plan_send_student_email('CONFIRM_ENROLL_AND_PAY_EMAIL',student)
+            else
+                student.status = 's'
+                student.save()
+                plan_send_student_email('CONFIRM_SPARE_EMAIL',student)
+                
             plan_update_course(course)
-        elif student.status != 'nc':
+
+        elif not student.status in ['e','s']:
             status = False
 
     return render_to_response('enroll/confirm.html', RequestContext(request, { 'course': course, 'student':student, 'confirm_code':confirm_code, 'status':status }))

@@ -152,6 +152,10 @@ class Course(BaseModel):
         logging.info('get_COURSE_CHOICES: %s'%res)
         return res 
 
+
+    def can_enroll(self):
+        return (self.usage<self.capacity)
+
     def group_mode_loc(self):
         if self.group_mode == 'Single':
             return 'jednotlivci'
@@ -174,7 +178,7 @@ class Course(BaseModel):
 class Student(BaseModel):
     hidden = db.BooleanProperty(default=False)
     course_key = db.StringProperty()
-    status = db.StringProperty(choices=['-','n','nc','e','k'], default='-')
+    status = db.StringProperty(choices=['-','n','s','e','k'], default='-')
     reg_by_admin = db.BooleanProperty(default=False)
     reg_datetime = db.DateTimeProperty()
     ref_base = db.StringProperty(default='')
@@ -334,7 +338,7 @@ class Student(BaseModel):
 
     @staticmethod
     def list_for_course_to_enroll(course_key):
-        return Student.all().filter('hidden',False).filter('course_key',str(course_key)).filter('status','nc').order('reg_datetime')
+        return Student.all().filter('hidden',False).filter('course_key',str(course_key)).filter('status','s').order('reg_datetime')
 
     @staticmethod
     def list_for_course_enrolled(course_key):
@@ -372,9 +376,9 @@ class Student(BaseModel):
         if self.status == '-':
             return ''
         elif self.status == 'n':
-            return 'nový' 
-        elif self.status == 'nc':
-            return 'platný nový'
+            return 'podaná' 
+        elif self.status == 's':
+            return 'náhradník'
         elif self.status == 'e':
             return 'zapsán'
         elif self.status == 'k':

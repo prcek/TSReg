@@ -18,13 +18,18 @@ def send_student_email(request):
     if student is None:
         logging.info('student is None')
         raise Http404
+#    logging.info('student=%s'%(student))
 
     course = student.get_course()
 
-    template_key = request.POST['mail_template_key']
+ #   logging.info('course=%s'%(course))
+
+    template_key = request.POST['template_key']
     if template_key is None:
         logging.info('template_key is None')
         raise Http404 
+
+  #  logging.info('template_key=%s'%(template_key))
 
     if not template_key in mail.MAIL_TEMPLATES:
         logging.info('template_key is not valid')
@@ -172,30 +177,24 @@ def recount_capacity(request):
     pending_payment = 0
     list = Student.list_for_course(course.key())
     for s in list:
-#        logging.info(s)
         m = False
         f = False
         if s.addressing == 'p':
             m=True
-#            logging.info('male')
         elif s.addressing == 's' or s.addressing == 'd':
             f=True
-#            logging.info('female')
 
 
-        if s.status == 'nc':
+        if s.status == 's':
             pending+=1
-#            logging.info('spare')
             if m:
                 pending_m+=1
             if f:
                 pending_f+=1
             if s.paid_ok:
-#                logging.info('paid')
                 pending_p+=1
                 
         elif s.status == 'e':
-#            logging.info('enrolled')
             enrolled+=1
             if m:
                 enrolled_m+=1
@@ -205,10 +204,8 @@ def recount_capacity(request):
             if not s.paid_ok:
                 pending_payment+=1
             else:
- #               logging.info('paid')
                 enrolled_p+=1
 
-  #      logging.info('iiii - capacity stats: %d/%d, %d/%d, %d/%d'%( enrolled_m, pending_m, enrolled_f, pending_f, enrolled_p, pending_p))
 
     course.pending=pending
     course.pending_payment=pending_payment
