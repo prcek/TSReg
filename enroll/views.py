@@ -57,7 +57,6 @@ class EnrollForm(forms.Form):
         return data
 
 def goto_index(request):
-    return HttpResponse('ok')
     return HttpResponseRedirect('/zapis/')
 
 def get_offer_list(folder_id = None):
@@ -96,7 +95,6 @@ def get_offer_list(folder_id = None):
 
 def index(request):
 
-    return HttpResponse('ok')
 
     if not config.getConfigBool('ENROLL_ENROLL_ON',False):
         return render_to_response('enroll/index_off.html', RequestContext(request))
@@ -241,7 +239,7 @@ def confirm(request,confirm_code):
                     plan_send_student_email('CONFIRM_ENROLL_EMAIL',student)
                 else:
                     plan_send_student_email('CONFIRM_ENROLL_AND_PAY_EMAIL',student)
-            else
+            else:
                 student.status = 's'
                 student.save()
                 plan_send_student_email('CONFIRM_SPARE_EMAIL',student)
