@@ -89,7 +89,7 @@
     <tr>
         <th></th>
         <th>p.č</th>
-        {% include "admin/st_table_header.html" %}
+        {% include "admin/st_table_header_e.html" %}
         <th>operace</th>
     </tr>
     {% for s in student_list_enrolled %}
@@ -100,7 +100,7 @@
             </td>
  
             <td>{{forloop.counter}}</td>
-            {% include "admin/st_table_row.html" %}
+            {% include "admin/st_table_row_e.html" %}
             <td>
                 <a class='button' href='{{s.key.id}}/view/'>zobrazit</a>
                 <a class='button' href='{{s.key.id}}/spare/'>náhradník</a>

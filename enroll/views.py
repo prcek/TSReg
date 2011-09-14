@@ -236,6 +236,7 @@ def confirm(request,confirm_code):
         if student.status == 'n':
             if course.can_enroll():
                 student.status = 'e'
+                student.init_enroll()
                 student.save()
                 if student.paid_ok:
                     plan_send_student_email('CONFIRM_ENROLL_EMAIL',student)

@@ -181,6 +181,7 @@ class Student(BaseModel):
     status = db.StringProperty(choices=['-','n','s','e','k'], default='-')
     reg_by_admin = db.BooleanProperty(default=False)
     reg_datetime = db.DateTimeProperty()
+    enroll_datetime = db.DateTimeProperty()
     ref_base = db.StringProperty(default='')
     ref_key = db.StringProperty(default='')
     confirm_key = db.StringProperty()
@@ -206,9 +207,11 @@ class Student(BaseModel):
     def init_reg(self):
         self.reg_datetime = datetime.datetime.utcnow()        
 
+    def init_enroll(self):
+        self.enroll_datetime = datetime.datetime.utcnow()        
+
     def init_ref_base(self):
         self.ref_base = crypt.gen_key()
-
 
     def init_ref_codes(self):
         id = self.key().id()

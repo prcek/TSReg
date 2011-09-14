@@ -205,6 +205,7 @@ def enroll(request,student_id,course_id=None):
 
     if student.status == 's':
         student.status = 'e'
+        student.init_enroll()
         student.save()
         plan_send_student_email('CONFIRM_ENROLL_EMAIL', student)
         plan_update_course(course_id)
