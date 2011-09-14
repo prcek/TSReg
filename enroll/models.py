@@ -193,6 +193,8 @@ class Student(BaseModel):
     paid_ok = db.BooleanProperty(default=False)
     year = db.IntegerProperty(default=0)
     email = db.StringProperty(default='') 
+    no_email_info = db.BooleanProperty(default=False)
+    no_email_ad = db.BooleanProperty(default=False)
     phone = db.StringProperty(default='')  
     street = db.StringProperty(default='')
     street_no = db.StringProperty(default='')

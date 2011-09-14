@@ -39,6 +39,7 @@ class EnrollForm(forms.Form):
     name = forms.CharField(label='jméno', error_messages=ERROR_MESSAGES)
     surname = forms.CharField(label='příjmení', error_messages=ERROR_MESSAGES)
     email = forms.EmailField(label='email', error_messages=ERROR_MESSAGES)
+    no_email_ad = forms.BooleanField(label='nezasílat reklamu', error_messages=ERROR_MESSAGES, required=False)
     phone = forms.CharField(label='telefon', error_messages=ERROR_MESSAGES, required=False)
     student = forms.BooleanField(label='student', error_messages=ERROR_MESSAGES, required=False)
     long_period = forms.BooleanField(label='celoroční', error_messages=ERROR_MESSAGES, required=False)
@@ -161,6 +162,7 @@ def attend(request,course_id):
                 st.long_period = form.cleaned_data['long_period']
                 st.year = form.cleaned_data['year']
                 st.email = form.cleaned_data['email']
+                st.no_email_ad = form.cleaned_data['no_email_ad']
                 st.phone = form.cleaned_data['phone']
                 st.street = form.cleaned_data['street']
                 st.street_no = form.cleaned_data['street_no']

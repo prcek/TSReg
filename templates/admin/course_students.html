@@ -46,6 +46,7 @@
             <td>{{forloop.counter}}</td>
             {% include "admin/st_table_row.html" %}
             <td>
+                <a class='button' href='{{s.key.id}}/view/'>zobrazit</a>
                 <a class='button' href='{{s.key.id}}/enroll/'>zapsat</a>
                 <a class='button' href='{{s.key.id}}/edit/'>editovat</a>
                 <a class='kbutton' href='{{s.key.id}}/kick/'>vyřadit</a>
@@ -101,6 +102,7 @@
             <td>{{forloop.counter}}</td>
             {% include "admin/st_table_row.html" %}
             <td>
+                <a class='button' href='{{s.key.id}}/view/'>zobrazit</a>
                 <a class='button' href='{{s.key.id}}/spare/'>náhradník</a>
                 <a class='button' href='{{s.key.id}}/edit/'>editovat</a>
                 <a class='kbutton' href='{{s.key.id}}/kick/'>vyřadit</a>

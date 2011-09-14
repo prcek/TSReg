@@ -222,17 +222,25 @@ def recount_capacity(request):
 
 
 
+    pend_open = True
     if (course.pending_limit!=-1):
         if (course.pending>=course.pending_limit):
-            course.suspend = True
-        else:
-            course.suspend = False
+            pend_open = False
+
+
+    cap_open = True
+    if (course.capacity!=-1):
+        if (course.usage>=course.capacity):
+            cap_open = False
+
 
 #    if (course.capacity!=0):
 #        if (course.usage>=course.capacity):
 #            course.suspend = True
 #        else:
 #            course.suspend = False
+
+    course.suspend = not (cap_open or pend_open)
 
 
     course.save()
