@@ -13,6 +13,10 @@ import urllib
 
 def plan_send_student_email(template_key, student, course=None):
 
+    if student.no_email_info:
+        logging.info('info emails disabled for this student, ignore request') 
+        return
+
     if not template_key in mail.MAIL_TEMPLATES:
         logging.info('plan_send_student_email - invalid template - "%s"'%template_key)
         raise Http404
