@@ -227,7 +227,7 @@ def create(request, course_id):
     return render_to_response('admin/students_create.html', RequestContext(request, {'form':form}))
 
 
-def email(request,student_id):
+def email(request,student_id,course_id=None):
     student = Student.get_by_id(int(student_id))
     if student is None:
         raise Http404
