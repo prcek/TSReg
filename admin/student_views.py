@@ -23,6 +23,11 @@ ADDRESSING_CHOICES = (
     ('d','Paní'),
 )
 
+ADD_CHOICES = (
+    ('e','zapsaného'),
+    ('s','náhradníka')
+)
+
 YEAR_CHOICES = [
     (0,'')
 ]
@@ -40,10 +45,7 @@ class CourseField(forms.ChoiceField):
 
 
 class StudentForm(forms.ModelForm):
-#    course_key = forms.ChoiceField(label='kurz', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=Course.get_COURSE_CHOICES()))
-#    course_key = forms.ChoiceField(label='kurz', error_messages=ERROR_MESSAGES, choices=Course.get_COURSE_CHOICES())
-#    course_key = forms.ChoiceField(label='kurz', error_messages=ERROR_MESSAGES)
-    course_key = CourseField(label='kurz', error_messages=ERROR_MESSAGES)
+
     addressing = forms.CharField(label='oslovení', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=ADDRESSING_CHOICES))
     name = forms.CharField(label='jméno', error_messages=ERROR_MESSAGES)
     surname = forms.CharField(label='příjmení', error_messages=ERROR_MESSAGES)
@@ -72,11 +74,46 @@ class StudentForm(forms.ModelForm):
 
     class Meta:
         model = Student
-        fields = ( 'course_key', 'addressing', 'name', 'surname', 'email', 'no_email_info', 'no_email_ad', 'student','long_period', 'to_pay', 'paid_ok', 'phone', 'year', 'street', 'street_no', 'city', 'post_code', 'partner_ref_code', 'comment' )
+        fields = ( 'addressing', 'name', 'surname', 'email', 'no_email_info', 'no_email_ad', 'student','long_period', 'to_pay', 'paid_ok', 'phone', 'year', 'street', 'street_no', 'city', 'post_code', 'partner_ref_code', 'comment' )
 
-    def __init__(self,data = None, **kwargs):
-        super(self.__class__,self).__init__(data, **kwargs)
-        self.fields['course_key']._set_choices(Course.get_COURSE_CHOICES())
+#    def __init__(self,data = None, **kwargs):
+#        super(self.__class__,self).__init__(data, **kwargs)
+#        self.fields['course_key']._set_choices(Course.get_COURSE_CHOICES())
+
+
+class StudentFormAdd(StudentForm):
+    add_mode = forms.CharField(label='přidat jako', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=ADD_CHOICES))
+    addressing = forms.CharField(label='oslovení', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=ADDRESSING_CHOICES))
+    name = forms.CharField(label='jméno', error_messages=ERROR_MESSAGES)
+    surname = forms.CharField(label='příjmení', error_messages=ERROR_MESSAGES)
+    email = forms.EmailField(label='email', error_messages=ERROR_MESSAGES)
+    no_email_info = forms.BooleanField(label='ne informace', error_messages=ERROR_MESSAGES, required=False)
+    no_email_ad = forms.BooleanField(label='ne reklamu', error_messages=ERROR_MESSAGES, required=False)
+    student = forms.BooleanField(label='student', error_messages=ERROR_MESSAGES, required=False)
+    long_period = forms.BooleanField(label='celoroční', error_messages=ERROR_MESSAGES, required=False)
+    to_pay = forms.IntegerField(label='cena', error_messages=ERROR_MESSAGES)
+    paid_ok = forms.BooleanField(label='zaplaceno', error_messages=ERROR_MESSAGES, required=False)
+    phone = forms.CharField(label='telefon', error_messages=ERROR_MESSAGES, required=False)
+    year = forms.IntegerField(label='rok', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=YEAR_CHOICES))
+    street = forms.CharField(label='ulice', error_messages=ERROR_MESSAGES, required=False)
+    street_no = forms.CharField(label='číslo', error_messages=ERROR_MESSAGES, required=False)
+    city = forms.CharField(label='město', error_messages=ERROR_MESSAGES, required=False)
+    post_code = forms.CharField(label='psč', error_messages=ERROR_MESSAGES, required=False)
+    partner_ref_code = forms.CharField(label='kód partnera', error_messages=ERROR_MESSAGES, required=False)
+    comment = forms.CharField(label='poznámka', error_messages=ERROR_MESSAGES, required=False)
+
+
+    def clean_addressing(self):
+        data = self.cleaned_data['addressing']
+        if not data in ['p','s','d']:
+            raise forms.ValidationError(ERROR_MESSAGES['required'])
+        return data
+
+    class Meta:
+        model = Student
+        fields = ( 'addressing', 'name', 'surname', 'email', 'no_email_info', 'no_email_ad', 'student','long_period', 'to_pay', 'paid_ok', 'phone', 'year', 'street', 'street_no', 'city', 'post_code', 'partner_ref_code', 'comment' )
+
+   
 
 class FindForm(forms.Form):
     ref_code = forms.CharField(label='referenční číslo', error_messages=ERROR_MESSAGES,required=False)
@@ -156,18 +193,26 @@ def edit(request, student_id,course_id=None):
 
     return render_to_response('admin/students_edit.html', RequestContext(request, {'form':form}))
 
-def create(request, course_id=None):
+def create(request, course_id):
+
+    course = Course.get_by_id(int(course_id))  
+    if course is None:
+        raise Http404
 
     student = Student()
+    student.set_course_key(str(course.key()))
     student.init_reg()
     student.init_ref_base()
     student.reg_by_admin = True
-    student.status = 'nc'
+    student.status = '-'
     if request.method == 'POST':
-        form = StudentForm(request.POST, instance=student)
+        form = StudentFormAdd(request.POST, instance=student)
         if form.is_valid():
             logging.info('create student before %s'% student)
             form.save(commit=False)
+            student.status =  form.cleaned_data['add_mode']
+            if student.status=='e':
+                student.init_enroll()
             logging.info('create student after %s'% student)
             student.save()
             student.init_ref_codes()
@@ -178,7 +223,7 @@ def create(request, course_id=None):
 
             return redirect('..')
     else:
-        form = StudentForm(instance=student)
+        form = StudentFormAdd(instance=student)
     return render_to_response('admin/students_create.html', RequestContext(request, {'form':form}))
 
 

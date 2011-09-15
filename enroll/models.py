@@ -364,6 +364,12 @@ class Student(BaseModel):
             return None
         return c.key().id()
 
+    def set_course_key(self,course_key):
+        self.course_key = course_key
+        
+        
+        
+        
        
 
     def addressing_loc(self):
