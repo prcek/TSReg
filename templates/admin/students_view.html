@@ -1,0 +1,43 @@
+
+{% extends "admin/base.html" %}
+
+{% block title %} Administrace zápisu {% endblock %}
+
+{% block content %}
+
+   <a class='button' href='../..'>zpět na žáky</a>
+   <a class='button' href='.'>přenačíst</a>
+   <a class='button' href='../edit/'>editovat</a>
+
+{% with student as s %}
+
+
+<br><br><br>
+referenční číslo: {{s.ref_key}}<br>
+oslovení: {{s.addressing_loc}}<br>
+jméno: {{s.name}}<br
+příjmení: {{s.surname}}<br>
+student: {{s.student|anone}}<br>
+email: {{s.email}}<br>
+nezasílat reklamu: {{s.no_email_ad|anone}}<br>
+nezasílat nic: {{s.no_email_info|anone}}<br> 
+<br>
+kurz: {{student.course_code}}<br>
+stav: {{student.status_loc}}<br>
+čas podání přihlášky:{{s.reg_datetime}}<br>
+čas zápisu:{{s.enroll_datetime|nonone}}<br>
+zaplaceno: {{s.paid_ok|anone}}<br>
+<br>
+telefon:{{s.phone|nonone}}<br>
+rok:{% if s.year %}{{s.year}}{% else %}&nbsp;{%endif%}<br>
+ulice:{{s.street|nonone}}<br>
+číslo:{{s.street_no|nonone}}<br>
+město:{{s.city|nonone}}<br>
+psč:{{s.post_code|nonone}}<br>
+kód partnera:{{s.partner_ref_code|nonone}}<br>
+poznámka:{{s.comment|nonone}}<br>
+
+{% endwith %}
+
+{% endblock %}
+

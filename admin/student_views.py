@@ -283,7 +283,18 @@ def spare(request,student_id,course_id=None):
     return HttpResponseRedirect('../..')
 
 def view(request,student_id,course_id=None):
-    return HttpResponse('ok')
+
+    student = Student.get_by_id(int(student_id))
+    if student is None:
+        raise Http404
+    course = student.get_course()
+
+
+
+    return render_to_response('admin/students_view.html', RequestContext(request, {
+        'student':student,'course':course
+    }))
+
  
 
 def course_emails(request, course_id):
