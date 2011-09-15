@@ -101,6 +101,7 @@ def edit(request, course_id):
             form.save(commit=False)
             logging.info('edit course after %s'% course)
             course.save()
+            taskqueue.add(url='/task/recount_capacity/', params={'course_id':course.key().id()})
             return HttpResponseRedirect('../..')
     else:
         form = CourseForm(instance=course)
