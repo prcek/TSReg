@@ -49,7 +49,7 @@ def edit(request, season_id):
             season.save()
             return redirect('../..')
     else:
-        form = FolderForm(instance=Season)
+        form = SeasonForm(instance=season)
 
     return render_to_response('admin/seasons_edit.html', RequestContext(request, {'form':form}))
 
