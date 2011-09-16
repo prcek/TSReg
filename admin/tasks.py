@@ -7,6 +7,8 @@ from admin.models import Job
 import utils.config as cfg
 import utils.mail as mail
 from google.appengine.api import mail as gmail
+from google.appengine.api import taskqueue
+
 
 
 import logging
@@ -160,13 +162,11 @@ def _obs_send_enroll_no_email(request):
     return HttpResponse('ok')
 
 
-def recount_capacity(request):
-    logging.info(request.POST)
-    course_id = request.POST['course_id']
-    course = Course.get_by_id(int(course_id))
-    
+def recount_course_capacity(course):
+   
     if course is None:
         raise Http404
+
     pending = 0
     pending_m = 0
     pending_f = 0
@@ -235,21 +235,24 @@ def recount_capacity(request):
             cap_open = False
 
 
-#    if (course.capacity!=0):
-#        if (course.usage>=course.capacity):
-#            course.suspend = True
-#        else:
-#            course.suspend = False
-
     course.suspend = not (cap_open or pend_open)
 
 
+def recount_capacity(request):
+    logging.info(request.POST)
+    course_id = request.POST['course_id']
+    course = Course.get_by_id(int(course_id))
+    
+    if course is None:
+        raise Http404
+    
+    recount_course_capacity(course)
     course.save()
     logging.info(course)
  
     return HttpResponse('ok')
 
-
+ 
 def hide_course_students(request):
     logging.info(request.POST)
     course_id = request.POST['course_id']
@@ -265,18 +268,57 @@ def hide_course_students(request):
  
     return HttpResponse('ok')
 
+def transfer_student(student_id, course):
+    logging.info('transfer student %d'%student_id)
+    student = Student.get_by_id(student_id)
+    if student is None:
+        return
+
+    student.set_course_key(str(course.key()))
+    student.save()
+    
+
 def transfer_students(request):
     logging.info(request.POST)
     job_id = request.POST['job_id']
     job = Job.get_by_id(int(job_id))
 
-    if job.start_datetime is None:
-        job.start()
+    job.start()
+    job.save()
+
+    student_ids = request.POST.getlist('student_ids')
+    target_course_id = request.POST['target_course_id']
+    source_course_id = request.POST['source_course_id']
+
+
+
+    target_course = Course.get_by_id(int(target_course_id))
+    if target_course is None:
+        logging.info('missing target course')
+        job.finish(error=True)
         job.save()
-        raise Http404
+        return HttpResponse('error')
+
+    source_course = Course.get_by_id(int(source_course_id))
+    if source_course is None:
+        logging.info('missing source course')
+        job.finish(error=True)
+        job.save()
+        return HttpResponse('error')
 
 
-    # TODO ....
+
+    logging.info('student list %s'%student_ids) 
+    for student_id in student_ids:
+        transfer_student(int(student_id), target_course) 
+    
+    recount_course_capacity(source_course)
+    source_course.save()
+    logging.info(source_course)
+ 
+
+    taskqueue.add(url='/task/recount_capacity/', params={'course_id':target_course.key().id()})
+
 
     job.finish()
     job.save()

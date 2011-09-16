@@ -49,7 +49,7 @@ def plan_job_transfer_students(student_ids,source_course, target_course):
     job.init("transfer_students",target='../../')
     job.save()
  
-    taskqueue.add(url='/task/transfer_students/', params={'job_id':job.key().id(), 'student_ids':student_ids, 'course':target_course})
+    taskqueue.add(url='/task/transfer_students/', params={'job_id':job.key().id(), 'student_ids':student_ids, 'source_course_id': source_course.key().id(), 'target_course_id':target_course.key().id()})
 
     logging.info('job_id %d'%(job.key().id())) 
 
