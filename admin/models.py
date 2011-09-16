@@ -22,7 +22,10 @@ class Job(BaseModel):
     def list():
         return Job.all().order('create_datetime')
     
-
+    @staticmethod
+    def list_active():
+        return Job.all().filter('active',True).order('create_datetime')
+ 
     def init(self,name,target=None):
         self.name = name
         self.active = True

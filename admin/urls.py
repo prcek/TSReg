@@ -7,6 +7,7 @@ urlpatterns = patterns('admin',
     (r'^sys/setup/$', 'sys_views.config_setup'),
     (r'^sys/test/$', 'test_views.index'),
     (r'^sys/jobs/$', 'jobs_views.index'),
+    (r'^sys/jobs/(?P<job_id>\d+)/del/$', 'jobs_views.delete'),
 
 
     (r'^kurzy/$', 'course_views.index'),

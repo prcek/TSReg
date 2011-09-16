@@ -13,7 +13,7 @@ import datetime
 def index(request):
     now = datetime.datetime.utcnow()
 
-    jobs = Job.list()
+    jobs = Job.list_active()
 
     return render_to_response('admin/jobs_index.html', RequestContext(request, { 'now': now, 'jobs':jobs }))
 
@@ -30,6 +30,18 @@ def wait(request,job_id):
 
     return render_to_response('admin/jobs_wait.html', RequestContext(request, { 'now': now, 'job':job }))
 
+def delete(request,job_id):
+    job = Job.get_by_id(int(job_id))
+
+    if job is None:
+        raise Http404
+
+
+    job.active=False
+    job.save()
+
+
+    return HttpResponseRedirect('../..')
 
 
 
