@@ -286,6 +286,8 @@ def transfer_students(request):
     job.start()
     job.save()
 
+
+
     student_ids = request.POST.getlist('student_ids')
     target_course_id = request.POST['target_course_id']
     source_course_id = request.POST['source_course_id']

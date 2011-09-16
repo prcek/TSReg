@@ -15,6 +15,7 @@ class Job(BaseModel):
     start_datetime = db.DateTimeProperty()
     finish_datetime = db.DateTimeProperty()
     finish_target = db.StringProperty(default='')
+    finish_error = db.BooleanProperty(default=False)
     name = db.StringProperty(default='')
     owner = db.StringProperty(default='')
 
@@ -26,6 +27,10 @@ class Job(BaseModel):
     def list_active():
         return Job.all().filter('active',True).order('create_datetime')
  
+    @staticmethod
+    def list_error():
+        return Job.all().filter('finish_error',True).order('create_datetime')
+ 
     def init(self,name,target=None):
         self.name = name
         self.active = True
@@ -35,9 +40,10 @@ class Job(BaseModel):
     def start(self):
         self.start_datetime = datetime.datetime.utcnow()
 
-    def finish(self):
+    def finish(self, error=False):
         self.active = False
         self.finish_datetime = datetime.datetime.utcnow()
+        self.finish_error = error
 
     
         

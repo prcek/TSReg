@@ -33,6 +33,11 @@ indexes:
   - name: active
   - name: create_datetime
 
+- kind: Job
+  properties:
+  - name: finish_error
+  - name: create_datetime
+
 - kind: Season
   properties:
   - name: order_value

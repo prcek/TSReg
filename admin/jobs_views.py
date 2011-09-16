@@ -14,8 +14,9 @@ def index(request):
     now = datetime.datetime.utcnow()
 
     jobs = Job.list_active()
+    e_jobs = Job.list_error()
 
-    return render_to_response('admin/jobs_index.html', RequestContext(request, { 'now': now, 'jobs':jobs }))
+    return render_to_response('admin/jobs_index.html', RequestContext(request, { 'now': now, 'jobs':jobs, 'e_jobs':e_jobs }))
 
 
 def wait(request,job_id):
