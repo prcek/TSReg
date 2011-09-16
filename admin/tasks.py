@@ -3,6 +3,7 @@
 from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from enroll.models import Student,Course
+from admin.models import Job
 import utils.config as cfg
 import utils.mail as mail
 from google.appengine.api import mail as gmail
@@ -262,5 +263,23 @@ def hide_course_students(request):
         s.hidden = True
         s.save()
  
+    return HttpResponse('ok')
+
+def transfer_students(request):
+    logging.info(request.POST)
+    job_id = request.POST['job_id']
+    job = Job.get_by_id(int(job_id))
+
+    if job.start_datetime is None:
+        job.start()
+        job.save()
+        raise Http404
+
+
+    # TODO ....
+
+    job.finish()
+    job.save()
+
     return HttpResponse('ok')
 

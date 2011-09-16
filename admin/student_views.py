@@ -7,7 +7,7 @@ from django.template import RequestContext,Context, loader
 #from google.appengine.api import taskqueue
 
 from enroll.models import Student,Course
-from admin.queue import plan_send_student_email, plan_update_course
+from admin.queue import plan_send_student_email, plan_update_course, plan_job_transfer_students
 import utils.config as cfg
 import utils.mail as mail
 import utils.pdf as pdf
@@ -232,6 +232,11 @@ class CoursePickForm(forms.Form):
 def action_do_transfer(request, source_course=None, student_ids=None, target_course=None):
     logging.info('student_ids = %s'%student_ids)
 
+
+    if (student_ids is None) or (len(student_ids)==0):
+        info = 'nebyl vybrán žádný žák'
+        return render_to_response('admin/action_transfer.html', RequestContext(request, {'info':info}))
+
     if target_course is None:
 
         info = 'přeřazení žáků do jiného kurzu'
@@ -239,7 +244,11 @@ def action_do_transfer(request, source_course=None, student_ids=None, target_cou
 
         return render_to_response('admin/action_transfer.html', RequestContext(request, {'form':form, 'info':info, 'operation':request.POST['operation'], 'all_select':student_ids}))
 
-    return HttpResponse('ok')
+
+    job_id=plan_job_transfer_students(student_ids,source_course, target_course)
+
+
+    return HttpResponseRedirect('../wait/%d/'%job_id)
 
 
 

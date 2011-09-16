@@ -25,8 +25,16 @@ class Job(BaseModel):
 
     def init(self,name,target=None):
         self.name = name
+        self.active = True
         self.finish_target = target
         self.create_datetime =  datetime.datetime.utcnow()
+
+    def start(self):
+        self.start_datetime = datetime.datetime.utcnow()
+
+    def finish(self):
+        self.active = False
+        self.finish_datetime = datetime.datetime.utcnow()
 
     
         

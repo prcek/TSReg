@@ -43,14 +43,16 @@ def plan_update_course(course):
 
 
 def plan_job_transfer_students(student_ids,source_course, target_course):
-    logging.info('transfer %s from course %d to course %d'%(student_ids,source_course.key().id(), targer_course.key().id()))    
+    logging.info('transfer %s from course %d to course %d'%(student_ids,source_course.key().id(), target_course.key().id()))    
 
     job = Job()
-    job.init("transfer_students",target='/admin/kurzy/')
+    job.init("transfer_students",target='../../')
     job.save()
  
     taskqueue.add(url='/task/transfer_students/', params={'job_id':job.key().id(), 'student_ids':student_ids, 'course':target_course})
 
     logging.info('job_id %d'%(job.key().id())) 
+
+    return job.key().id()
 
 
