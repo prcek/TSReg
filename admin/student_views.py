@@ -220,13 +220,14 @@ def action_course(request,course_id):
 
     return HttpResponseRedirect('../')
 
-class CoursePickForm(forms.Form):
+class TransferPickForm(forms.Form):
     course_key = forms.ChoiceField()
     def __init__(self, data = None, courses = [], label = None):
         super(self.__class__,self).__init__(data)
         if not label is None:
             self.fields['course_key'].label=label
         self.fields['course_key'].choices=courses
+
 
 
 def action_do_transfer(request, source_course=None, student_ids=None, target_course=None):
@@ -240,7 +241,7 @@ def action_do_transfer(request, source_course=None, student_ids=None, target_cou
     if target_course is None:
 
         info = 'přeřazení žáků do jiného kurzu'
-        form = CoursePickForm(label = 'do kurzu', courses = Course.get_COURSE_CHOICES())
+        form = TransferPickForm(label = 'do kurzu', courses = Course.get_COURSE_CHOICES())
 
         return render_to_response('admin/action_transfer.html', RequestContext(request, {'form':form, 'info':info, 'operation':request.POST['operation'], 'all_select':student_ids}))
 
@@ -250,6 +251,31 @@ def action_do_transfer(request, source_course=None, student_ids=None, target_cou
 
     return HttpResponseRedirect('../wait/%d/'%job_id)
 
+
+class CardPickForm(forms.Form):
+    course_code = forms.CharField(required=False)
+    season_name = forms.CharField(required=False)
+    info_line_1 = forms.CharField(required=False)
+    info_line_2 = forms.CharField(required=False)
+   
+    def __init__(self, data = None, course = None):
+        super(self.__class__,self).__init__(data)
+        if not course is None:
+            self.fields['course_code'].initial = course.code
+            self.fields['season_name'].initial = course.season_name()
+
+    
+def action_do_card(request, source_course=None, student_ids=None):
+    logging.info('student_ids = %s'%student_ids)
+
+
+    if (student_ids is None) or (len(student_ids)==0):
+        info = 'nebyl vybrán žádný žák'
+        return render_to_response('admin/action_card.html', RequestContext(request, {'info':info}))
+
+
+    #TODO...   
+    
 
 
 def edit(request, student_id,course_id=None):
