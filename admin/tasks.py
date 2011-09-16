@@ -263,3 +263,4 @@ def hide_course_students(request):
         s.save()
  
     return HttpResponse('ok')
+

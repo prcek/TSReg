@@ -1,0 +1,34 @@
+
+{% extends "admin/base.html" %}
+
+{% block title %} Administrace zápisu {% endblock %}
+
+{% block content %}
+    <a class='button' href='.'>přenačíst</a>
+
+    <br><br>Přehled úloh<br>
+
+{% if jobs %}
+    <table>
+    <tr>
+        <th>aktivní</th>
+        <th>název</th>
+        <th>operace</th>
+    </tr>
+    {% for j in jobs %}
+        <tr>
+            <td>{{j.active|anone }}</td>
+            <td>{{j.name }}</td>
+            <td>
+                <a class='cbutton' href='{{j.key.id}}/del/'>smazat</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+{% else %}
+    žádný úkol<br>
+{% endif %}
+
+
+{% endblock %}
+

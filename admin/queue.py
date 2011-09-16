@@ -5,6 +5,7 @@ from django.http import Http404
 
 
 from enroll.models import Student,Course
+from admin.models import Job
 import utils.config as cfg
 import utils.mail as mail
 import utils.pdf as pdf
@@ -39,3 +40,17 @@ def plan_update_course(course):
             raise Http404
     else:
         logging.info('plan_recount_course - course is None, skip')
+
+
+def plan_job_transfer_students(student_ids,source_course, target_course):
+    logging.info('transfer %s from course %d to course %d'%(student_ids,source_course.key().id(), targer_course.key().id()))    
+
+    job = Job()
+    job.init("transfer_students",target='/admin/kurzy/')
+    job.save()
+ 
+    taskqueue.add(url='/task/transfer_students/', params={'job_id':job.key().id(), 'student_ids':student_ids, 'course':target_course})
+
+    logging.info('job_id %d'%(job.key().id())) 
+
+

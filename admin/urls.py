@@ -6,6 +6,8 @@ urlpatterns = patterns('admin',
     (r'^sys/(?P<config_id>\d+)/', 'sys_views.config_edit'),
     (r'^sys/setup/$', 'sys_views.config_setup'),
     (r'^sys/test/$', 'test_views.index'),
+    (r'^sys/jobs/$', 'jobs_views.index'),
+
 
     (r'^kurzy/$', 'course_views.index'),
     (r'^kurzy/add/$', 'course_views.create'),
@@ -23,6 +25,7 @@ urlpatterns = patterns('admin',
     (r'^kurzy/(?P<course_id>\d+)/zaci/email/$', 'student_views.course_emails'),
     (r'^kurzy/(?P<course_id>\d+)/zaci/csv/$', 'student_views.course_as_csv'),
     (r'^kurzy/(?P<course_id>\d+)/zaci/pdf/$', 'student_views.course_as_pdf'),
+    (r'^kurzy/(?P<course_id>\d+)/zaci/op/$', 'student_views.action_course'),
 
 
     (r'^kategorie/$', 'folder_views.index'),

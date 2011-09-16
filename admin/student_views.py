@@ -160,6 +160,10 @@ def index_course(request, course_id):
     course = Course.get_by_id(int(course_id))  
     if course is None:
         raise Http404
+
+
+
+
     student_list_to_enroll=Student.list_for_course_to_enroll(course.key())
     student_list_enrolled=Student.list_for_course_enrolled(course.key())
 
@@ -169,6 +173,73 @@ def index_course(request, course_id):
         'student_list_to_enroll': student_list_to_enroll,  
         'student_list_enrolled': student_list_enrolled,  
     }))
+
+def action_course(request,course_id):
+    course = Course.get_by_id(int(course_id))  
+    if course is None:
+        raise Http404
+
+
+    if request.method == 'POST':
+        logging.info(request.POST)
+        if 'operation' in request.POST:
+            op = request.POST['operation']
+        else:
+            op = None
+
+        if 'enroll_select' in request.POST:
+            en_sel = request.POST.getlist('enroll_select')
+        else:
+            en_sel = [] 
+
+        if 'spare_select' in request.POST:
+            sp_sel = request.POST.getlist('spare_select')
+        else:
+            sp_sel = [] 
+
+        if 'all_select' in request.POST:
+            all_sel = request.POST.getlist('all_select')
+        else:
+            all_sel = []
+            all_sel.extend(en_sel)
+            all_sel.extend(sp_sel)
+
+        logging.info('en_sel=%s, spare_sel=%s, all_sel=%s'%(en_sel,sp_sel,all_sel))
+
+        if 'course_key' in request.POST:
+            target_course = Course.get(request.POST['course_key'])
+        else:
+            target_course = None
+        
+
+        if op == 'action_transfer':
+            return action_do_transfer(request, source_course=course, student_ids = all_sel, target_course=target_course)
+
+
+    logging.info('unhandled action!')
+
+    return HttpResponseRedirect('../')
+
+class CoursePickForm(forms.Form):
+    course_key = forms.ChoiceField()
+    def __init__(self, data = None, courses = [], label = None):
+        super(self.__class__,self).__init__(data)
+        if not label is None:
+            self.fields['course_key'].label=label
+        self.fields['course_key'].choices=courses
+
+
+def action_do_transfer(request, source_course=None, student_ids=None, target_course=None):
+    logging.info('student_ids = %s'%student_ids)
+
+    if target_course is None:
+
+        info = 'přeřazení žáků do jiného kurzu'
+        form = CoursePickForm(label = 'do kurzu', courses = Course.get_COURSE_CHOICES())
+
+        return render_to_response('admin/action_transfer.html', RequestContext(request, {'form':form, 'info':info, 'operation':request.POST['operation'], 'all_select':student_ids}))
+
+    return HttpResponse('ok')
 
 
 
