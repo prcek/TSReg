@@ -46,4 +46,32 @@ class Job(BaseModel):
         self.finish_error = error
 
     
+       
+
+class Card(BaseModel):
+    create_datetime = db.DateTimeProperty()
+    owner = db.StringProperty(default='')
+    name = db.StringProperty(default='')
+    surname = db.StringProperty(default='')
+    season_name = db.StringProperty(default='')
+    course_code = db.StringProperty(default='')
+    info_line_1 = db.StringProperty(default='')
+    info_line_2 = db.StringProperty(default='')
+
+
+    @staticmethod
+    def list():
+        return Card.all().order('create_datetime')
+
+    def init(self, name=None, surname=None, season_name=None, course_code=None, info_line_1=None, info_line_2=None):
+        self.create_datetime = datetime.datetime.utcnow()
+        self.name = name
+        self.surname = surname
+        self.season_name = season_name
+        self.course_code = course_code
+        self.info_line_1 = info_line_1
+        self.info_line_2 = info_line_2
         
+
+ 
+

@@ -1,0 +1,14 @@
+{% extends "admin/base.html" %}
+
+{% block title %} Založení karty {% endblock %}
+
+{% block content %}
+<form method="post" name="form">
+<table>
+{{ form.as_table }}
+</table>
+<input class="button" type="submit" value="založit kartu">
+<a class='button' href='..'>zpět</a>
+</form>
+{% endblock %}
+

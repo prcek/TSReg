@@ -7,7 +7,7 @@ from django.template import RequestContext,Context, loader
 #from google.appengine.api import taskqueue
 
 from enroll.models import Student,Course
-from admin.queue import plan_send_student_email, plan_update_course, plan_job_transfer_students
+from admin.queue import plan_send_student_email, plan_update_course, plan_job_transfer_students, plan_job_card_for_students
 import utils.config as cfg
 import utils.mail as mail
 import utils.pdf as pdf
@@ -215,6 +215,10 @@ def action_course(request,course_id):
         if op == 'action_transfer':
             return action_do_transfer(request, source_course=course, student_ids = all_sel, target_course=target_course)
 
+        if op == 'action_card':
+            return action_do_card(request, source_course=course, student_ids = all_sel)
+
+
 
     logging.info('unhandled action!')
 
@@ -273,9 +277,24 @@ def action_do_card(request, source_course=None, student_ids=None):
         info = 'nebyl vybrán žádný žák'
         return render_to_response('admin/action_card.html', RequestContext(request, {'info':info}))
 
+    if not 'season_name' in request.POST:
+        form = CardPickForm(course = source_course)
+        info = 'generování průkazek' 
+        return render_to_response('admin/action_card.html', RequestContext(request, {'form':form, 'info':info, 'operation':request.POST['operation'], 'all_select':student_ids}))
+   
+    form = CardPickForm(request.POST)
+    if form.is_valid():
+        course_code = form.cleaned_data['course_code']
+        season_name = form.cleaned_data['season_name']
+        info_line_1 = form.cleaned_data['info_line_1']
+        info_line_2 = form.cleaned_data['info_line_2']
+        job_id=plan_job_card_for_students(student_ids,course_code, season_name, info_line_1, info_line_2)
+        return HttpResponseRedirect('../wait/%d/'%job_id)
 
-    #TODO...   
-    
+
+    info = 'generování průkazek' 
+    return render_to_response('admin/action_card.html', RequestContext(request, {'form':form, 'info':info, 'operation':request.POST['operation'], 'all_select':student_ids}))
+          
 
 
 def edit(request, student_id,course_id=None):

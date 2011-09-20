@@ -5,9 +5,11 @@
 
 {% block content %}
 
-
+<br>Vyhledání žáka<br>
 <form method="post" name="form">
-{{ form.as_p }}
+<table>
+{{ form.as_table }}
+</table>
 <input class="button" type="submit" value="hledat">
 </form>
 

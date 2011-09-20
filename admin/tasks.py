@@ -3,7 +3,7 @@
 from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from enroll.models import Student,Course
-from admin.models import Job
+from admin.models import Job,Card
 import utils.config as cfg
 import utils.mail as mail
 from google.appengine.api import mail as gmail
@@ -320,6 +320,45 @@ def transfer_students(request):
  
 
     taskqueue.add(url='/task/recount_capacity/', params={'course_id':target_course.key().id()})
+
+
+    job.finish()
+    job.save()
+
+    return HttpResponse('ok')
+
+
+def prepare_card(student_id, season_name, course_code, info_line_1, info_line_2):
+    student = Student.get_by_id(int(student_id))
+    if student is None:
+        return
+  
+ 
+    card = Card() 
+    card.init(name=student.name, surname=student.surname, season_name=season_name,  course_code=course_code, info_line_1=info_line_1, info_line_2=info_line_2)
+    card.save()
+    logging.info('card=%s'%card)
+
+def prepare_cards(request):
+    logging.info(request.POST)
+    job_id = request.POST['job_id']
+    job = Job.get_by_id(int(job_id))
+
+    job.start()
+    job.save()
+
+
+    student_ids = request.POST.getlist('student_ids')
+    season_name = request.POST['season_name']
+    course_code = request.POST['course_code']
+    info_line_1 = request.POST['info_line_1']
+    info_line_2 = request.POST['info_line_2']
+
+
+    logging.info('student list %s'%student_ids) 
+    for student_id in student_ids:
+        prepare_card(student_id, season_name, course_code, info_line_1, info_line_2)        
+    
 
 
     job.finish()

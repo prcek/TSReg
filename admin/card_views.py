@@ -1,0 +1,81 @@
+# -*- coding: utf-8 -*-
+
+from django import forms
+from django.http import HttpResponse, Http404, HttpResponseRedirect
+from django.shortcuts import render_to_response, redirect, get_object_or_404
+from django.template import RequestContext,Context, loader
+
+from admin.models import Card
+import utils.config as cfg
+import logging
+
+ERROR_MESSAGES={'required': 'Prosím vyplň tuto položku', 'invalid': 'Neplatná hodnota'}
+
+
+
+class CardForm(forms.ModelForm):
+    season_name = forms.CharField(label='název sezóny', error_messages=ERROR_MESSAGES, required=False)
+    course_code = forms.CharField(label='kód kurzu', error_messages=ERROR_MESSAGES, required=False)
+    name = forms.CharField(label='jméno', error_messages=ERROR_MESSAGES, required=False)
+    surname = forms.CharField(label='přijmení', error_messages=ERROR_MESSAGES, required=False)
+    info_line_1 = forms.CharField(label='1. řádek', error_messages=ERROR_MESSAGES, required=False)
+    info_line_2 = forms.CharField(label='2. řádek', error_messages=ERROR_MESSAGES, required=False)
+
+    class Meta:
+        model = Card 
+        fields = ( 'season_name','course_code', 'name', 'surname', 'info_line_1','info_line_2')
+
+
+def index(request):
+    card_list=Card.list()
+    return render_to_response('admin/cards_index.html', RequestContext(request, { 'card_list': card_list }))
+    
+def edit(request, card_id):
+
+    card = Card.get_by_id(int(card_id))
+
+    if card is None:
+        raise Http404
+
+    if request.method == 'POST':
+        form = CardForm(request.POST, instance=card)
+        if form.is_valid():
+            logging.info('edit card before %s'% card)
+            form.save(commit=False)
+            logging.info('edit card after %s'% card)
+            card.save()
+            return HttpResponseRedirect('../..')
+    else:
+        form = CardForm(instance=card)
+
+    return render_to_response('admin/cards_edit.html', RequestContext(request, {'form':form}))
+
+def create(request):
+
+    card = Card()
+    card.init()
+    if request.method == 'POST':
+        form = CardForm(request.POST, instance=card)
+        if form.is_valid():
+            logging.info('edit card before %s'% card)
+            form.save(commit=False)
+            logging.info('edit card after %s'% card)
+            card.save()
+            return HttpResponseRedirect('..')
+    else:
+        form = CardForm(instance=card)
+
+    return render_to_response('admin/cards_create.html', RequestContext(request, {'form':form}))
+
+
+
+def delete(request, card_id):
+
+    card = Card.get_by_id(int(card_id))
+
+    if card is None:
+        raise Http404
+
+    card.delete()
+
+    return HttpResponseRedirect('../..')

@@ -1,0 +1,48 @@
+
+{% extends "admin/base.html" %}
+
+{% block title %} Administrace zápisu {% endblock %}
+
+{% block content %}
+    <a class='button' href='.'>přenačíst</a>
+    <a class='button' href='add/'>přidat kartu</a>
+
+    <br><br>Přehled karet<br>
+
+{% if card_list %}
+    <table>
+    <tr>
+        <th>p.č.</th>
+        <th>vyrobena</th>
+        <th>sezona</th>
+        <th>kurz</th>
+        <th>1. řádek</th>
+        <th>2. řádek</th>
+        <th>jméno</th>
+        <th>přijmení</th>
+        <th>operace</th>
+    </tr>
+    {% for c in card_list %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{c.create_datetime}}</td>
+            <td>{{c.season_name|nonone}}</td>
+            <td>{{c.course_code|nonone}}</td>
+            <td>{{c.info_line_1|nonone}}</td>
+            <td>{{c.info_line_2|nonone}}</td>
+            <td>{{c.name|nonone}}</td>
+            <td>{{c.surname|nonone}}</td>
+            <td>
+                <a class='button' href='{{c.key.id}}/edit/'>editovat</a>
+                <a class='cbutton' href='{{c.key.id}}/del/'>smazat</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+{% else %}
+    no card<br>
+{% endif %}
+
+
+{% endblock %}
+
