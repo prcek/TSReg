@@ -16,8 +16,9 @@
 {% for s in all_select %}
 <input type="hidden" name="all_select" value="{{s}}" />
 {% endfor %}
-
-{{ form.as_p }}
+<table>
+{{ form.as_table }}
+</table>
     <input class="button" type="submit" value="vygenerovat">
     <a class='button' href='../'>zpět</a>
     </form>
