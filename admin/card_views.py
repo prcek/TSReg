@@ -4,6 +4,7 @@ from django import forms
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext,Context, loader
+from google.appengine.ext import db
 
 from admin.models import Card
 import utils.config as cfg
@@ -89,13 +90,21 @@ def delete(request, card_id):
 
 def clear_all(request):
 #TODO delete all - NO ADMIN == owner=me
+
+    card_keys=Card.keys_my(request.auth_info.email)
+    db.delete(card_keys)
+
     return HttpResponseRedirect('..')
 
 def clear_all_all(request):
+#TODO delete all - ADMIN = ALL
     if not request.auth_info.admin:
         raise Http404
 
-#TODO delete all - ADMIN = ALL
+    card_keys=Card.keys_all()
+
+    db.delete(card_keys)
+
     return HttpResponseRedirect('..')
 
 

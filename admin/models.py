@@ -63,10 +63,19 @@ class Card(BaseModel):
     @staticmethod
     def list_all():
         return Card.all().order('create_datetime')
+
+
+    @staticmethod
+    def keys_all():
+        return Card.all(keys_only=True)
     
     @staticmethod
     def list_my(owner):
         return Card.all().filter('owner',owner).order('create_datetime')
+ 
+    @staticmethod
+    def keys_my(owner):
+        return Card.all(keys_only=True).filter('owner',owner)
  
     def init(self, owner=None, name=None, surname=None, season_name=None, course_code=None, info_line_1=None, info_line_2=None):
         self.create_datetime = datetime.datetime.utcnow()
