@@ -299,13 +299,13 @@ def action_do_card(request, source_course=None, student_ids=None):
   
 INVITATION_MODE_CHOICES = (
     ('direct','přímá adresa'),
-    ('parents','adresa rodičům')
+    ('parents','adresa rodičům'),
 )
 
         
 class InvitationPickForm(forms.Form):
-    addressing = forms.CharField(required=False, label='Oslovení pro rodiče')
-    mode  = forms.CharField(label='Typ adresy', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=INVITATION_MODE_CHOICES))
+    addressing = forms.CharField(required=False, label='Oslovení pro rodiče', initial='Vážení rodiče')
+    mode  = forms.CharField(label='Typ adresy', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=INVITATION_MODE_CHOICES), initial='parents')
    
     def __init__(self, data = None, course = None):
         super(self.__class__,self).__init__(data)
