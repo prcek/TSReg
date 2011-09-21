@@ -68,3 +68,17 @@ def plan_job_card_for_students(owner,student_ids,course_code, season_name, info_
 
     return job.key().id()
 
+
+def plan_job_invitation_for_students(owner,student_ids,mode, addressing):
+    logging.info('prepare invitations for %s, mode=%s, addressing=%s'%(student_ids,mode,addressing))
+
+    job = Job()
+    job.init("prepare invitations",target='../../', owner=owner)
+    job.save()
+ 
+    taskqueue.add(url='/task/prepare_invitations/', params={'job_id':job.key().id(), 'owner':owner, 'student_ids':student_ids, 'mode': mode, 'addressing':addressing})
+
+    logging.info('job_id %d'%(job.key().id())) 
+
+    return job.key().id()
+

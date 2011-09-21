@@ -3,7 +3,7 @@
 from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from enroll.models import Student,Course
-from admin.models import Job,Card
+from admin.models import Job,Card,Invitation
 import utils.config as cfg
 import utils.mail as mail
 from google.appengine.api import mail as gmail
@@ -360,6 +360,43 @@ def prepare_cards(request):
     for student_id in student_ids:
         prepare_card(owner, student_id, season_name, course_code, info_line_1, info_line_2)        
     
+
+
+    job.finish()
+    job.save()
+
+    return HttpResponse('ok')
+
+def prepare_invitation(owner, student_id, mode, addressing):
+    student = Student.get_by_id(int(student_id))
+    if student is None:
+        return
+  
+ 
+    invitation = Invitation() 
+    invitation.init(owner=owner,mode=mode, addressing=addressing, name=student.name, surname=student.surname)
+    invitation.save()
+    logging.info('invitation=%s'%invitation)
+
+
+def prepare_invitations(request):
+    logging.info(request.POST)
+    job_id = request.POST['job_id']
+    job = Job.get_by_id(int(job_id))
+
+    job.start()
+    job.save()
+
+
+    student_ids = request.POST.getlist('student_ids')
+    owner = request.POST['owner']
+    mode = request.POST['mode']
+    addressing = request.POST['addressing']
+
+
+    logging.info('student list %s'%student_ids) 
+    for student_id in student_ids:
+        prepare_invitation(owner, student_id, mode, addressing)        
 
 
     job.finish()

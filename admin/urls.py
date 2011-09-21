@@ -43,7 +43,7 @@ urlpatterns = patterns('admin',
     (r'^adresy/(?P<invitation_id>\d+)/del/$', 'invitation_views.delete'),
     (r'^adresy/clear/$', 'invitation_views.clear_all'),
     (r'^adresy/clear_all/$', 'invitation_views.clear_all_all'),
-    (r'^karty/print/$', 'invitation_views.print_all'),
+    (r'^adresy/print/$', 'invitation_views.print_all'),
 
 
 
