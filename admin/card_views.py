@@ -27,7 +27,11 @@ class CardForm(forms.ModelForm):
 
 
 def index(request):
-    card_list=Card.list()
+    if (request.auth_info.admin):
+        card_list=Card.list_all()
+    else:
+        card_list=Card.list_my(request.auth_info.email)
+
     return render_to_response('admin/cards_index.html', RequestContext(request, { 'card_list': card_list }))
     
 def edit(request, card_id):
@@ -53,7 +57,7 @@ def edit(request, card_id):
 def create(request):
 
     card = Card()
-    card.init()
+    card.init(owner=request.auth_info.email)
     if request.method == 'POST':
         form = CardForm(request.POST, instance=card)
         if form.is_valid():
@@ -71,6 +75,8 @@ def create(request):
 
 def delete(request, card_id):
 
+    
+
     card = Card.get_by_id(int(card_id))
 
     if card is None:
@@ -79,3 +85,21 @@ def delete(request, card_id):
     card.delete()
 
     return HttpResponseRedirect('../..')
+
+
+def clear_all(request):
+#TODO delete all - NO ADMIN == owner=me
+    return HttpResponseRedirect('..')
+
+def clear_all_all(request):
+    if not request.auth_info.admin:
+        raise Http404
+
+#TODO delete all - ADMIN = ALL
+    return HttpResponseRedirect('..')
+
+
+def print_all(request):
+#TODO print all == owner=me
+    return HttpResponseRedirect('..')
+

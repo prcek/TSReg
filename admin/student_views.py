@@ -249,8 +249,7 @@ def action_do_transfer(request, source_course=None, student_ids=None, target_cou
 
         return render_to_response('admin/action_transfer.html', RequestContext(request, {'form':form, 'info':info, 'operation':request.POST['operation'], 'all_select':student_ids}))
 
-
-    job_id=plan_job_transfer_students(student_ids,source_course, target_course)
+    job_id=plan_job_transfer_students(request.auth_info.email,student_ids,source_course, target_course)
 
 
     return HttpResponseRedirect('../wait/%d/'%job_id)
@@ -288,7 +287,7 @@ def action_do_card(request, source_course=None, student_ids=None):
         season_name = form.cleaned_data['season_name']
         info_line_1 = form.cleaned_data['info_line_1']
         info_line_2 = form.cleaned_data['info_line_2']
-        job_id=plan_job_card_for_students(student_ids,course_code, season_name, info_line_1, info_line_2)
+        job_id=plan_job_card_for_students(request.auth_info.email,student_ids,course_code, season_name, info_line_1, info_line_2)
         return HttpResponseRedirect('../wait/%d/'%job_id)
 
 

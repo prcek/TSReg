@@ -31,8 +31,9 @@ class Job(BaseModel):
     def list_error():
         return Job.all().filter('finish_error',True).order('create_datetime')
  
-    def init(self,name,target=None):
+    def init(self,name,target=None, owner=None):
         self.name = name
+        self.onwer = owner
         self.active = True
         self.finish_target = target
         self.create_datetime =  datetime.datetime.utcnow()
@@ -60,11 +61,16 @@ class Card(BaseModel):
 
 
     @staticmethod
-    def list():
+    def list_all():
         return Card.all().order('create_datetime')
-
-    def init(self, name=None, surname=None, season_name=None, course_code=None, info_line_1=None, info_line_2=None):
+    
+    @staticmethod
+    def list_my(owner):
+        return Card.all().filter('owner',owner).order('create_datetime')
+ 
+    def init(self, owner=None, name=None, surname=None, season_name=None, course_code=None, info_line_1=None, info_line_2=None):
         self.create_datetime = datetime.datetime.utcnow()
+        self.owner = owner
         self.name = name
         self.surname = surname
         self.season_name = season_name

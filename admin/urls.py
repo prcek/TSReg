@@ -33,6 +33,9 @@ urlpatterns = patterns('admin',
     (r'^karty/add/$', 'card_views.create'),
     (r'^karty/(?P<card_id>\d+)/edit/$', 'card_views.edit'),
     (r'^karty/(?P<card_id>\d+)/del/$', 'card_views.delete'),
+    (r'^karty/clear/$', 'card_views.clear_all'),
+    (r'^karty/clear_all/$', 'card_views.clear_all_all'),
+    (r'^karty/print/$', 'card_views.print_all'),
 
 
 

@@ -42,27 +42,27 @@ def plan_update_course(course):
         logging.info('plan_recount_course - course is None, skip')
 
 
-def plan_job_transfer_students(student_ids,source_course, target_course):
+def plan_job_transfer_students(owner,student_ids,source_course, target_course):
     logging.info('transfer %s from course %d to course %d'%(student_ids,source_course.key().id(), target_course.key().id()))    
 
     job = Job()
-    job.init("transfer_students",target='../../')
+    job.init("transfer_students",target='../../', owner=owner)
     job.save()
  
-    taskqueue.add(url='/task/transfer_students/', params={'job_id':job.key().id(), 'student_ids':student_ids, 'source_course_id': source_course.key().id(), 'target_course_id':target_course.key().id()})
+    taskqueue.add(url='/task/transfer_students/', params={'job_id':job.key().id(), 'owner':owner, 'student_ids':student_ids, 'source_course_id': source_course.key().id(), 'target_course_id':target_course.key().id()})
 
     logging.info('job_id %d'%(job.key().id())) 
 
     return job.key().id()
 
-def plan_job_card_for_students(student_ids,course_code, season_name, info_line_1, info_line_2):
+def plan_job_card_for_students(owner,student_ids,course_code, season_name, info_line_1, info_line_2):
     logging.info('prepare cards for %s, code=%s, season=%s, line1=%s, line2=%s'%(student_ids,course_code, season_name, info_line_1, info_line_2))
 
     job = Job()
-    job.init("prepare cards",target='../../')
+    job.init("prepare cards",target='../../', owner=owner)
     job.save()
  
-    taskqueue.add(url='/task/prepare_cards/', params={'job_id':job.key().id(), 'student_ids':student_ids, 'course_code': course_code, 'season_name':season_name, 'info_line_1':info_line_1, 'info_line_2': info_line_2})
+    taskqueue.add(url='/task/prepare_cards/', params={'job_id':job.key().id(), 'owner':owner, 'student_ids':student_ids, 'course_code': course_code, 'season_name':season_name, 'info_line_1':info_line_1, 'info_line_2': info_line_2})
 
     logging.info('job_id %d'%(job.key().id())) 
 

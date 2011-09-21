@@ -328,14 +328,14 @@ def transfer_students(request):
     return HttpResponse('ok')
 
 
-def prepare_card(student_id, season_name, course_code, info_line_1, info_line_2):
+def prepare_card(owner, student_id, season_name, course_code, info_line_1, info_line_2):
     student = Student.get_by_id(int(student_id))
     if student is None:
         return
   
  
     card = Card() 
-    card.init(name=student.name, surname=student.surname, season_name=season_name,  course_code=course_code, info_line_1=info_line_1, info_line_2=info_line_2)
+    card.init(owner=owner,name=student.name, surname=student.surname, season_name=season_name,  course_code=course_code, info_line_1=info_line_1, info_line_2=info_line_2)
     card.save()
     logging.info('card=%s'%card)
 
@@ -349,6 +349,7 @@ def prepare_cards(request):
 
 
     student_ids = request.POST.getlist('student_ids')
+    owner = request.POST['owner']
     season_name = request.POST['season_name']
     course_code = request.POST['course_code']
     info_line_1 = request.POST['info_line_1']
@@ -357,7 +358,7 @@ def prepare_cards(request):
 
     logging.info('student list %s'%student_ids) 
     for student_id in student_ids:
-        prepare_card(student_id, season_name, course_code, info_line_1, info_line_2)        
+        prepare_card(owner, student_id, season_name, course_code, info_line_1, info_line_2)        
     
 
 

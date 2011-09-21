@@ -6,6 +6,11 @@
 {% block content %}
     <a class='button' href='.'>přenačíst</a>
     <a class='button' href='add/'>přidat kartu</a>
+    <a class='cbutton' href='clear/'>vymazat všechny (MOJE)</a>
+{% if request.auth_info.admin %}
+    <a class='cbutton' href='clear_all/'>vymazat ÚPLNĚ všechny</a>
+{% endif %}
+    <a class='button' href='print/'>tisk</a>
 
     <br><br>Přehled karet<br>
 
@@ -13,6 +18,9 @@
     <table>
     <tr>
         <th>p.č.</th>
+{% if request.auth_info.admin %}
+        <th>vlastník</th>
+{% endif %}
         <th>vyrobena</th>
         <th>sezona</th>
         <th>kurz</th>
@@ -25,6 +33,9 @@
     {% for c in card_list %}
         <tr>
             <td>{{forloop.counter}}</td>
+{% if request.auth_info.admin %}
+            <td>{{c.owner}}</td>
+{% endif %}
             <td>{{c.create_datetime}}</td>
             <td>{{c.season_name|nonone}}</td>
             <td>{{c.course_code|nonone}}</td>

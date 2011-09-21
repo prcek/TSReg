@@ -11,9 +11,10 @@
     <table>
 
 {% if jobs %}
-    <tr> <td colspan=7> aktivní </td></tr>
+    <tr> <td colspan=8> aktivní </td></tr>
     <tr>
         <th>aktivní</th>
+        <th>vlastník</th>
         <th>název</th>
         <th>vytvořena</th>
         <th>zahájena</th>
@@ -25,6 +26,7 @@
    {% for j in jobs %}
         <tr>
             <td>{{j.active|anone }}</td>
+            <td>{{j.owner }}</td>
             <td>{{j.name }}</td>
             <td>{{j.create_datetime}}</td>
             <td>{{j.start_datetime}}</td>
@@ -36,13 +38,14 @@
         </tr>
     {% endfor %}
 {% else %}
-    <tr> <td colspan=7> žádné aktivní </td></tr>
+    <tr> <td colspan=8> žádné aktivní </td></tr>
 {% endif %}
 
 {% if e_jobs %}
-    <tr> <td colspan=7> chybové </td></tr>
+    <tr> <td colspan=8> chybové </td></tr>
     <tr>
         <th>aktivní</th>
+        <th>vlastník</th>
         <th>název</th>
         <th>vytvořena</th>
         <th>zahájena</th>
@@ -54,6 +57,7 @@
     {% for j in e_jobs %}
         <tr>
             <td>{{j.active|anone }}</td>
+            <td>{{j.owner }}</td>
             <td>{{j.name }}</td>
             <td>{{j.create_datetime}}</td>
             <td>{{j.start_datetime}}</td>
@@ -65,7 +69,7 @@
         </tr>
     {% endfor %}
 {% else %}
-    <tr> <td colspan=7> žádné chybové</td></tr>
+    <tr> <td colspan=8> žádné chybové</td></tr>
 {% endif %}
 
     </table>
