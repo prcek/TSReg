@@ -304,7 +304,10 @@ INVITATION_MODE_CHOICES = (
 
         
 class InvitationPickForm(forms.Form):
-    addressing = forms.CharField(required=False, label='Oslovení pro rodiče', initial='Vážení rodiče')
+    addressing_parents = forms.CharField(required=False, label='Oslovení pro rodiče', initial='Vážení rodiče')
+    addressing_p = forms.CharField(required=False, label='Oslovení pro pána', initial='Vážený pan')
+    addressing_s = forms.CharField(required=False, label='Oslovení pro slečnu', initial='Vážená slečna')
+    addressing_d = forms.CharField(required=False, label='Oslovení pro paní', initial='Vážená paní')
     mode  = forms.CharField(label='Typ adresy', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=INVITATION_MODE_CHOICES), initial='parents')
    
     def __init__(self, data = None, course = None):
@@ -329,8 +332,11 @@ def action_do_invitation(request, source_course=None, student_ids=None):
     form = InvitationPickForm(request.POST)
     if form.is_valid():
         mode  = form.cleaned_data['mode']
-        addressing = form.cleaned_data['addressing']
-        job_id=plan_job_invitation_for_students(request.auth_info.email,student_ids,mode,addressing)
+        addressing_parents = form.cleaned_data['addressing_parents']
+        addressing_p= form.cleaned_data['addressing_p']
+        addressing_s= form.cleaned_data['addressing_s']
+        addressing_d= form.cleaned_data['addressing_d']
+        job_id=plan_job_invitation_for_students(request.auth_info.email,student_ids,mode,addressing_parents, addressing_p, addressing_s,addressing_d)
         return HttpResponseRedirect('../wait/%d/'%job_id)
 
 

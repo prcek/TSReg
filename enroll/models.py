@@ -369,8 +369,16 @@ class Student(BaseModel):
         
         
         
-        
-       
+    def get_sex(self):
+        if self.addressing == 'p':
+            return 'm'
+        elif self.addressing == 's':
+            return 'f'
+        elif self.addressing == 'd':
+            return 'f'
+        else:
+            return '-'
+    
 
     def addressing_loc(self):
         if self.addressing == '-':

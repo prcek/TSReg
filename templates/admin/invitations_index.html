@@ -24,6 +24,8 @@
         <th>vyrobena</th>
         <th>jméno</th>
         <th>přijmení</th>
+        <th>rod</th>
+        <th>oslovení</th>
         <th>operace</th>
     </tr>
     {% for i in invitation_list %}
@@ -35,6 +37,8 @@
             <td>{{i.create_datetime}}</td>
             <td>{{i.name|nonone}}</td>
             <td>{{i.surname|nonone}}</td>
+            <td>{{i.get_sex_loc}}</td>
+            <td>{{i.addressing|nonone}}</td>
             <td>
                 <a class='button' href='{{i.key.id}}/edit/'>editovat</a>
                 <a class='cbutton' href='{{i.key.id}}/del/'>smazat</a>

@@ -77,7 +77,7 @@ def create(request):
 def delete(request, invitation_id):
 
 
-    invitation = Invitation.get_by_id(int(card_id))
+    invitation = Invitation.get_by_id(int(invitation_id))
 
     if invitation is None:
         raise Http404

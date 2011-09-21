@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from appengine_django.models import BaseModel
 from google.appengine.ext import db
 import datetime
@@ -122,9 +124,18 @@ class Invitation(BaseModel):
     @staticmethod
     def keys_my(owner):
         return Invitation.all(keys_only=True).filter('owner',owner)
+
+
+    def get_sex_loc(self):
+        if self.sex == 'm':
+            return 'muž'
+        elif self.sex == 'f':
+            return 'žena'
+        else:
+            return '?'
  
 
-    def init(self, owner=None, mode=None, sex=None, name=None, surname=None, street=None, street_no=None, city=None, post_code=None, addressing=None, name_inflected=None, surname_inflected=None):
+    def init(self, owner=None, mode=None, sex=None, name=None, surname=None, street=None, street_no=None, city=None, post_code=None, addressing=None):
         self.create_datetime = datetime.datetime.utcnow()
         self.owner = owner
         self.mode = mode 
@@ -136,6 +147,4 @@ class Invitation(BaseModel):
         self.city=city
         self.post_code = post_code
         self.addressing = addressing
-        self.name_inflected = name_inflected
-        self.surname_inflected = surname_inflected
  

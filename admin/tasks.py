@@ -367,14 +367,34 @@ def prepare_cards(request):
 
     return HttpResponse('ok')
 
-def prepare_invitation(owner, student_id, mode, addressing):
+def prepare_invitation(owner, student_id, mode, addressing_parents, addressing_p, addressing_s, addressing_d):
     student = Student.get_by_id(int(student_id))
     if student is None:
         return
   
+
+    logging.info('student: %s'%student)
+
+    addressing=''
+    if mode=='parents':
+        addressing=addressing_parents
+    elif mode=='direct':
+        if student.addressing =='p':
+            addressing=addressing_p
+        elif student.addressing =='s':
+            addressing=addressing_s
+        elif student.addressing =='d':
+            addressing=addressing_d
+       
+    logging.info('addressing:%s'%addressing) 
  
     invitation = Invitation() 
-    invitation.init(owner=owner,mode=mode, addressing=addressing, name=student.name, surname=student.surname)
+    
+    invitation.init(owner=owner,mode=mode, addressing=addressing, name=student.name, surname=student.surname, sex=student.get_sex(), street=student.street,
+        street_no=student.street_no, city=student.city, post_code=student.post_code
+                )
+    logging.info('pre save invitation=%s'%invitation)
+
     invitation.save()
     logging.info('invitation=%s'%invitation)
 
@@ -391,12 +411,15 @@ def prepare_invitations(request):
     student_ids = request.POST.getlist('student_ids')
     owner = request.POST['owner']
     mode = request.POST['mode']
-    addressing = request.POST['addressing']
+    addressing_parents = request.POST['addressing_parents']
+    addressing_p = request.POST['addressing_p']
+    addressing_s = request.POST['addressing_s']
+    addressing_d = request.POST['addressing_d']
 
 
     logging.info('student list %s'%student_ids) 
     for student_id in student_ids:
-        prepare_invitation(owner, student_id, mode, addressing)        
+        prepare_invitation(owner, student_id, mode,addressing_parents, addressing_p, addressing_s, addressing_d)        
 
 
     job.finish()
