@@ -1,0 +1,51 @@
+
+{% extends "admin/base.html" %}
+
+{% block title %} Administrace zápisu {% endblock %}
+
+{% block content %}
+    <a class='button' href='.'>přenačíst</a>
+    <a class='button' href='add/'>přidat adresu</a>
+    <a class='cbutton' href='clear/'>vymazat všechny (MOJE)</a>
+{% if request.auth_info.admin %}
+    <a class='cbutton' href='clear_all/'>vymazat ÚPLNĚ všechny</a>
+{% endif %}
+    <a class='button' href='print/'>tisk</a>
+
+    <br><br>Přehled adres<br>
+
+{% if invitation_list %}
+    <table>
+    <tr>
+        <th>p.č.</th>
+{% if request.auth_info.admin %}
+        <th>vlastník</th>
+{% endif %}
+        <th>vyrobena</th>
+        <th>jméno</th>
+        <th>přijmení</th>
+        <th>operace</th>
+    </tr>
+    {% for i in invitation_list %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+{% if request.auth_info.admin %}
+            <td>{{i.owner}}</td>
+{% endif %}
+            <td>{{i.create_datetime}}</td>
+            <td>{{i.name|nonone}}</td>
+            <td>{{i.surname|nonone}}</td>
+            <td>
+                <a class='button' href='{{i.key.id}}/edit/'>editovat</a>
+                <a class='cbutton' href='{{i.key.id}}/del/'>smazat</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+{% else %}
+    no invitation<br>
+{% endif %}
+
+
+{% endblock %}
+

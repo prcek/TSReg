@@ -118,6 +118,21 @@ def students_card(output,cards):
 
     doc.build(elements)
 
+def students_invitation(output,invitations):
+    doc = SimpleDocTemplate(output, pagesize=A4) 
+    styles = getStyleSheet()
+    styleN = styles['Normal']
+    styleH = styles['Heading']
+    styleT = styles['Title']
+
+    elements = []
+
+    elements.append(Paragraph(u"adresy pozvánek....",styleH))
+
+    doc.build(elements)
+
+
+
 
 def pdftest(output):
     logging.info('pdftest')

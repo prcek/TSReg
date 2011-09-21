@@ -88,5 +88,54 @@ class Card(BaseModel):
         self.info_line_2 = info_line_2
         
 
+class Invitation(BaseModel):
+    create_datetime = db.DateTimeProperty()
+    owner = db.StringProperty(default='')
+    mode =  db.StringProperty(choices=['direct','parents'], default='direct')
+
+    sex = db.StringProperty(choices=['-','m','f'], default='-')
+    name = db.StringProperty(default='')
+    surname = db.StringProperty(default='')
+ 
+    street = db.StringProperty(default='')
+    street_no = db.StringProperty(default='')
+    city = db.StringProperty(default='')
+    post_code = db.StringProperty(default='')
+ 
+    addressing = db.StringProperty(default='')
+    name_inflected = db.StringProperty(default='')
+    surname_inflected = db.StringProperty(default='')
+
+    @staticmethod
+    def list_all():
+        return Invitation.all().order('create_datetime')
+
+
+    @staticmethod
+    def keys_all():
+        return Invitation.all(keys_only=True)
+    
+    @staticmethod
+    def list_my(owner):
+        return Invitation.all().filter('owner',owner).order('create_datetime')
+ 
+    @staticmethod
+    def keys_my(owner):
+        return Invitation.all(keys_only=True).filter('owner',owner)
  
 
+    def init(self, owner=None, mode=None, sex=None, name=None, surname=None, street=None, street_no=None, city=None, post_code=None, addressing=None, name_inflected=None, surname_inflected=None):
+        self.create_datetime = datetime.datetime.utcnow()
+        self.owner = owner
+        self.mode = mode 
+        self.sex= sex
+        self.name=name
+        self.surname=surname
+        self.street=street
+        self.street_no = street_no
+        self.city=city
+        self.post_code = post_code
+        self.addressing = addressing
+        self.name_inflected = name_inflected
+        self.surname_inflected = surname_inflected
+ 
