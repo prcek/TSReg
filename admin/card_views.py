@@ -8,7 +8,10 @@ from google.appengine.ext import db
 
 from admin.models import Card
 import utils.config as cfg
+import utils.pdf as pdf
 import logging
+import urllib
+
 
 ERROR_MESSAGES={'required': 'Prosím vyplň tuto položku', 'invalid': 'Neplatná hodnota'}
 
@@ -76,7 +79,6 @@ def create(request):
 
 def delete(request, card_id):
 
-    
 
     card = Card.get_by_id(int(card_id))
 
@@ -89,15 +91,12 @@ def delete(request, card_id):
 
 
 def clear_all(request):
-#TODO delete all - NO ADMIN == owner=me
-
     card_keys=Card.keys_my(request.auth_info.email)
     db.delete(card_keys)
 
     return HttpResponseRedirect('..')
 
 def clear_all_all(request):
-#TODO delete all - ADMIN = ALL
     if not request.auth_info.admin:
         raise Http404
 
@@ -109,6 +108,15 @@ def clear_all_all(request):
 
 
 def print_all(request):
-#TODO print all == owner=me
-    return HttpResponseRedirect('..')
+
+    r =  HttpResponse(mimetype='application/pdf')
+    file_name = urllib.quote("karty.pdf")
+    logging.info(file_name)
+    r['Content-Disposition'] = "attachment; filename*=UTF-8''%s"%file_name
+
+    card_list=Card.list_my(request.auth_info.email)
+
+    pdf.students_card(r,card_list)
+
+    return r
 

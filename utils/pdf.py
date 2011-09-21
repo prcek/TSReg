@@ -104,6 +104,21 @@ def students_table(output,course,students):
     elements.append(t)
     doc.build(elements)
 
+
+def students_card(output,cards):
+    doc = SimpleDocTemplate(output, pagesize=A4) 
+    styles = getStyleSheet()
+    styleN = styles['Normal']
+    styleH = styles['Heading']
+    styleT = styles['Title']
+
+    elements = []
+
+    elements.append(Paragraph(u"legitimace....",styleH))
+
+    doc.build(elements)
+
+
 def pdftest(output):
     logging.info('pdftest')
 
