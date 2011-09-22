@@ -7,6 +7,10 @@
     <a class='button' href='.'>přenačíst</a>
     <a class='button' href='add/'>přidat vzor</a>
     <a class='button' href='test/'>testovat</a>
+{% if request.auth_info.admin %}
+    <a class='cbutton' href='clear_all/'>vymazat vše</a>
+    <a class='button' href='setup/'>setup</a>
+{% endif %}
 
     <br><br>Přehled skloňovacích vzorů<br>
 

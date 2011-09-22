@@ -99,6 +99,31 @@ def delete(request, inflect_id):
 
     return HttpResponseRedirect('../..')
 
+def clear_all(request):
+    if not request.auth_info.admin:
+        raise Http404
+    inflect_keys=Inflect.keys_all()
+    logging.info('clear all inflect patterns %s'%inflect_keys)
+    db.delete(inflect_keys)
+
+    return HttpResponseRedirect('..')
+
+
+
+def setup(request):
+    if not request.auth_info.admin:
+        raise Http404
+    
+    from admin.inflect_data import INFLECT_PATTERNS
+
+    for p in INFLECT_PATTERNS:
+        logging.info('p=%s',p)
+        inflect = Inflect() 
+        inflect.init(owner=request.auth_info.email,gender=p[1],part=p[0],pattern=p[2],proposal=p[3])
+        inflect.save()
+
+    return HttpResponse('ok')
+
 
 def test(request):
     

@@ -168,6 +168,10 @@ class Inflect(BaseModel):
     def list():
         return Inflect.all().order('create_datetime')
 
+    @staticmethod
+    def keys_all():
+        return Inflect.all(keys_only=True)
+ 
 
     def init(self, owner=None, gender=None, part=None, pattern=None, proposal=None):
         self.create_datetime = datetime.datetime.utcnow()

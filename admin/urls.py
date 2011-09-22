@@ -50,7 +50,8 @@ urlpatterns = patterns('admin',
     (r'^inflect/test/$', 'inflect_views.test'),
     (r'^inflect/(?P<inflect_id>\d+)/edit/$', 'inflect_views.edit'),
     (r'^inflect/(?P<inflect_id>\d+)/del/$', 'inflect_views.delete'),
- 
+    (r'^inflect/clear_all/$', 'inflect_views.clear_all'),
+    (r'^inflect/setup/$', 'inflect_views.setup'),
 
 
     (r'^kategorie/$', 'folder_views.index'),
