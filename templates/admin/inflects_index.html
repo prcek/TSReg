@@ -1,0 +1,51 @@
+
+{% extends "admin/base.html" %}
+
+{% block title %} Administrace zápisu {% endblock %}
+
+{% block content %}
+    <a class='button' href='.'>přenačíst</a>
+    <a class='button' href='add/'>přidat vzor</a>
+    <a class='button' href='test/'>testovat</a>
+
+    <br><br>Přehled skloňovacích vzorů<br>
+
+{% if inflect_list %}
+    <table>
+    <tr>
+        <th>p.č.</th>
+{% if request.auth_info.admin %}
+        <th>vlastník</th>
+{% endif %}
+        <th>vložen</th>
+        <th>část</th>
+        <th>rod</th>
+        <th>vzor</th>
+        <th>návrh</th>
+        <th>operace</th>
+    </tr>
+    {% for c in inflect_list %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+{% if request.auth_info.admin %}
+            <td>{{c.owner}}</td>
+{% endif %}
+            <td>{{c.create_datetime}}</td>
+            <td>{{c.part|nonone}}</td>
+            <td>{{c.gender|nonone}}</td>
+            <td>{{c.pattern|nonone}}</td>
+            <td>{{c.proposal|nonone}}</td>
+            <td>
+                <a class='button' href='{{c.key.id}}/edit/'>editovat</a>
+                <a class='cbutton' href='{{c.key.id}}/del/'>smazat</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+{% else %}
+    no inflect<br>
+{% endif %}
+
+
+{% endblock %}
+

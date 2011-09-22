@@ -45,7 +45,12 @@ urlpatterns = patterns('admin',
     (r'^adresy/clear_all/$', 'invitation_views.clear_all_all'),
     (r'^adresy/print/$', 'invitation_views.print_all'),
 
-
+    (r'^inflect/$', 'inflect_views.index'),
+    (r'^inflect/add/$', 'inflect_views.create'),
+    (r'^inflect/test/$', 'inflect_views.test'),
+    (r'^inflect/(?P<inflect_id>\d+)/edit/$', 'inflect_views.edit'),
+    (r'^inflect/(?P<inflect_id>\d+)/del/$', 'inflect_views.delete'),
+ 
 
 
     (r'^kategorie/$', 'folder_views.index'),

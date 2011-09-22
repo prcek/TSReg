@@ -156,3 +156,24 @@ class Invitation(BaseModel):
         self.post_code = post_code
         self.addressing = addressing
  
+class Inflect(BaseModel):
+    create_datetime = db.DateTimeProperty()
+    owner = db.StringProperty(default='')
+    gender = db.StringProperty(choices=['-','m','f'], default='-')
+    part = db.StringProperty(choices=['-','name','surname'], default='-') 
+    pattern = db.StringProperty(default='') 
+    proposal = db.StringProperty(default='')
+
+    @staticmethod
+    def list():
+        return Inflect.all().order('create_datetime')
+
+
+    def init(self, owner=None, gender=None, part=None, pattern=None, proposal=None):
+        self.create_datetime = datetime.datetime.utcnow()
+        self.owner = owner
+        self.gender=gender
+        self.part=part
+        self.pattern=pattern
+        self.proposal=proposal
+ 
