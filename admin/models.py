@@ -133,6 +133,14 @@ class Invitation(BaseModel):
             return 'žena'
         else:
             return '?'
+
+    def get_mode_loc(self):
+        if self.mode == 'direct':
+            return 'přímá'
+        elif self.mode == 'parents':
+            return 'rodičům'
+        else:
+            return '?'
  
 
     def init(self, owner=None, mode=None, sex=None, name=None, surname=None, street=None, street_no=None, city=None, post_code=None, addressing=None):

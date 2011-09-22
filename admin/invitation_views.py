@@ -15,16 +15,40 @@ import urllib
 
 ERROR_MESSAGES={'required': 'Prosím vyplň tuto položku', 'invalid': 'Neplatná hodnota'}
 
+SEX_CHOICES = (
+    ('-','?'),
+    ('m','mužský'),
+    ('f','ženský'),
+)
+
+MODE_CHOICES = (
+    ('direct','přímá'),
+    ('parents','rodičům')
+)
+
 
 
 class InvitationForm(forms.ModelForm):
 
+    mode  = forms.CharField(label='režim adresy', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=MODE_CHOICES))
+
     name = forms.CharField(label='jméno', error_messages=ERROR_MESSAGES, required=False)
     surname = forms.CharField(label='přijmení', error_messages=ERROR_MESSAGES, required=False)
+    street = forms.CharField(label='ulice', error_messages=ERROR_MESSAGES, required=False)
+    street_no = forms.CharField(label='číslo', error_messages=ERROR_MESSAGES, required=False)
+    city = forms.CharField(label='město', error_messages=ERROR_MESSAGES, required=False)
+    post_code= forms.CharField(label='psč', error_messages=ERROR_MESSAGES, required=False)
+
+      
+    addressing = forms.CharField(label='oslovení', error_messages=ERROR_MESSAGES, required=False)
+    sex  = forms.CharField(label='rod', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=SEX_CHOICES))
+    name_inflected = forms.CharField(label='2. pád jména', error_messages=ERROR_MESSAGES, required=False)
+    surname_inflected= forms.CharField(label='2. pád přijmení', error_messages=ERROR_MESSAGES, required=False)
+
 
     class Meta:
         model = Invitation
-        fields = ( 'name','surname')
+        fields = ( 'name','surname', 'street', 'street_no', 'city', 'post_code', 'mode', 'sex', 'addressing', 'name_inflected', 'surname_inflected')
 
 
 def index(request):
