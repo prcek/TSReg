@@ -9,8 +9,10 @@ from google.appengine.ext import db
 from admin.models import Inflect
 import utils.config as cfg
 import utils.pdf as pdf
+import admin.inflector as inflector
 import logging
 import urllib
+
 
 
 ERROR_MESSAGES={'required': 'Prosím vyplň tuto položku', 'invalid': 'Neplatná hodnota'}
@@ -117,15 +119,37 @@ def setup(request):
     from admin.inflect_data import INFLECT_PATTERNS
 
     for p in INFLECT_PATTERNS:
-        logging.info('p=%s',p)
+#        logging.info('p=%s',p)
         inflect = Inflect() 
         inflect.init(owner=request.auth_info.email,gender=p[1],part=p[0],pattern=p[2],proposal=p[3])
         inflect.save()
 
     return HttpResponse('ok')
 
+class TestInflectForm(forms.Form):
+
+    part = forms.CharField(label='část', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=PART_CHOICES))
+    gender = forms.CharField(label='rod', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=GENDER_CHOICES))
+    pattern = forms.CharField(label='vzor', error_messages=ERROR_MESSAGES, required=True)
+    proposal = forms.CharField(label='návrh 2. pád', error_messages=ERROR_MESSAGES, required=False)
+
+
 
 def test(request):
+    inflector.init_dicts()
+    if request.method == 'POST':
+        form = TestInflectForm(request.POST)
+        if form.is_valid():
+            pattern = form.cleaned_data['pattern']
+            part = form.cleaned_data['part']
+            gender = form.cleaned_data['gender']
+
+            proposal = inflector.do_inflect(part,gender,pattern)
     
-    return HttpResponse('ok')
+            form = TestInflectForm({'proposal':proposal,'pattern':pattern,'gender':gender,'part':part})
+            
+    else:
+        form = TestInflectForm()
+
+    return render_to_response('admin/inflects_test.html', RequestContext(request, {'form':form}))
 
