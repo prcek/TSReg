@@ -5,7 +5,7 @@ import sys
 import os
 
 
-class RevTrie:
+class RevTrieXXXX:
 
     def __init__(self):
         self.root = [None, {}]
@@ -42,15 +42,36 @@ class RevTrie:
 
 class InfTrie:
     def __init__(self):
-        self.rt = RevTrie()     
+        self.root = [None, {}]
 
     def add(self, pattern, proposal):
-        self.rt.add(pattern,(pattern,proposal))
+        curr_node = self.root
+        for ch in pattern[::-1]:
+            curr_node = curr_node[1].setdefault(ch, [None, {}])
+        curr_node[0] = (pattern,proposal)
 
-    def do(self,text):
-        (suffix_len, rule) = self.rt.find_max(text)
+    def find_max(self, key):
+        curr_node = self.root
+        prefix_len = 0
+        for ch in key[::-1]:
+            try:
+                curr_node = curr_node[1][ch]
+                prefix_len+=1
+            except KeyError:
+                if curr_node == self.root:
+                    return (0,None)
+                break
+
+        while curr_node[0] is None:
+            curr_node = curr_node[1].itervalues().next()
+ 
+        return (prefix_len,curr_node[0])
+
+
+    def do(self,text,default=None):
+        (suffix_len, rule) = self.find_max(text)
         if suffix_len == 0:
-            return None
+            return default 
 
 
         pattern = rule[0]
@@ -86,6 +107,7 @@ if __name__ == "__main__":
     print t.do(u"Jiří")
     print t.do(u"Novák")
     print t.do(u"Bůček")
+    print t.do(u"X")
 
 #    t.add(u"foo", "A")
 #    t.add(u"foik34895ěščáíěšřýá", "B")
