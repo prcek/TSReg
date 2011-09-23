@@ -36,8 +36,9 @@ class InflectDict:
     def inflect(self, text, default = None):
         (suffix_len, rule) = self.find_max(text)
         if suffix_len == 0:
+            logging.info('no rule')
             return default 
-
+        logging.info('suffix_len=%d, rule=%s'%(suffix_len,rule))
 
         pattern = rule[0]
         proposal = rule[1]
