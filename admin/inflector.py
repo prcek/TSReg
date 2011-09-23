@@ -13,6 +13,7 @@ class InflectDict:
 
     def find(self, pattern):
         if pattern in self.data:
+            #exact match
             return self.data[pattern]
         return None
 #    def __str__(self):
