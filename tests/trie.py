@@ -48,28 +48,52 @@ class InfTrie:
         self.rt.add(pattern,(pattern,proposal))
 
     def do(self,text):
+        (suffix_len, rule) = self.rt.find_max(text)
+        if suffix_len == 0:
+            return None
 
-#        String inft_p = best_m.getPatern();
-#        String inft_t = best_m.getInflected();
-#
-#        String base = text.substring(0,text.length()-best_v);
-#        if ((inft_p.length()-best_v)<0) return "";
-#        if ((inft_p.length()-best_v)>=inft_t.length()) return base;
-#        String addon = inft_t.substring(inft_p.length()-best_v);
-#        return base+addon;
-        return text
+
+        pattern = rule[0]
+        proposal = rule[1]
+
+        if text == pattern:
+            return proposal
+
+        base = text[:-suffix_len]
+        pattern_base = pattern[:-suffix_len]
+        prefix_len = len(pattern_base) 
+        proposal_suffix = proposal[prefix_len:]
+        return base+proposal_suffix
+        
 
 
 
 if __name__ == "__main__":    
-    t = RevTrie()
-    t.add(u"foo", "A")
-    t.add(u"foik34895ěščáíěšřýá", "B")
-    t.add(u"lba", "C")
 
-    print t.find_max('fuc') 
-    print t.find_max('lba') 
-    print t.find_max('pako') 
+    from inflect_data import INFLECT_PATTERNS
+
+    t = InfTrie()
+
+    for p in INFLECT_PATTERNS:
+        t.add(p[2],p[3])
+
+
+
+    print t.do(u"Test")
+    print t.do(u"Lucie")
+    print t.do(u"Honza")
+    print t.do(u"Španěl")
+    print t.do(u"Jiří")
+    print t.do(u"Novák")
+    print t.do(u"Bůček")
+
+#    t.add(u"foo", "A")
+#    t.add(u"foik34895ěščáíěšřýá", "B")
+#    t.add(u"lba", "C")
+
+#    print t.find_max('fuc') 
+#    print t.find_max('lba') 
+#    print t.find_max('pako') 
 
     print "Ok."
 
