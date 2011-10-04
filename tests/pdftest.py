@@ -11,9 +11,21 @@ import utils.pdf
 os.chdir('tests/')
 
 
+
+
 def hello_pdf():
     utils.pdf.pdftest('hello.pdf')
 
+
+class FakeInvitation():
+    def get_print_lines(self):
+        return ['Aa','Bb','Cc','Dd']
+
+def test_inivitations():
+    i = FakeInvitation()
+    utils.pdf.students_invitation('out.pdf',7*[i])
+
 if __name__ == "__main__":
     hello_pdf()
+    test_inivitations()
 

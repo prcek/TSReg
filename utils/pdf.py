@@ -67,6 +67,12 @@ def getStyleSheet():
                                   alignment=TA_CENTER,
                                   spaceAfter=6),
                    )
+    stylesheet.add(ParagraphStyle(name='Post',
+                                  fontName='DejaVuSansMono',
+                                  fontSize=9)
+                   )
+
+
     return stylesheet
 
 
@@ -119,16 +125,66 @@ def students_card(output,cards):
     doc.build(elements)
 
 def students_invitation(output,invitations):
+
+    width = 150
+    height = 40
+    ipad = 1
+    pad = 5
+
     doc = SimpleDocTemplate(output, pagesize=A4) 
     styles = getStyleSheet()
     styleN = styles['Normal']
     styleH = styles['Heading']
     styleT = styles['Title']
+    styleP = styles['Post']
 
     elements = []
 
-    elements.append(Paragraph(u"adresy pozvánek....",styleH))
+    invs = []
+    for i in invitations:
+        p_lines = i.get_print_lines()         
+        pl_0 = Paragraph(p_lines[0],styleP)
+        pl_1 = Paragraph(p_lines[1],styleP)
+        pl_2 = Paragraph(p_lines[2],styleP)
+        pl_3 = Paragraph(p_lines[3],styleP)
+        invtable = Table([ [pl_0],[pl_1],[pl_2],[pl_3] ], colWidths=[width],rowHeights=4*[height/4], style=[
+            ('GRID',(0,0),(-1,-1),1, colors.red),
+            ('LEFTPADDING',(0,0),(-1,-1),ipad),
+            ('RIGHTPADDING',(0,0),(-1,-1),ipad),
+            ('TOPPADDING',(0,0),(-1,-1),ipad),
+            ('BOTTOMPADDING',(0,0),(-1,-1),ipad),
 
+            ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+            ('ALIGN',(0,0),(-1,-1),'LEFT'),
+        ])
+
+        invs.append(invtable)
+       
+    line=[]
+    data=[]
+    for t in invs:
+        line.append(t) 
+        if len(line)==3:
+            data.append(line)
+            line=[]
+
+    if len(line)>0:
+        data.append(line)
+    
+    bigtable = Table(data,style=[
+        ('GRID',(0,0),(-1,-1),1,colors.black),
+        ('LEFTPADDING',(0,0),(-1,-1),pad),
+        ('RIGHTPADDING',(0,0),(-1,-1),pad),
+        ('TOPPADDING',(0,0),(-1,-1),pad),
+        ('BOTTOMPADDING',(0,0),(-1,-1),pad),
+    ]) 
+    elements.append(bigtable)
+   
+
+    if len(elements)==0:
+        elements.append(Paragraph(u"žádná data",styleH))
+     
+ 
     doc.build(elements)
 
 
@@ -144,5 +200,6 @@ def pdftest(output):
     c.showPage()
     c.save()
     logging.info('ok')    
+
 
     

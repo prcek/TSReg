@@ -143,6 +143,9 @@ class Invitation(BaseModel):
             return '?'
  
 
+    def get_print_lines(self):
+        return ['x','x','x','x']  #TODO
+
     def init(self, owner=None, mode=None, sex=None, name=None, surname=None, street=None, street_no=None, city=None, post_code=None, addressing=None):
         self.create_datetime = datetime.datetime.utcnow()
         self.owner = owner
