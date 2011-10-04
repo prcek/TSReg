@@ -131,7 +131,7 @@ def students_invitation(output,invitations):
     ipad = 1
     pad = 5
 
-    doc = SimpleDocTemplate(output, pagesize=A4) 
+    doc = SimpleDocTemplate(output, pagesize=A4 ,leftMargin=0, rightMargin=0, topMargin=1*cm, bottomMargin=1.2*cm)
     styles = getStyleSheet()
     styleN = styles['Normal']
     styleH = styles['Heading']
@@ -170,9 +170,13 @@ def students_invitation(output,invitations):
 
     if len(line)>0:
         data.append(line)
-    
-    bigtable = Table(data,style=[
+   
+    rows = len(data) 
+    bigtable = Table(data,rowHeights= rows*[3*cm], style=[
         ('GRID',(0,0),(-1,-1),1,colors.black),
+
+        ('ALIGN',(0,0),(-1,-1),'CENTER'),
+        ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
         ('LEFTPADDING',(0,0),(-1,-1),pad),
         ('RIGHTPADDING',(0,0),(-1,-1),pad),
         ('TOPPADDING',(0,0),(-1,-1),pad),

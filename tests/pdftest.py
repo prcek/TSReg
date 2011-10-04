@@ -23,7 +23,7 @@ class FakeInvitation():
 
 def test_inivitations():
     i = FakeInvitation()
-    utils.pdf.students_invitation('out.pdf',7*[i])
+    utils.pdf.students_invitation('out.pdf',29*[i])
 
 if __name__ == "__main__":
     hello_pdf()
