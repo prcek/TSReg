@@ -127,11 +127,11 @@ def students_card(output,cards):
 def students_invitation(output,invitations):
 
     width = 150
-    height = 40
+    height = 12
     ipad = 1
     pad = 5
 
-    doc = SimpleDocTemplate(output, pagesize=A4 ,leftMargin=0, rightMargin=0, topMargin=1*cm, bottomMargin=1.2*cm)
+    doc = SimpleDocTemplate(output, pagesize=A4 ,leftMargin=0, rightMargin=0, topMargin=1*cm, bottomMargin=1.2*cm, showBoundary=0)
     styles = getStyleSheet()
     styleN = styles['Normal']
     styleH = styles['Heading']
@@ -147,7 +147,7 @@ def students_invitation(output,invitations):
         pl_1 = Paragraph(p_lines[1],styleP)
         pl_2 = Paragraph(p_lines[2],styleP)
         pl_3 = Paragraph(p_lines[3],styleP)
-        invtable = Table([ [pl_0],[pl_1],[pl_2],[pl_3] ], colWidths=[width],rowHeights=4*[height/4], style=[
+        invtable = Table([ [pl_0],[pl_1],[pl_2],[pl_3] ], colWidths=[width],rowHeights=4*[height], style=[
             ('GRID',(0,0),(-1,-1),1, colors.red),
             ('LEFTPADDING',(0,0),(-1,-1),ipad),
             ('RIGHTPADDING',(0,0),(-1,-1),ipad),
