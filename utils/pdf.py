@@ -78,10 +78,10 @@ def getStyleSheet():
 
 def students_table(output,course,students):
 
-    if course.group_mode == 'School':
-        ps = landscape(A4)
-    else:
-        ps = A4
+#    if course.group_mode == 'School':
+    ps = landscape(A4)
+#    else:
+#        ps = A4
     
     doc = SimpleDocTemplate(output, pagesize=ps) 
 
@@ -101,14 +101,22 @@ def students_table(output,course,students):
         widths = [ 0.8*cm, 3*cm, 4*cm, 3*cm, 1.1*cm, 1.1*cm, 3*cm,5*cm,1.5*cm,4.5*cm ]
         data = [ ['č.','kód','přijmení','jméno','platba','dopl.', 'sleva', 'škola', 'třída', 'poznámka'] ]
     else:
-        widths = [ 1*cm, 3*cm, 10*cm, 5*cm ]
-        data = [ ['č.','kód','přijmení','jméno'] ]
+        widths = [ 0.8*cm, 3*cm, 4*cm, 3*cm, 1.1*cm, 1.1*cm, 3*cm, 0.5*cm,0.5*cm, 4.5*cm]
+        data = [ ['č.','kód','přijmení','jméno', 'platba','dopl.', 'sleva', 'st.', 'ov.',  'poznámka'] ]
     i=1;
     for s in students:
         if course.group_mode == 'School':
             data.append([i,s.ref_key,s.surname,s.name,s.to_pay,s.balance_due,s.discount,s.school,s.school_class, s.comment])
         else:
-            data.append([i,s.ref_key,s.surname,s.name])
+            if s.student:
+                st = 'A'
+            else:   
+                st = 'N'
+            if s.student_check:
+                stc = 'Ov'
+            else:
+                stc = ''
+            data.append([i,s.ref_key,s.surname,s.name,s.to_pay,s.balance_due,s.discount,st,stc,s.comment])
         i+=1
    # logging.info(data) 
 

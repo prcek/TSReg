@@ -191,6 +191,7 @@ class Student(BaseModel):
     name = db.StringProperty(default='')
     surname = db.StringProperty(default='')
     student = db.BooleanProperty(default=False)
+    student_check = db.BooleanProperty(default=False)
     long_period = db.BooleanProperty(default=False)
     to_pay = db.IntegerProperty(default=0)
     balance_due = db.IntegerProperty(default=0)

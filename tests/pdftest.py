@@ -45,12 +45,19 @@ class FakeStudent():
     school = 'skola'
     school_class = 'trida'
     comment = 'poznamka'
+    student = False
+    student_check = False
 
 def test_students_table():
     course = FakeCourse()
-    course.group_mode = 'School'
     student = FakeStudent()
-    utils.pdf.students_table('students_table.pdf',course,120*[student])
+    student_2 = FakeStudent()
+    student_2.student = True
+    student_2.student_check = True
+    course.group_mode = 'School'
+    utils.pdf.students_table('students_table_1.pdf',course,120*[student])
+    course.group_mode = 'Single'
+    utils.pdf.students_table('students_table_2.pdf',course,120*[student,student_2])
 
 if __name__ == "__main__":
     hello_pdf()
