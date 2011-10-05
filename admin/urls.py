@@ -73,5 +73,10 @@ urlpatterns = patterns('admin',
     
     (r'^nahled/zapis/$', 'preview_views.enroll'), 
 
+
+
+    (r'^import/$', 'import_views.index'),
+ 
+
     (r'^opt/$', 'opt_views.index'),
 )
