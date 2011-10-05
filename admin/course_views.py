@@ -16,6 +16,7 @@ import logging
 GROUP_MODE_CHOICES = (
     ('Single','jednotlivci'),
     ('Pair','po párech'),
+    ('School','po třídách'),
 )
 
 COST_MODE_CHOICES = (

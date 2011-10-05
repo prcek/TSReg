@@ -6,7 +6,7 @@ sys.path.insert(0, 'libs/reportlab.zip')
 #sys.path.insert(0, 'libs')
 
 from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4
+from reportlab.lib.pagesizes import A4,landscape
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_LEFT, TA_CENTER
 from reportlab.lib.units import inch,mm,cm
@@ -77,7 +77,14 @@ def getStyleSheet():
 
 
 def students_table(output,course,students):
-    doc = SimpleDocTemplate(output, pagesize=A4) 
+
+    if course.group_mode == 'School':
+        ps = landscape(A4)
+    else:
+        ps = A4
+    
+    doc = SimpleDocTemplate(output, pagesize=ps) 
+
     styles = getStyleSheet()
     styleN = styles['Normal']
     styleH = styles['Heading']
@@ -86,25 +93,43 @@ def students_table(output,course,students):
 
     elements = []
 
-    elements.append(Paragraph(u"Přihlášky kurzu %s"%escape(course.code),styleH))
-    elements.append(Paragraph(u"vygenerováno %s"%getNow(),styleN))
+    elements.append(Paragraph(u"Kurz %s - %s - %s (%s)"%(escape(course.code),escape(course.name), escape(course.folder_name()),escape(course.season_name())),styleH))
+    elements.append(Paragraph(u"ke dni %s"%getNow(),styleN))
 
 
-    data = [ ['č.','ref kód','přijmení','jméno'] ]
+    if course.group_mode == 'School':
+        widths = [ 0.8*cm, 3*cm, 4*cm, 3*cm, 1.1*cm, 1.1*cm, 3*cm,5*cm,1.5*cm,4.5*cm ]
+        data = [ ['č.','kód','přijmení','jméno','platba','dopl.', 'sleva', 'škola', 'třída', 'poznámka'] ]
+    else:
+        widths = [ 1*cm, 3*cm, 10*cm, 5*cm ]
+        data = [ ['č.','kód','přijmení','jméno'] ]
     i=1;
     for s in students:
-        data.append([i,s.ref_key,s.surname,s.name])
+        if course.group_mode == 'School':
+            data.append([i,s.ref_key,s.surname,s.name,s.to_pay,s.balance_due,s.discount,s.school,s.school_class, s.comment])
+        else:
+            data.append([i,s.ref_key,s.surname,s.name])
         i+=1
    # logging.info(data) 
 
     #TODO: add spare students
-
-    t=Table(data)
+    pad = 1
+    t=Table(data,colWidths=widths)
     t.setStyle(TableStyle([
 #        ('BACKGROUND',(1,1),(-2,-2),colors.green),
 #        ('TEXTCOLOR',(0,0),(1,-1),colors.red),
-        ('FONT', (0,0), (-1,-1), 'DejaVuSansBold'),
-        ('FONTSIZE', (0,-1), (-1,-1), 8)
+        ('GRID',(0,1),(-1,-1),0.3, colors.gray),
+        ('FONT', (0,0), (-1,1), 'DejaVuSansBold'),
+        ('FONT', (0,1), (-1,-1), 'DejaVuSansMono'),
+        ('FONTSIZE', (0,0), (-1,-1), 8),
+        ('LEFTPADDING',(0,0),(-1,-1),pad),
+        ('RIGHTPADDING',(0,0),(-1,-1),pad),
+        ('TOPPADDING',(0,0),(-1,-1),pad),
+        ('BOTTOMPADDING',(0,0),(-1,-1),pad),
+            ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+            ('ALIGN',(0,0),(-1,-1),'LEFT'),
+ 
+
     ]))
  
     elements.append(t)
