@@ -1,0 +1,49 @@
+
+{% extends "admin/base.html" %}
+
+{% block title %} Import žáků{% endblock %}
+
+{% block content %}
+    <a class='button' href='.'>přenačíst</a>
+
+
+
+    <br><br>import žáků<br><br>
+
+{% if info and not selected %}
+    <table>
+    <tr><th>blok</th><th>kurz</th><th>kategorie</th><th>sezona</th><th>info</th><th>žáků</th><th>operace</th></tr>
+    {% for i in info %}
+    <tr>
+        <td>{{ i.seq }}</td>
+        <td>{{ i.code }}</td>
+        <td>{{ i.folder }}</td>
+        <td>{{ i.season }}</td>
+        <td>{{ i.info }}</td>
+        <td>{{ i.students }}</td>
+        <td>
+        <a class='button' href='{{i.seq}}/'>import</a>
+        </td>
+    </tr>
+    {% endfor %}
+    </table>
+{% endif %}
+
+
+{% if selected %}
+    kurz: {{ selected.code }} - {{ selected.folder}} - {{ selected.season }} ({{ selected.info }}), žáků: {{ selected.students }} <br>
+    <form  method="post" name="form">
+    <table>
+    {{ form.as_table }}
+    </table>
+    <input class="button" type="submit" value="zvol">
+    </form>
+{% endif %}
+
+{% if course %}
+    vybrany kurz: {{ course.code }}<br> 
+    <a class='button' href='../lines/{{selected.start_line}}/{{selected.end_line}}/to/{{course.key.id}}/'>pridat do kurzu</a>
+{% endif %}
+
+{% endblock %}
+

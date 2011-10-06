@@ -183,4 +183,18 @@ class Inflect(BaseModel):
         self.part=part
         self.pattern=pattern
         self.proposal=proposal
- 
+
+class FileBlob(BaseModel):
+    create_datetime = db.DateTimeProperty()
+    tmp = db.BooleanProperty(default=False)
+    owner = db.StringProperty(default='')
+    name = db.StringProperty(default='')
+    data = db.BlobProperty()
+    def init(self, data, owner=None, tmp=False, name=None):
+        self.create_datetime = datetime.datetime.utcnow()
+        self.owner = owner
+        self.name = name
+        self.tmp = tmp
+        self.data = data
+      
+     
