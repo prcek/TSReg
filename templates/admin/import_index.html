@@ -6,7 +6,18 @@
 {% block content %}
     <a class='button' href='.'>přenačíst</a>
 
+
+
     <br><br>import<br><br>
+
+{% if form %}
+<form enctype="multipart/form-data" method="post" name="form">
+<table>
+{{ form.as_table }}
+</table>
+<input class="button" type="submit" value="provést">
+</form>
+{% endif %}
 
 
 {% endblock %}
