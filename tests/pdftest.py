@@ -59,8 +59,28 @@ def test_students_table():
     course.group_mode = 'Single'
     utils.pdf.students_table('students_table_2.pdf',course,120*[student,student_2])
 
+class FakeCard():
+    name = "Jxxxxxx"
+    surname = "Pxxxxxxxxx"
+    season_name = "XXXX/XX"
+    course_code = "X88"
+    info_line_1 = "2xxxxxxxxxxxxxxxxxxx1"
+    info_line_2 = "2xxxxxxxxxxxxxxxxxxx2"
+
+
+def test_students_card():
+    card = FakeCard()
+    card2 = FakeCard()
+    card2.course_code = "KM12"
+    card3 = FakeCard()
+    card3.info_line_1 = ""
+    card3.info_line_2 = ""
+    utils.pdf.students_card('students_card.pdf',3*[card,card2,card3])
+    
+
 if __name__ == "__main__":
     hello_pdf()
     test_inivitations()
     test_students_table()
+    test_students_card()
 
