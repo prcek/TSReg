@@ -14,6 +14,9 @@
 
     <br><br>
 
+
+{% with 'single' as mode %}
+
     <a class='button' href='add'>přidat žáka</a>
     <a class='button' href='email'>emaily</a>
     <a class='button' href='csv'>stáhnout</a>
@@ -28,14 +31,18 @@
     <tr>
         <td colspan=2></td>
         {% with 'Náhradníci' as text %}
-        {% include "admin/st_table_sep_line.html" %}
+        {% if mode == 'single' %}
+        {% include "admin/st_table_single_sep_line.html" %}
+        {% endif %}
         {% endwith %}
         <td></td>
     </tr>
     <tr>
         <th></th>
         <th>p.č</th>
-        {% include "admin/st_table_header.html" %}
+        {% if mode == 'single' %}
+        {% include "admin/st_table_single_header.html" %}
+        {% endif %}
         <th>operace</th>
     </tr>
     {% for s in student_list_to_enroll %}
@@ -45,7 +52,9 @@
             </td>
  
             <td>{{forloop.counter}}</td>
-            {% include "admin/st_table_row.html" %}
+            {% if mode == 'single' %}
+            {% include "admin/st_table_single_row.html" %}
+            {% endif %}
             <td>
                 <a class='button' href='{{s.key.id}}/view/'>zobrazit</a>
                 <a class='button' href='{{s.key.id}}/enroll/'>zapsat</a>
@@ -62,7 +71,9 @@
             </div>
         </td>
         {% with '' as text %}
-        {% include "admin/st_table_sep_line.html" %}
+        {% if mode == 'single' %}
+        {% include "admin/st_table_single_sep_line.html" %}
+        {% endif %}
         {% endwith %}
         <td></td>
     </tr>
@@ -71,7 +82,9 @@
     <tr>
         <td colspan=2></td>
         {% with 'Žádný náhradník' as text %}
-        {% include "admin/st_table_sep_line.html" %}
+        {% if mode == 'single' %}
+        {% include "admin/st_table_single_sep_line.html" %}
+        {% endif %}
         {% endwith %}
         <td></td>
     </tr>
@@ -83,14 +96,18 @@
     <tr>
         <td colspan=2></td>
         {% with 'Žáci zapsaní do kurzu' as text %}
-        {% include "admin/st_table_sep_line.html" %}
+        {% if mode == 'single' %}
+        {% include "admin/st_table_single_sep_line.html" %}
+        {% endif %}
         {% endwith %}
         <td></td>
     </tr>
     <tr>
         <th></th>
         <th>p.č</th>
-        {% include "admin/st_table_header_e.html" %}
+        {% if mode == 'single' %}
+        {% include "admin/st_table_single_header_e.html" %}
+        {% endif %}
         <th>operace</th>
     </tr>
     {% for s in student_list_enrolled %}
@@ -101,7 +118,9 @@
             </td>
  
             <td>{{forloop.counter}}</td>
-            {% include "admin/st_table_row_e.html" %}
+            {% if mode == 'single' %}
+            {% include "admin/st_table_single_row_e.html" %}
+            {% endif %}
             <td>
                 <a class='button' href='{{s.key.id}}/view/'>zobrazit</a>
                 <a class='button' href='{{s.key.id}}/spare/'>náhradník</a>
@@ -118,7 +137,9 @@
             </div>
         </td>
         {% with '' as text %}
-        {% include "admin/st_table_sep_line.html" %}
+        {% if mode == 'single' %}
+        {% include "admin/st_table_single_sep_line.html" %}
+        {% endif %}
         {% endwith %}
         <td></td>
     </tr>
@@ -126,7 +147,9 @@
     <tr>
         <td colspan=2></td>
         {% with 'Kurz je prázdný' as text %}
-        {% include "admin/st_table_sep_line.html" %}
+        {% if mode == 'single' %}
+        {% include "admin/st_table_single_sep_line.html" %}
+        {% endif %}
         {% endwith %}
         <td></td>
     </tr>
@@ -156,6 +179,9 @@
         TOOLS.bindSelect('select-e','select-e-slave');     
 
 </script>
+
+{% endwith %}
+
 
 {% endblock %}
 
