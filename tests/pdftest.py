@@ -76,6 +76,10 @@ def test_students_card():
     card3.info_line_1 = ""
     card3.info_line_2 = ""
     utils.pdf.students_card('students_card.pdf',3*[card,card2,card3])
+
+def test_students_enroll():
+    student = FakeStudent()
+    utils.pdf.students_enroll('students_enroll.pdf',3*[student])
     
 
 if __name__ == "__main__":
@@ -83,4 +87,5 @@ if __name__ == "__main__":
     test_inivitations()
     test_students_table()
     test_students_card()
+    test_students_enroll()
 

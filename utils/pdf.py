@@ -6,14 +6,14 @@ sys.path.insert(0, 'libs/reportlab.zip')
 #sys.path.insert(0, 'libs')
 
 from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4,landscape
+from reportlab.lib.pagesizes import A4,A6,landscape
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_LEFT, TA_CENTER
 from reportlab.lib.units import inch,mm,cm
 from reportlab.lib.styles import StyleSheet1, ParagraphStyle
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle,Paragraph
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle,Paragraph,PageBreak
 
 import os
 import reportlab
@@ -142,6 +142,28 @@ def students_table(output,course,students):
  
     elements.append(t)
     doc.build(elements)
+
+
+def students_enroll(output,students):
+    doc = SimpleDocTemplate(output, pagesize=landscape(A6) ,leftMargin=1*cm, rightMargin=1*cm, topMargin=1*cm, bottomMargin=1*cm, showBoundary=0)
+    styles = getStyleSheet()
+    styleN = styles['Normal']
+    styleH = styles['Heading']
+    styleT = styles['Title']
+
+    elements = []
+    
+    for s in students:
+        t = Table([["enroll table"]])
+        elements.append(t)
+        elements.append(PageBreak())
+                
+
+    if len(elements)==0:
+        elements.append(Paragraph(u"žádná data",styleH))
+    doc.build(elements)
+
+
 
 
 def students_card(output,cards):
