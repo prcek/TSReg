@@ -145,7 +145,12 @@ def students_table(output,course,students):
 
 
 def students_card(output,cards):
-    doc = SimpleDocTemplate(output, pagesize=A4) 
+    width = 150
+    height = 12
+    ipad = 1
+    pad = 10
+
+    doc = SimpleDocTemplate(output, pagesize=A4 ,leftMargin=1*cm, rightMargin=1*cm, topMargin=1*cm, bottomMargin=1*cm, showBoundary=0)
     styles = getStyleSheet()
     styleN = styles['Normal']
     styleH = styles['Heading']
@@ -153,8 +158,55 @@ def students_card(output,cards):
 
     elements = []
 
-    elements.append(Paragraph(u"legitimace....",styleH))
+    cardcells = []
+    for c in cards:
+        c00 = Paragraph("x",styleN)
+        c01 = Paragraph("x",styleN)
 
+        c10 = Paragraph("x",styleN)
+        c11 = Paragraph("x",styleN)
+
+        c20 = Paragraph("x",styleN)
+        c21 = Paragraph("x",styleN)
+
+        cc = Table([ [c00,c01],[c10,c11],[c20,c21] ], colWidths=[6*cm,2*cm],rowHeights=[1*cm,2*cm,1*cm], style=[
+            ('GRID',(0,0),(-1,-1),1, colors.red),
+            ('LEFTPADDING',(0,0),(-1,-1),ipad),
+            ('RIGHTPADDING',(0,0),(-1,-1),ipad),
+            ('TOPPADDING',(0,0),(-1,-1),ipad),
+            ('BOTTOMPADDING',(0,0),(-1,-1),ipad),
+            ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+            ('ALIGN',(0,0),(-1,-1),'LEFT'),
+        ])
+
+        cardcells.append(cc)
+
+    line=[]
+    data=[]
+    for t in cardcells:
+        line.append(t) 
+        if len(line)==2:
+            data.append(line)
+            line=[]
+
+    if len(line)>0:
+        data.append(line)
+   
+    rows = len(data) 
+    bigtable = Table(data,rowHeights= rows*[5*cm], style=[
+        ('GRID',(0,0),(-1,-1),1,colors.black),
+        ('ALIGN',(0,0),(-1,-1),'CENTER'),
+        ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+        ('LEFTPADDING',(0,0),(-1,-1),pad),
+        ('RIGHTPADDING',(0,0),(-1,-1),pad),
+        ('TOPPADDING',(0,0),(-1,-1),pad),
+        ('BOTTOMPADDING',(0,0),(-1,-1),pad),
+    ]) 
+    elements.append(bigtable)
+   
+
+    if len(elements)==0:
+        elements.append(Paragraph(u"žádná data",styleH))
     doc.build(elements)
 
 def students_invitation(output,invitations):
