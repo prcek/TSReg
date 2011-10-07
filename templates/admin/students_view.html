@@ -27,10 +27,15 @@ kurz: {{student.course_code}}<br>
 stav: {{student.status_loc}}<br>
 čas podání přihlášky:{{s.reg_datetime}}<br>
 čas zápisu:{{s.enroll_datetime|nonone}}<br>
+cena: {{s.to_pay|nonone}}<br>
+doplatit: {{s.balance_due}}<br>
+sleva: {{s.discount}}<br>
 zaplaceno: {{s.paid_ok|anone}}<br>
 <br>
 telefon:{{s.phone|nonone}}<br>
 rok:{% if s.year %}{{s.year}}{% else %}&nbsp;{%endif%}<br>
+škola: {{ s.school }}<br>
+třída: {{ s.school_class }}<br>
 ulice:{{s.street|nonone}}<br>
 číslo:{{s.street_no|nonone}}<br>
 město:{{s.city|nonone}}<br>

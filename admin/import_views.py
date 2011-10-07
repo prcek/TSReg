@@ -169,17 +169,45 @@ def import_student(course,row):
 #    st.addressing = form.cleaned_data['addressing']
     st.name = row[4]
     st.surname = row[3]
-#    st.student = form.cleaned_data['student']
+
+
+# 5 6 7 - prachy
+    try:
+        st.to_pay = int(row[5])
+    except:
+        pass
+    try:
+        st.balance_due = int(row[6])
+        if st.balance_due == 0:
+            st.paid_ok = True
+    except:
+        pass
+    st.discount = row[7]
+
+# 8,9 skola  trida
+    st.school = row[8]
+    st.school_class = row[9]
+
+    st.student = AnoNe2Bool(row[17])
+    st.student_check = AnoNe2Bool(row[18])
+    
 #    st.long_period = form.cleaned_data['long_period']
 #    st.year = form.cleaned_data['year']
     st.email = row[15]
-#    st.no_email_ad = form.cleaned_data['no_email_ad']
+    spam = AnoNe2Bool(row[16])
+    if spam is True:
+        st.no_email_ad = False
+    else:
+        st.no_email_ad = True
+
     st.no_email_info = True
     st.phone = row[14]
     st.street = row[10]
     st.street_no = row[11]
     st.city = row[12]
     st.post_code = row[13]
+
+    st.comment = row[19]
 
     st.save()
     st.init_ref_codes()
