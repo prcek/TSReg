@@ -530,3 +530,26 @@ def course_as_pdf(request, course_id):
     students_table(r,course,students)
     return r
 
+def enroll_as_pdf(request, course_id):
+
+    course = Course.get_by_id(int(course_id))  
+
+    if course is None:
+        raise Http404
+
+    r =  HttpResponse(mimetype='application/pdf')
+    file_name = urllib.quote("prihlasky_%s.pdf"%course.code)
+    logging.info(file_name)
+    r['Content-Disposition'] = "attachment; filename*=UTF-8''%s"%file_name
+    from utils.pdf import students_table
+
+    student_list_to_enroll=Student.list_for_course_to_enroll(course.key())
+    student_list_enrolled=Student.list_for_course_enrolled(course.key())
+
+    students = []
+    students.extend(student_list_enrolled)
+    students.extend(student_list_to_enroll)
+
+    students_enroll(r,students)
+    return r
+
