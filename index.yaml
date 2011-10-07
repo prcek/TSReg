@@ -33,6 +33,11 @@ indexes:
   - name: order_value
   - name: name
 
+- kind: Invitation
+  properties:
+  - name: owner
+  - name: create_datetime
+
 - kind: Job
   properties:
   - name: active

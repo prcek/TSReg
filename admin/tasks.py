@@ -8,6 +8,7 @@ import utils.config as cfg
 import utils.mail as mail
 from google.appengine.api import mail as gmail
 from google.appengine.api import taskqueue
+import admin.inflector as inflector
 
 
 
@@ -376,8 +377,17 @@ def prepare_invitation(owner, student_id, mode, addressing_parents, addressing_p
     logging.info('student: %s'%student)
 
     addressing=''
+    iname = None
+    isurname = None
     if mode=='parents':
         addressing=addressing_parents
+        sex=student.get_sex()
+        if not student.name is None:
+            iname = inflector.do_inflect('name',sex,student.name)
+        
+        if not student.surname is None:
+            isurname = inflector.do_inflect('surname',sex,student.surname)
+
     elif mode=='direct':
         if student.addressing =='p':
             addressing=addressing_p
@@ -393,6 +403,13 @@ def prepare_invitation(owner, student_id, mode, addressing_parents, addressing_p
     invitation.init(owner=owner,mode=mode, addressing=addressing, name=student.name, surname=student.surname, sex=student.get_sex(), street=student.street,
         street_no=student.street_no, city=student.city, post_code=student.post_code
                 )
+
+    if not iname is None:
+        invitation.name_inflected = iname
+    if not isurname is None:
+        invitation.surname_inflected = isurname
+
+
     logging.info('pre save invitation=%s'%invitation)
 
     invitation.save()
@@ -416,6 +433,9 @@ def prepare_invitations(request):
     addressing_s = request.POST['addressing_s']
     addressing_d = request.POST['addressing_d']
 
+
+    inflector.init_dicts()
+    
 
     logging.info('student list %s'%student_ids) 
     for student_id in student_ids:
