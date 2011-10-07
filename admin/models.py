@@ -144,7 +144,21 @@ class Invitation(BaseModel):
  
 
     def get_print_lines(self):
-        return ['x','x','x','x']  #TODO
+        line_0 = self.addressing
+        if self.mode == 'parents':
+            line_1 = "%s %s"%(self.name_inflected, self.surname_inflected)
+        else:
+            line_1 = "%s %s"%(self.name,self.surname)
+
+        if self.street is None or (self.street.strip() == ""):
+            line_2 = "%s %s"%(self.city, self.street_no)
+            line_3 = "%s"%(self.post_code)
+        else:
+            line_2 = "%s %s"%(self.street, self.street_no)
+            line_3 = "%s %s"%(self.post_code, self.city)
+ 
+         
+        return [line_0,line_1,line_2,line_3]
 
     def init(self, owner=None, mode=None, sex=None, name=None, surname=None, street=None, street_no=None, city=None, post_code=None, addressing=None):
         self.create_datetime = datetime.datetime.utcnow()
