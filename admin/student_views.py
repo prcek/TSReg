@@ -8,6 +8,7 @@ from django.template import RequestContext,Context, loader
 
 from enroll.models import Student,Course
 from admin.queue import plan_send_student_email, plan_update_course, plan_job_transfer_students, plan_job_card_for_students, plan_job_invitation_for_students
+from admin.student_sort import sort_students_single, sort_students_school, sort_students_pair, sort_students_spare_single, sort_students_spare_school, sort_students_spare_pair
 import utils.config as cfg
 import utils.mail as mail
 import utils.pdf as pdf
@@ -166,6 +167,16 @@ def index_course(request, course_id):
 
     student_list_to_enroll=Student.list_for_course_to_enroll(course.key())
     student_list_enrolled=Student.list_for_course_enrolled(course.key())
+
+    if course.group_mode == 'Single':
+        student_list_to_enroll = sort_students_spare_single(student_list_to_enroll)
+        student_list_enrolled = sort_students_single(student_list_enrolled)
+    elif course.group_mode == 'School':
+        student_list_to_enroll = sort_students_spare_school(student_list_to_enroll)
+        student_list_enrolled = sort_students_school(student_list_enrolled)
+    elif course.group_mode == 'Pair':
+        student_list_to_enroll = sort_students_spare_pair(student_list_to_enroll)
+        student_list_enrolled = sort_students_pair(student_list_enrolled)
 
 
     return render_to_response('admin/course_students.html', RequestContext(request, { 
@@ -541,7 +552,7 @@ def enroll_as_pdf(request, course_id):
     file_name = urllib.quote("prihlasky_%s.pdf"%course.code)
     logging.info(file_name)
     r['Content-Disposition'] = "attachment; filename*=UTF-8''%s"%file_name
-    from utils.pdf import students_table
+    from utils.pdf import students_enroll
 
     student_list_to_enroll=Student.list_for_course_to_enroll(course.key())
     student_list_enrolled=Student.list_for_course_enrolled(course.key())
