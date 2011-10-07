@@ -269,6 +269,8 @@ class CardPickForm(forms.Form):
         if not course is None:
             self.fields['course_code'].initial = course.code
             self.fields['season_name'].initial = course.season_name()
+            self.fields['info_line_1'].initial = course.card_line_1
+            self.fields['info_line_2'].initial = course.card_line_2
 
     
 def action_do_card(request, source_course=None, student_ids=None):

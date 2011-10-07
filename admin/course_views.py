@@ -61,12 +61,14 @@ class CourseForm(forms.ModelForm):
     group_mode = forms.CharField(label='režim zápisu', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=GROUP_MODE_CHOICES)) 
     capacity = forms.IntegerField(label='kapacita', error_messages=ERROR_MESSAGES)
     pending_limit = forms.IntegerField(label='náhradníci', error_messages=ERROR_MESSAGES)
+    card_line_1 = forms.CharField(label='tisk 1.ř.', error_messages=ERROR_MESSAGES, required=False)
+    card_line_2 = forms.CharField(label='tisk 2.ř.', error_messages=ERROR_MESSAGES, required=False)
 
 
     class Meta:
         model = Course
         fields = ( 'folder_key','season_key', 'active', 'order_value', 'code','name', 'period', 'first_period', 'place', 'teacher', 
-                'cost_a', 'cost_b', 'cost_sa', 'cost_sb', 'cost_sale', 'cost_mode', 'group_mode', 'capacity', 'pending_limit' )
+                'cost_a', 'cost_b', 'cost_sa', 'cost_sb', 'cost_sale', 'cost_mode', 'group_mode', 'capacity', 'pending_limit','card_line_1','card_line_2' )
 
     def clean_code(self):
         data = self.cleaned_data['code']
