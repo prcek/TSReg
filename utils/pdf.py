@@ -250,10 +250,10 @@ def students_invitation(output,invitations):
     invs = []
     for i in invitations:
         p_lines = i.get_print_lines()         
-        pl_0 = Paragraph(p_lines[0],styleP)
-        pl_1 = Paragraph(p_lines[1],styleP)
-        pl_2 = Paragraph(p_lines[2],styleP)
-        pl_3 = Paragraph(p_lines[3],styleP)
+        pl_0 = Paragraph(escape(p_lines[0]),styleP)
+        pl_1 = Paragraph(escape(p_lines[1]),styleP)
+        pl_2 = Paragraph(escape(p_lines[2]),styleP)
+        pl_3 = Paragraph(escape(p_lines[3]),styleP)
         invtable = Table([ [pl_0],[pl_1],[pl_2],[pl_3] ], colWidths=[width],rowHeights=4*[height], style=[
 #            ('GRID',(0,0),(-1,-1),1, colors.red),
             ('LEFTPADDING',(0,0),(-1,-1),ipad),
