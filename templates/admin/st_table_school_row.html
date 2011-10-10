@@ -1,19 +1,13 @@
-<!--            <td>{{s.status_loc}}</td> --!>
-            <td>{{s.reg_datetime}}</td>
-<!--            <td>{{s.course_code}}</td> --!>
             <td>{{s.ref_key}}</td>
             <td>{{s.addressing_loc}}</td>
             <td>{{s.name}}</td>
             <td>{{s.surname}}</td>
             <td>{{s.email}}</td>
             <td>{{s.phone|nonone}}</td>
-            <td>{% if s.year %}{{s.year}}{% else %}&nbsp;{%endif%}</td>
-            <td>{{s.student|anone}}</td>
             <td>{{s.to_pay|nonone}}</td>
+            <td>{{s.balance_due}}</td>
+            <td>{{s.discount}}</td>
             <td>{{s.paid_ok|anone}}</td>
-            <td>{{s.street|nonone}}</td>
-            <td>{{s.street_no|nonone}}</td>
-            <td>{{s.city|nonone}}</td>
-            <td>{{s.post_code|nonone}}</td>
-            <td>{{s.partner_ref_code|nonone}}</td>
+            <td>{{s.school|nonone}}</td>
+            <td>{{s.school_class|nonone}}</td>
             <td>{{s.comment|nonone}}</td>
