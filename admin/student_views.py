@@ -182,6 +182,7 @@ def index_course(request, course_id):
         student_list_to_enroll = sort_students_spare_pair(student_list_to_enroll)
         student_list_enrolled = sort_students_pair(student_list_enrolled)
 
+    
 
     return render_to_response('admin/course_students.html', RequestContext(request, { 
         'course': course,
@@ -235,6 +236,9 @@ def action_course(request,course_id):
 
         if op == 'action_invitation':
             return action_do_invitation(request, source_course=course, student_ids = all_sel)
+
+        if op == 'action_pair':
+            return action_do_pair(request, source_course=course, student_ids = all_sel)
 
 
 
@@ -360,10 +364,45 @@ def action_do_invitation(request, source_course=None, student_ids=None):
     info = 'generování adres' 
     return render_to_response('admin/action_invitation.html', RequestContext(request, {'form':form, 'info':info, 'operation':request.POST['operation'], 'all_select':student_ids}))
 
+def action_do_pair(request, source_course=None, student_ids=None):
+    logging.info('student_ids = %s'%student_ids)
+
+    if (student_ids is None) or (len(student_ids)!=2):
+        info = 'musí být označeni právě dva žáci'
+        return render_to_response('admin/action_pair.html', RequestContext(request, {'info':info}))
+    
+    s1 = Student.get_by_id(int(student_ids[0])) 
+    s2 = Student.get_by_id(int(student_ids[1])) 
+
+    if s1 is None or s2 is None:
+        raise Http404
+
+    s1.partner_ref_code = s2.ref_key
+    s2.partner_ref_code = s1.ref_key
+
+    s1.save()
+    s2.save()
+
+
+    for s in Student.list_by_partner(s1.ref_key):
+        if s.key().id != s2.key().id:
+            s.partner_ref_code=""
+            s.save()
+    
+    for s in Student.list_by_partner(s2.ref_key):
+        if s.key().id != s1.key().id:
+            s.partner_ref_code=""
+            s.save()
+ 
+    return redirect('..')
+
 
 def edit(request, student_id,course_id=None):
 
     student = Student.get_by_id(int(student_id))
+    if student is None:
+        raise Http404
+
 
     if request.method == 'POST':
         form = StudentForm(request.POST, instance=student)

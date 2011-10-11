@@ -213,6 +213,10 @@ class Student(BaseModel):
     school_class = db.StringProperty(default='')
     comment = db.StringProperty(default='')
 
+    x_pair_empty_slot = False
+    x_pair_no = 0
+    x_pair_complete = False
+
     def init_reg(self):
         self.reg_datetime = datetime.datetime.utcnow()        
 
@@ -341,6 +345,9 @@ class Student(BaseModel):
     def list_by_email(e):
         return Student.all().filter('hidden',False).filter('email',e).order('-reg_datetime')
 
+    @staticmethod
+    def list_by_partner(p):
+        return Student.all().filter('hidden',False).filter('partner_ref_code',p)
 
     @staticmethod
     def list_for_cleanup(time_limit):
