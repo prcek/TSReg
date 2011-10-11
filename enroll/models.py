@@ -216,6 +216,8 @@ class Student(BaseModel):
     x_pair_empty_slot = False
     x_pair_no = 0
     x_pair_complete = False
+    x_pair_first = False
+    x_pair_second = False
 
     def init_reg(self):
         self.reg_datetime = datetime.datetime.utcnow()        

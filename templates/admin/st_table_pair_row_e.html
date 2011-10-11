@@ -1,5 +1,11 @@
 <!--            <td>{{s.status_loc}}</td> --!>
-            <td>{{s.x_pair_no}}</td>
+{% if s.x_pair_first %}
+            <td rowspan=2>{{s.x_pair_no}}</td>
+{% endif %}
+
+{% if s.x_pair_empty_slot %}
+            <td colspan=17>&nbsp;</td>
+{% else %}
             <td>{{s.enroll_datetime}}</td>
 <!--            <td>{{s.course_code}}</td> --!>
             <td>{{s.ref_key}}</td>
@@ -18,3 +24,4 @@
             <td>{{s.post_code|nonone}}</td>
             <td>{{s.partner_ref_code|nonone}}</td>
             <td>{{s.comment|nonone}}</td>
+{% endif %}
