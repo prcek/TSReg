@@ -172,7 +172,7 @@ def students_card(output,cards):
     ipad = 1
     pad = 10
 
-    doc = SimpleDocTemplate(output, pagesize=A4 ,leftMargin=1*cm, rightMargin=1*cm, topMargin=1*cm, bottomMargin=1*cm, showBoundary=0)
+    doc = SimpleDocTemplate(output, pagesize=A4 ,leftMargin=1*cm, rightMargin=1*cm, topMargin=0.8*cm, bottomMargin=1*cm, showBoundary=0)
     styles = getStyleSheet()
     styleN = styles['Normal']
     styleH = styles['Heading']
@@ -191,7 +191,7 @@ def students_card(output,cards):
         c20 = Paragraph("x",styleN)
         c21 = Paragraph("x",styleN)
 
-        cc = Table([ [c00,c01],[c10,c11],[c20,c21] ], colWidths=[6*cm,2*cm],rowHeights=[1*cm,2*cm,1*cm], style=[
+        cc = Table([ [c00,c01],[c10,c11],[c20,c21] ], colWidths=[5.9*cm,1.5*cm],rowHeights=[1.50*cm,1.95*cm,0.95*cm], style=[
             ('GRID',(0,0),(-1,-1),1, colors.red),
             ('LEFTPADDING',(0,0),(-1,-1),ipad),
             ('RIGHTPADDING',(0,0),(-1,-1),ipad),
@@ -215,8 +215,8 @@ def students_card(output,cards):
         data.append(line)
    
     rows = len(data) 
-    bigtable = Table(data,rowHeights= rows*[5*cm], style=[
-        ('GRID',(0,0),(-1,-1),1,colors.black),
+    bigtable = Table(data,colWidths=[8.5*cm,8.5*cm], rowHeights= rows*[5.43*cm], style=[
+        ('GRID',(0,0),(-1,-1),0.5,colors.gray),
         ('ALIGN',(0,0),(-1,-1),'CENTER'),
         ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
         ('LEFTPADDING',(0,0),(-1,-1),pad),
