@@ -8,7 +8,7 @@ sys.path.insert(0, 'libs/reportlab.zip')
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4,A6,landscape
 from reportlab.lib import colors
-from reportlab.lib.enums import TA_LEFT, TA_CENTER
+from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT
 from reportlab.lib.units import inch,mm,cm
 from reportlab.lib.styles import StyleSheet1, ParagraphStyle
 from reportlab.pdfbase import pdfmetrics
@@ -16,6 +16,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle,Paragraph,PageBreak
 
 import os
+import re
 import reportlab
 folderFonts = os.path.dirname(reportlab.__file__) + os.sep + 'fonts'
 
@@ -71,6 +72,56 @@ def getStyleSheet():
                                   fontName='DejaVuSansMono',
                                   fontSize=9)
                    )
+
+    stylesheet.add(ParagraphStyle(name='Card',
+                                  fontName='DejaVuSansMono',
+                                  fontSize=9)
+                   )
+
+    stylesheet.add(ParagraphStyle(name='CardHeaderLeft', parent=stylesheet['Card'],
+                                  textColor=colors.white,
+                                  alignment=TA_CENTER,
+                                  )
+                   )
+
+    stylesheet.add(ParagraphStyle(name='CardHeaderRight', parent=stylesheet['Card'],
+                                  textColor=colors.black,
+                                  alignment=TA_CENTER,
+                                  )
+                   )
+
+    stylesheet.add(ParagraphStyle(name='CardSeason', parent=stylesheet['Card'],
+                                  textColor=colors.black,
+                                  alignment=TA_CENTER,
+                                  )
+                   )
+
+    stylesheet.add(ParagraphStyle(name='CardName', parent=stylesheet['Card'],
+                                  textColor=colors.black,
+                                  alignment=TA_RIGHT,
+                                  )
+                   )
+
+    stylesheet.add(ParagraphStyle(name='CardSurname', parent=stylesheet['Card'],
+                                  textColor=colors.black,
+                                  alignment=TA_LEFT,
+                                  )
+                   )
+
+
+    stylesheet.add(ParagraphStyle(name='CardCode', parent=stylesheet['Card'],
+                                  textColor=colors.black,
+                                  alignment=TA_CENTER,
+                                  )
+                   )
+
+    stylesheet.add(ParagraphStyle(name='CardInfoLines', parent=stylesheet['Card'],
+                                  textColor=colors.white,
+                                  alignment=TA_CENTER,
+                                  )
+                   )
+
+
 
 
     return stylesheet
@@ -167,38 +218,84 @@ def students_enroll(output,students):
 
 
 def students_card(output,cards):
-    width = 150
-    height = 12
     ipad = 1
     pad = 10
 
+
     doc = SimpleDocTemplate(output, pagesize=A4 ,leftMargin=1*cm, rightMargin=1*cm, topMargin=0.8*cm, bottomMargin=1*cm, showBoundary=0)
     styles = getStyleSheet()
+
     styleN = styles['Normal']
-    styleH = styles['Heading']
-    styleT = styles['Title']
+    styleHeaderLeft = styles['CardHeaderLeft']
+    styleHeaderRight = styles['CardHeaderRight']
+    styleIL  = styles['CardInfoLines']
+    styleSeason  = styles['CardSeason']
+    styleCode = styles['CardCode']
+    styleName = styles['CardName']
+    styleSurname = styles['CardSurname']
+
+
 
     elements = []
 
     cardcells = []
     for c in cards:
-        c00 = Paragraph("x",styleN)
-        c01 = Paragraph("x",styleN)
 
-        c10 = Paragraph("x",styleN)
-        c11 = Paragraph("x",styleN)
+        info_empty = (c.info_line_1 is None or c.info_line_1=='') and (c.info_line_2 is None or c.info_line_2=='')
+        
+            
+        c00 = Paragraph("XX<br/>YY<br/>ZZ",styleHeaderLeft)
+        c01 = Paragraph("xxx<br/>yyy",styleHeaderRight)
 
-        c20 = Paragraph("x",styleN)
-        c21 = Paragraph("x",styleN)
+        c10_n = Paragraph("xn",styleName)
+        c10_s = Paragraph("xs",styleSurname)
+
+
+        code = c.course_code
+        if len(code)<=3:
+            code_p = escape(code) 
+        else:
+            m = re.match('([^\d]*)(.*)',code)
+            if m:
+                code_p = "%s<br/>%s"%(escape(m.group(1)), escape(m.group(2)))
+            else:       
+                code_p = escape(code)
+
+        c11 = Paragraph(code_p,styleCode)
+
+        if info_empty:
+            c20_bg = colors.white
+        else:
+            c20_bg = colors.black
+
+        info_text = u""
+        if not (c.info_line_1 is None or c.info_line_1==''):            
+            info_text = info_text+escape(c.info_line_1)
+
+        if not (c.info_line_2 is None or c.info_line_2==''):            
+            if info_text != "":
+                info_text = info_text + "<br/>"
+            info_text = info_text + escape(c.info_line_2)
+            
+
+        c10 = Table([[c10_s],[c10_n]], style=[
+       #     ('GRID',(0,0),(-1,-1),1, colors.black)
+        ])
+        
+        c20 = Paragraph(str(info_text),styleIL)
+        c21 = Paragraph(c.season_name,styleSeason)
 
         cc = Table([ [c00,c01],[c10,c11],[c20,c21] ], colWidths=[5.9*cm,1.5*cm],rowHeights=[1.50*cm,1.95*cm,0.95*cm], style=[
-            ('GRID',(0,0),(-1,-1),1, colors.red),
+            ('GRID',(0,0),(-1,-1),1, colors.black),
+            ('BACKGROUND',(0,0),(0,0),colors.black),
+            ('BACKGROUND',(0,2),(0,2),c20_bg),
+#            ('TEXTCOLOR',(0,0),(0,0),colors.red),
             ('LEFTPADDING',(0,0),(-1,-1),ipad),
             ('RIGHTPADDING',(0,0),(-1,-1),ipad),
             ('TOPPADDING',(0,0),(-1,-1),ipad),
             ('BOTTOMPADDING',(0,0),(-1,-1),ipad),
             ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
-            ('ALIGN',(0,0),(-1,-1),'LEFT'),
+            ('ALIGN',(0,0),(-1,-1),'CENTER'),
         ])
 
         cardcells.append(cc)

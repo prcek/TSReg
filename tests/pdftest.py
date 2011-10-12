@@ -60,12 +60,12 @@ def test_students_table():
     utils.pdf.students_table('students_table_2.pdf',course,120*[student,student_2])
 
 class FakeCard():
-    name = "Jxxxxxx"
-    surname = "Pxxxxxxxxx"
-    season_name = "XXXX/XX"
-    course_code = "X88"
-    info_line_1 = "2xxxxxxxxxxxxxxxxxxx1"
-    info_line_2 = "2xxxxxxxxxxxxxxxxxxx2"
+    name = u"Jxxxxxx"
+    surname = u"Pxxxxxxxxx"
+    season_name = u"XXXX/XX"
+    course_code = u"X88"
+    info_line_1 = u"1xxxxxxxxxxxxxxxxxxx1"
+    info_line_2 = u"2xxxxxxxxxxxxxxxxxxx2"
 
 
 def test_students_card():
@@ -73,9 +73,13 @@ def test_students_card():
     card2 = FakeCard()
     card2.course_code = "KM12"
     card3 = FakeCard()
-    card3.info_line_1 = ""
-    card3.info_line_2 = ""
-    utils.pdf.students_card('students_card.pdf',3*[card,card2,card3])
+    card3.info_line_1 = u""
+    card3.info_line_2 = u""
+    card4 = FakeCard()
+    card4.info_line_1 = u"xxxx"
+    card4.info_line_2 = u""
+ 
+    utils.pdf.students_card('students_card.pdf',3*[card,card2,card3,card4])
 
 def test_students_enroll():
     student = FakeStudent()
