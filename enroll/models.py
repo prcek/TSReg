@@ -219,6 +219,9 @@ class Student(BaseModel):
     x_pair_first = False
     x_pair_second = False
 
+    x_import_no_1 = None
+    x_import_no_2 = None
+
     def init_reg(self):
         self.reg_datetime = datetime.datetime.utcnow()        
 

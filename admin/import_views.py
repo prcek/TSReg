@@ -138,12 +138,29 @@ def import_students_do(request,file_id, start_line, end_line, course_id):
     start_line = int(start_line)
     end_line = int(end_line)
     line = 0
+    st_list=[]
     for row in r:
         if (line>=end_line):
             break
         if (line>=start_line):
-            import_student(course,row)
+            st = import_student(course,row)
+            st_list.append(st)
         line+=1
+
+    if course.group_mode == 'Pair':
+        pd = dict()  
+        for s in st_list:
+            if not s.x_import_no_2 is None:
+                p = pd.pop(s.x_import_no_2,None)        
+                if p is None:
+                    pd[s.x_import_no_2] = s
+                else:
+                    s.partner_ref_code = p.ref_key
+                    p.partner_ref_code = s.ref_key
+                    s.save()
+                    p.save()
+
+    
 
     return HttpResponseRedirect('../../../../../')
 
@@ -170,6 +187,15 @@ def import_student(course,row):
     st.name = row[4]
     st.surname = row[3]
 
+
+    try:
+        st.x_import_no_1 = int(row[0])
+    except:
+        pass
+    try:
+        st.x_import_no_2 = int(row[1])
+    except:
+        pass
 
 # 5 6 7 - prachy
     try:
@@ -212,4 +238,6 @@ def import_student(course,row):
     st.save()
     st.init_ref_codes()
     st.save()
+
+    return st
 
