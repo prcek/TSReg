@@ -4,6 +4,13 @@ from operator import attrgetter
 import logging
 
 
+cz_spec_dict = { u'Š':u'S', u'Ď':u'D', u'Č':u'C' }
+cz_spec_dict = dict((ord(k), cz_spec_dict[k]) for k in cz_spec_dict)
+
+def cz_spec_order(s):
+    return s.translate(cz_spec_dict)
+
+
 class FakeStudent():
     x_pair_empty_slot = True
     x_pair_no = 0
@@ -18,20 +25,33 @@ class FakeStudent():
     def key(self):
         return {'id':''} 
 
+def get_single_sort():
+        def g(obj):
+            return (cz_spec_order(obj.surname),obj.name)
+        return g
+
+def get_school_sort():
+        def g(obj):
+            return (obj.school, obj.school_class, obj.addressing, cz_spec_order(obj.surname),obj.name)
+        return g
+
+
+
+
 def sort_students_spare_single(students):
-    return sorted(students, key=attrgetter('surname','name')) 
+    return sorted(students, key=get_single_sort()) 
 
 def sort_students_spare_school(students):
-    return sorted(students, key=attrgetter('school','school_class','addressing','surname','name')) 
+    return sorted(students, key=get_school_sort())
 
 def sort_students_spare_pair(students):
     return sort_students_pair(students)
 
 def sort_students_single(students):
-    return sorted(students, key=attrgetter('surname','name')) 
+    return sorted(students, key=get_single_sort()) 
 
 def sort_students_school(students):
-    return sorted(students, key=attrgetter('school','school_class','addressing','surname','name')) 
+    return sorted(students, key=get_school_sort())
 
 def sort_students_pair(students):
 
@@ -67,21 +87,27 @@ def sort_students_pair(students):
             
     l = []         
     pno = 0
+
+    def get_compl():
+        def g(obj):
+            if (obj[0].x_pair_empty_slot or obj[1].x_pair_empty_slot):
+                c=True
+            else:
+                c=False
+            return (c,cz_spec_order(obj[0].surname),obj[0].name)
+        return g
+
+
+    pl = sorted(pl,key=get_compl())
+
     for (a,b) in pl:
         pno+=1
         a.x_pair_no = pno
         b.x_pair_no = pno
-#        logging.info("============================")            
-#        logging.info(a)
-#        logging.info(b)
         l.append(a)
         l.append(b)
         
-        
-#    logging.info(pl)
 
-    
-
-#    l =  sorted(students, key=attrgetter('surname','name')) 
+#    l =  sorted(l, key=get_compl()) 
 #    l.append(FakeStudent())
     return l
