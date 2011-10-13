@@ -74,7 +74,7 @@ def getStyleSheet():
                    )
 
     stylesheet.add(ParagraphStyle(name='Card',
-                                  fontName='DejaVuSansMono',
+                                  fontName='DejaVuSansBold',
                                   fontSize=9)
                    )
 
@@ -87,24 +87,29 @@ def getStyleSheet():
     stylesheet.add(ParagraphStyle(name='CardHeaderRight', parent=stylesheet['Card'],
                                   textColor=colors.black,
                                   alignment=TA_CENTER,
+                                    leading=8,
+                                    fontSize=8,
                                   )
                    )
 
     stylesheet.add(ParagraphStyle(name='CardSeason', parent=stylesheet['Card'],
                                   textColor=colors.black,
                                   alignment=TA_CENTER,
+                                  fontSize=8,
                                   )
                    )
 
     stylesheet.add(ParagraphStyle(name='CardName', parent=stylesheet['Card'],
+                                  fontSize=10,
                                   textColor=colors.black,
-                                  alignment=TA_RIGHT,
+                                  alignment=TA_LEFT,
                                   )
                    )
 
     stylesheet.add(ParagraphStyle(name='CardSurname', parent=stylesheet['Card'],
+                                  fontSize=13,
                                   textColor=colors.black,
-                                  alignment=TA_LEFT,
+                                  alignment=TA_RIGHT,
                                   )
                    )
 
@@ -112,6 +117,8 @@ def getStyleSheet():
     stylesheet.add(ParagraphStyle(name='CardCode', parent=stylesheet['Card'],
                                   textColor=colors.black,
                                   alignment=TA_CENTER,
+                                  leading=16,
+                                  fontSize=18,
                                   )
                    )
 
@@ -244,7 +251,7 @@ def students_card(output,cards):
         info_empty = (c.info_line_1 is None or c.info_line_1=='') and (c.info_line_2 is None or c.info_line_2=='')
         
             
-        c00 = Paragraph("XX<br/>YY<br/>ZZ",styleHeaderLeft)
+        c00 = Paragraph("<font size=14>XX</font><br/><forn size=8>YY<br/>ZZ</font>",styleHeaderLeft)
         c01 = Paragraph("xxx<br/>yyy",styleHeaderRight)
 
         c10_n = Paragraph("xn",styleName)
@@ -278,7 +285,7 @@ def students_card(output,cards):
             info_text = info_text + escape(c.info_line_2)
             
 
-        c10 = Table([[c10_s],[c10_n]], style=[
+        c10 = Table([[c10_n],[c10_s]], style=[
        #     ('GRID',(0,0),(-1,-1),1, colors.black)
         ])
         

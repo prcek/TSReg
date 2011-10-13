@@ -79,7 +79,7 @@ def test_students_card():
     card4.info_line_1 = u"xxxx"
     card4.info_line_2 = u""
  
-    utils.pdf.students_card('students_card.pdf',3*[card,card2,card3,card4])
+    utils.pdf.students_card('students_card.pdf',2*[card,card2,card3,card4,card2])
 
 def test_students_enroll():
     student = FakeStudent()
