@@ -251,11 +251,11 @@ def students_card(output,cards):
         info_empty = (c.info_line_1 is None or c.info_line_1=='') and (c.info_line_2 is None or c.info_line_2=='')
         
             
-        c00 = Paragraph("<font size=14>XX</font><br/><forn size=8>YY<br/>ZZ</font>",styleHeaderLeft)
-        c01 = Paragraph("xxx<br/>yyy",styleHeaderRight)
+        c00 = Paragraph("<font size=14>STARLET</font><br/><forn size=8>TANEČNÍ ŠKOLA<br/>MANŽELŮ BURYANOVÝCH</font>",styleHeaderLeft)
+        c01 = Paragraph("ČÍSLO<br/>KURZU",styleHeaderRight)
 
-        c10_n = Paragraph("xn",styleName)
-        c10_s = Paragraph("xs",styleSurname)
+        c10_n = Paragraph(escape(c.name),styleName)
+        c10_s = Paragraph(escape(c.surname),styleSurname)
 
 
         code = c.course_code
@@ -359,7 +359,7 @@ def students_invitation(output,invitations):
         pl_2 = Paragraph(escape(p_lines[2]),styleP)
         pl_3 = Paragraph(escape(p_lines[3]),styleP)
         invtable = Table([ [pl_0],[pl_1],[pl_2],[pl_3] ], colWidths=[width],rowHeights=4*[height], style=[
-#            ('GRID',(0,0),(-1,-1),1, colors.red),
+#            ('GRID',(0,0),(-1,-1),0.5, colors.gray),
             ('LEFTPADDING',(0,0),(-1,-1),ipad),
             ('RIGHTPADDING',(0,0),(-1,-1),ipad),
             ('TOPPADDING',(0,0),(-1,-1),ipad),
@@ -384,7 +384,7 @@ def students_invitation(output,invitations):
    
     rows = len(data) 
     bigtable = Table(data,rowHeights= rows*[3*cm], style=[
-#        ('GRID',(0,0),(-1,-1),1,colors.black),
+        ('GRID',(0,0),(-1,-1),0.5,colors.gray),
 
         ('ALIGN',(0,0),(-1,-1),'CENTER'),
         ('VALIGN',(0,0),(-1,-1),'MIDDLE'),

@@ -19,11 +19,11 @@ def hello_pdf():
 
 class FakeInvitation():
     def get_print_lines(self):
-        return ['Aa','Bb','Cc','Dd']
+        return ['Vážení rodiče','Karla Vomáčky','Luční 789','60178 Baculov']
 
 def test_inivitations():
     i = FakeInvitation()
-    utils.pdf.students_invitation('invitations.pdf',29*[i])
+    utils.pdf.students_invitation('invitations.pdf',27*[i])
 
 class FakeCourse():
     code='X123'
