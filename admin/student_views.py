@@ -600,6 +600,17 @@ def course_as_pdf(request, course_id):
     student_list_to_enroll=Student.list_for_course_to_enroll(course.key())
     student_list_enrolled=Student.list_for_course_enrolled(course.key())
 
+
+    if course.group_mode == 'Single':
+        student_list_to_enroll = sort_students_spare_single(student_list_to_enroll)
+        student_list_enrolled = sort_students_single(student_list_enrolled)
+    elif course.group_mode == 'School':
+        student_list_to_enroll = sort_students_spare_school(student_list_to_enroll)
+        student_list_enrolled = sort_students_school(student_list_enrolled)
+    elif course.group_mode == 'Pair':
+        student_list_to_enroll = sort_students_spare_pair(student_list_to_enroll)
+        student_list_enrolled = sort_students_pair(student_list_enrolled)
+
     students = []
     students.extend(student_list_enrolled)
     students.extend(student_list_to_enroll)
