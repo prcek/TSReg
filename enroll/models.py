@@ -222,6 +222,47 @@ class Student(BaseModel):
     x_import_no_1 = None
     x_import_no_2 = None
 
+
+    def clone(self):
+        s = Student() 
+        s.init_reg()
+        s.init_ref_base()
+        s.init_enroll()
+        s.course_key = self.course_key
+        s.status = self.status
+        s.reg_by_admin = True
+        s.addressing = self.addressing 
+        s.name = self.name
+        s.surname = self.surname
+
+        s.student  = self.student
+#        s.student_check = self.student_check
+#        s.long_period 
+#        s.to_pay 
+#        s.balance_due
+#        s.discount
+#        s.paid_ok 
+        s.year = self.year
+        s.email = self.email
+        s.no_email_info = self.no_email_info
+        s.no_email_ad = self.no_email_ad
+        s.phone = self.phone
+        s.street  = self.street
+        s.street_no  = self.street_no
+        s.city = self.city
+        s.post_code  = self.post_code
+        s.partner_ref_code  = self.partner_ref_code
+        s.school = self.school
+        s.school_class = self.school_class
+        s.comment = self.comment
+
+
+        s.save()
+        s.init_ref_codes();
+        s.save()
+
+        return s
+
     def init_reg(self):
         self.reg_datetime = datetime.datetime.utcnow()        
 

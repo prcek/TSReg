@@ -55,6 +55,20 @@ def plan_job_transfer_students(owner,student_ids,source_course, target_course):
 
     return job.key().id()
 
+def plan_job_makecopy_students(owner,student_ids,source_course, target_course):
+    logging.info('makecopy %s from course %d to course %d'%(student_ids,source_course.key().id(), target_course.key().id()))    
+
+    job = Job()
+    job.init("makecopy_students",target='../../', owner=owner)
+    job.save()
+ 
+    taskqueue.add(url='/task/makecopy_students/', params={'job_id':job.key().id(), 'owner':owner, 'student_ids':student_ids, 'source_course_id': source_course.key().id(), 'target_course_id':target_course.key().id()})
+
+    logging.info('job_id %d'%(job.key().id())) 
+
+    return job.key().id()
+
+
 def plan_job_card_for_students(owner,student_ids,course_code, season_name, info_line_1, info_line_2):
     logging.info('prepare cards for %s, code=%s, season=%s, line1=%s, line2=%s'%(student_ids,course_code, season_name, info_line_1, info_line_2))
 

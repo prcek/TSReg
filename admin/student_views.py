@@ -7,7 +7,7 @@ from django.template import RequestContext,Context, loader
 #from google.appengine.api import taskqueue
 
 from enroll.models import Student,Course
-from admin.queue import plan_send_student_email, plan_update_course, plan_job_transfer_students, plan_job_card_for_students, plan_job_invitation_for_students
+from admin.queue import plan_send_student_email, plan_update_course, plan_job_transfer_students, plan_job_card_for_students, plan_job_invitation_for_students, plan_job_makecopy_students
 from admin.student_sort import sort_students_single, sort_students_school, sort_students_pair, sort_students_spare_single, sort_students_spare_school, sort_students_spare_pair
 import utils.config as cfg
 import utils.mail as mail
@@ -231,6 +231,9 @@ def action_course(request,course_id):
         if op == 'action_transfer':
             return action_do_transfer(request, source_course=course, student_ids = all_sel, target_course=target_course)
 
+        if op == 'action_makecopy':
+            return action_do_makecopy(request, source_course=course, student_ids = all_sel, target_course=target_course)
+
         if op == 'action_card':
             return action_do_card(request, source_course=course, student_ids = all_sel)
 
@@ -246,12 +249,10 @@ def action_course(request,course_id):
 
     return HttpResponseRedirect('../')
 
-class TransferPickForm(forms.Form):
+class TargetCoursePickForm(forms.Form):
     course_key = forms.ChoiceField(label='Do kurzu')
     def __init__(self, data = None, courses = []):
         super(self.__class__,self).__init__(data)
-#        if not label is None:
-#            self.fields['course_key'].label=label
         self.fields['course_key'].choices=courses
 
 
@@ -267,11 +268,31 @@ def action_do_transfer(request, source_course=None, student_ids=None, target_cou
     if target_course is None:
 
         info = 'přeřazení žáků do jiného kurzu'
-        form = TransferPickForm(courses = Course.get_COURSE_CHOICES())
+        form = TargetCoursePickForm(courses = Course.get_COURSE_CHOICES())
 
         return render_to_response('admin/action_transfer.html', RequestContext(request, {'form':form, 'info':info, 'operation':request.POST['operation'], 'all_select':student_ids}))
 
     job_id=plan_job_transfer_students(request.auth_info.email,student_ids,source_course, target_course)
+
+
+    return HttpResponseRedirect('../wait/%d/'%job_id)
+
+def action_do_makecopy(request, source_course=None, student_ids=None, target_course=None):
+    logging.info('student_ids = %s'%student_ids)
+
+
+    if (student_ids is None) or (len(student_ids)==0):
+        info = 'nebyl vybrán žádný žák'
+        return render_to_response('admin/action_makecopy.html', RequestContext(request, {'info':info}))
+
+    if target_course is None:
+
+        info = 'kopie žáků do jiného kurzu'
+        form = TargetCoursePickForm(courses = Course.get_COURSE_CHOICES())
+
+        return render_to_response('admin/action_makecopy.html', RequestContext(request, {'form':form, 'info':info, 'operation':request.POST['operation'], 'all_select':student_ids}))
+
+    job_id=plan_job_makecopy_students(request.auth_info.email,student_ids,source_course, target_course)
 
 
     return HttpResponseRedirect('../wait/%d/'%job_id)

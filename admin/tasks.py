@@ -328,6 +328,78 @@ def transfer_students(request):
 
     return HttpResponse('ok')
 
+def makecopy_student(student_id, course):
+    logging.info('makecopy student %d'%student_id)
+    student = Student.get_by_id(student_id)
+    if student is None:
+        return
+    
+    new = student.clone()
+    logging.info('clone ok')
+    new.set_course_key(str(course.key()))
+    new.save()
+    
+    return (student.ref_key,new)
+
+ 
+def makecopy_students(request):
+    logging.info(request.POST)
+    job_id = request.POST['job_id']
+    job = Job.get_by_id(int(job_id))
+
+    job.start()
+    job.save()
+
+
+
+    student_ids = request.POST.getlist('student_ids')
+    target_course_id = request.POST['target_course_id']
+    source_course_id = request.POST['source_course_id']
+
+
+
+    target_course = Course.get_by_id(int(target_course_id))
+    if target_course is None:
+        logging.info('missing target course')
+        job.finish(error=True)
+        job.save()
+        return HttpResponse('error')
+
+    source_course = Course.get_by_id(int(source_course_id))
+    if source_course is None:
+        logging.info('missing source course')
+        job.finish(error=True)
+        job.save()
+        return HttpResponse('error')
+
+
+
+    logging.info('student list %s'%student_ids) 
+    pr = dict()
+    for student_id in student_ids:
+        (old_refkey,new) = makecopy_student(int(student_id), target_course) 
+        pr[old_refkey]=new
+
+    logging.info('stage 2 done')
+    for n in pr.values():
+        np = pr.get(n.partner_ref_code,None)
+        if not np is None:
+            logging.info('update partner_ref_code %s -> %s'%(n.partner_ref_code,np.ref_key))
+            n.partner_ref_code=np.ref_key
+            n.save()
+            
+    
+    
+ 
+
+    taskqueue.add(url='/task/recount_capacity/', params={'course_id':target_course.key().id()})
+
+
+    job.finish()
+    job.save()
+
+    return HttpResponse('ok')
+
 
 def prepare_card(owner, student_id, season_name, course_code, info_line_1, info_line_2):
     student = Student.get_by_id(int(student_id))
