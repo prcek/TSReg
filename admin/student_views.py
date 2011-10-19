@@ -483,8 +483,57 @@ def create_pair(request, course_id):
     if course is None:
         raise Http404
 
-    form1 = StudentFormAdd()
-    form2 = StudentFormAdd()
+    student1 = Student()
+    student1.set_course_key(str(course.key()))
+    student1.init_reg()
+    student1.init_ref_base()
+    student1.reg_by_admin = True
+    student1.status = '-'
+ 
+    student2 = Student()
+    student2.set_course_key(str(course.key()))
+    student2.init_reg()
+    student2.init_ref_base()
+    student2.reg_by_admin = True
+    student2.status = '-'
+ 
+    if request.method == 'POST':
+        form1 = StudentFormAdd(request.POST,prefix='p1',instance=student1)
+        form2 = StudentFormAdd(request.POST,prefix='p2',instance=student2)
+
+        if form1.is_valid() and form2.is_valid():
+
+
+            form1.save(commit=False)
+            student1.status =  form1.cleaned_data['add_mode']
+            if student1.status=='e':
+                student1.init_enroll()
+            logging.info('create student after %s'% student1)
+            student1.save()
+            student1.init_ref_codes()
+
+            form2.save(commit=False)
+            student2.status =  form2.cleaned_data['add_mode']
+            if student2.status=='e':
+                student2.init_enroll()
+            logging.info('create student after %s'% student2)
+            student2.save()
+            student2.init_ref_codes()
+
+
+            student1.partner_ref_code = student2.ref_key
+            student2.partner_ref_code = student1.ref_key
+            student1.save()
+            student2.save()
+
+            course_id = student1.get_course_id()
+            plan_update_course(course_id)
+
+            return redirect('..')
+
+    else:
+        form1 = StudentFormAdd(prefix='p1',instance=student1)
+        form2 = StudentFormAdd(prefix='p2',instance=student2)
 
     return render_to_response('admin/students_create_pair.html', RequestContext(request, {'form1':form1,'form2':form2}))
 
