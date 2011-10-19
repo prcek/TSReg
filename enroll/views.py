@@ -204,6 +204,50 @@ def attend_single(request,course):
 
    
 def attend_pair(request,course):
+    captcha_error = None
+
+    if request.method == 'POST':
+        form1 = EnrollForm(request.POST,prefix='p1')
+        form2 = EnrollForm(request.POST,prefix='p2')
+
+        if form1.is_valid() and form2.is_valid():
+            check_ok = False
+            if config.getConfigBool('CAPTCHA_ON',False):
+                if captcha.check(request.POST['recaptcha_challenge_field'], request.POST['recaptcha_response_field'], os.environ['REMOTE_ADDR'],  config.getConfigString('CAPTCHA_PRIVATE_KEY','')):
+                    check_ok = True
+                else:
+                    captcha_error = True
+                    logging.info('captcha wrong')
+            else:
+                check_ok = True
+
+            if check_ok:
+                logging.info('creating new student record')    
+                st1 = form2student(form1,course)
+                st2 = form2student(form2,course)
+
+                st1.partner_ref_code = st2.ref_key
+                st2.partner_ref_code = st1.ref_key
+                st1.save()
+                st2.save()
+
+                ref_code = st1.ref_key
+                plan_send_student_email('CHECK_EMAIL',st1)
+                return HttpResponseRedirect('/zapis/prihlaska/%s/'%ref_code)
+
+    else:
+        form1 = EnrollForm(prefix='p1')
+        form2 = EnrollForm(prefix='p2')
+    
+    if (config.getConfigBool('CAPTCHA_ON',False)):
+        html_captcha = captcha.displayhtml(config.getConfigString('CAPTCHA_PUBLIC_KEY',''))
+    else:
+        html_captcha = None
+
+    return render_to_response('enroll/attend_pair.html', RequestContext(request, { 'course': course, 'form1':form1, 'form2':form2 , 'html_captcha': html_captcha, 'captcha_error':captcha_error}))
+
+
+
     pass
 
 

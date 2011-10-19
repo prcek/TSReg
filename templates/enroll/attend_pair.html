@@ -1,0 +1,34 @@
+{% extends "enroll/base.html" %}
+
+{% block title %} TŠ Starlet - Zápis -Párová přihláška {% endblock %}
+
+{% block content %}
+
+{% if html_captcha %} 
+<script type="text/javascript">
+ var RecaptchaOptions = {
+    theme : 'white',
+    custom_translations : { instructions_visual : "Opište dvě slova:" }
+ };
+ </script>
+{% endif %}
+
+<div> Přihláska do kurzu {{ course.code }}  </div>
+<form method="post" name="form">
+
+<table><tr>
+<td>{{ form1.as_p }}</td>
+<td>{{ form2.as_p }}</td>
+</tr></table>
+
+{% if captcha_error %}  neplatný kód {% endif %}
+{% if html_captcha %} {{ html_captcha|safe }} {% endif %}
+    
+<input type="submit" value="Odeslat">
+<a  href='/zapis/'>zpět</a>
+</form>
+
+
+
+{% endblock %}
+
