@@ -118,20 +118,56 @@ def folder_index(request,folder_id):
 
     return render_to_response('enroll/folder_index.html', RequestContext(request, { 'offer':offer }))
 
+def form2student(form,course):
+    st = Student()
+    st.status = 'n'
+    st.course_key=str(course.key())
+    st.init_reg()
+    st.init_ref_base()
+    st.addressing = form.cleaned_data['addressing']
+    st.name = form.cleaned_data['name']
+    st.surname = form.cleaned_data['surname']
+    st.student = form.cleaned_data['student']
+    st.long_period = form.cleaned_data['long_period']
+    st.year = form.cleaned_data['year']
+    st.email = form.cleaned_data['email']
+    st.no_email_ad = form.cleaned_data['no_email_ad']
+    st.phone = form.cleaned_data['phone']
+    st.street = form.cleaned_data['street']
+    st.street_no = form.cleaned_data['street_no']
+    st.city = form.cleaned_data['city']
+    st.post_code = form.cleaned_data['post_code']
+    st.comment = form.cleaned_data['comment']
+    #st.partner_ref_code = form.cleaned_data['partner']
+
+    if course.cost_sale:
+        a = course.cost_sa
+        b = course.cost_sb
+    else:
+        a = course.cost_a
+        b = course.cost_b
+    
+    if course.cost_mode == 'Normal':
+        if (st.student):
+            st.to_pay = b
+        else:
+            st.to_pay = a
+    elif course.cost_mode == 'Period':
+        if (st.long_period):
+            st.to_pay = a 
+        else:
+            st.to_pay = b
+    elif course.cost_mode == 'Fix':
+        st.to_pay = a
 
 
-def attend(request,course_id):
+    st.save()
+    st.init_ref_codes()
+    st.save()
+    return st
 
 
-    if not config.getConfigBool('ENROLL_ENROLL_ON',False):
-        raise Http404
-
-    course = Course.get_by_id(int(course_id))
-    if course is None:
-        raise Http404
-    if not course.is_open():
-        raise Http404
-
+def attend_single(request,course):
     captcha_error = None
 
     if request.method == 'POST':
@@ -150,51 +186,7 @@ def attend(request,course_id):
 
             if check_ok:
                 logging.info('creating new student record')    
-                st = Student()
-                st.status = 'n'
-                st.course_key=str(course.key())
-                st.init_reg()
-                st.init_ref_base()
-                st.addressing = form.cleaned_data['addressing']
-                st.name = form.cleaned_data['name']
-                st.surname = form.cleaned_data['surname']
-                st.student = form.cleaned_data['student']
-                st.long_period = form.cleaned_data['long_period']
-                st.year = form.cleaned_data['year']
-                st.email = form.cleaned_data['email']
-                st.no_email_ad = form.cleaned_data['no_email_ad']
-                st.phone = form.cleaned_data['phone']
-                st.street = form.cleaned_data['street']
-                st.street_no = form.cleaned_data['street_no']
-                st.city = form.cleaned_data['city']
-                st.post_code = form.cleaned_data['post_code']
-                st.comment = form.cleaned_data['comment']
-#                st.partner_ref_code = form.cleaned_data['partner']
-
-                if course.cost_sale:
-                    a = course.cost_sa
-                    b = course.cost_sb
-                else:
-                    a = course.cost_a
-                    b = course.cost_b
-
-                if course.cost_mode == 'Normal':
-                    if (st.student):
-                        st.to_pay = b
-                    else:
-                        st.to_pay = a
-                elif course.cost_mode == 'Period':
-                    if (st.long_period):
-                        st.to_pay = a 
-                    else:
-                        st.to_pay = b
-                elif course.cost_mode == 'Fix':
-                    st.to_pay = a
-
-
-                st.save()
-                st.init_ref_codes()
-                st.save()
+                st = form2student(form,course)
                 ref_code = st.ref_key
                 plan_send_student_email('CHECK_EMAIL',st)
                 return HttpResponseRedirect('/zapis/prihlaska/%s/'%ref_code)
@@ -210,6 +202,24 @@ def attend(request,course_id):
     return render_to_response('enroll/attend.html', RequestContext(request, { 'course': course, 'form':form , 'html_captcha': html_captcha, 'captcha_error':captcha_error}))
 
 
+   
+def attend_pair(request,course):
+    pass
+
+
+def attend(request,course_id):
+
+
+    if not config.getConfigBool('ENROLL_ENROLL_ON',False):
+        raise Http404
+
+    course = Course.get_by_id(int(course_id))
+    if course is None:
+        raise Http404
+    if not course.is_open():
+        raise Http404
+
+    return attend_single(request,course)
 
 
 def show(request,ref_code):
