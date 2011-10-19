@@ -33,10 +33,10 @@ def plan_update_course(course):
     if not course is None:
         if isinstance(course,Course): 
             taskqueue.add(url='/task/recount_capacity/', params={'course_id':course.key().id()})
-        elif isinstance(course,(int,basestring)):
+        elif isinstance(course,(int,long,basestring)):
             taskqueue.add(url='/task/recount_capacity/', params={'course_id':course})
         else:            
-            logging.info('plan_recount_course - course is wrong')
+            logging.info('plan_recount_course - course datatype is wrong - %s'%(type(course)))
             raise Http404
     else:
         logging.info('plan_recount_course - course is None, skip')

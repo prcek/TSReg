@@ -401,6 +401,7 @@ def edit(request, student_id,course_id=None):
 
     student = Student.get_by_id(int(student_id))
     if student is None:
+        logging.info('student is None') 
         raise Http404
 
 
@@ -413,6 +414,7 @@ def edit(request, student_id,course_id=None):
             student.save()
 
             course_id = student.get_course_id()
+            logging.info('student course_id = %s'%(course_id))
             plan_update_course(course_id)
 
             return redirect('../..')
