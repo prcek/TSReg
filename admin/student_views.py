@@ -477,6 +477,16 @@ def create(request, course_id):
         form = StudentFormAdd(instance=student)
     return render_to_response('admin/students_create.html', RequestContext(request, {'form':form}))
 
+def create_pair(request, course_id):
+
+    course = Course.get_by_id(int(course_id))  
+    if course is None:
+        raise Http404
+
+    form1 = StudentFormAdd()
+    form2 = StudentFormAdd()
+
+    return render_to_response('admin/students_create_pair.html', RequestContext(request, {'form1':form1,'form2':form2}))
 
 def email(request,student_id,course_id=None):
     student = Student.get_by_id(int(student_id))
