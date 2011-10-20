@@ -18,6 +18,7 @@ class FakeStudent():
     x_pair_first = False
     x_pair_second = True
     x_no = 0
+    x_class_no = 0
     name = None
     surname = None
     def get_sex(self):
@@ -36,14 +37,23 @@ def get_school_sort():
             return (obj.school, obj.school_class, obj.addressing, cz_spec_order(obj.surname),obj.name)
         return g
 
+def diffclass(s1,s2):
+    if s1.school != s2.school:
+        return True 
+    if s1.school_class != s2.school_class:
+        return True 
+    if s1.addressing!= s2.addressing:
+        return True 
+ 
+    return False
 
 
 
 def sort_students_spare_single(students):
-    return sorted(students, key=get_single_sort()) 
+    return sort_students_single(students)
 
 def sort_students_spare_school(students):
-    return sorted(students, key=get_school_sort())
+    return sort_students_school(students)
 
 def sort_students_spare_pair(students):
     return sort_students_pair(students)
@@ -52,7 +62,20 @@ def sort_students_single(students):
     return sorted(students, key=get_single_sort()) 
 
 def sort_students_school(students):
-    return sorted(students, key=get_school_sort())
+    sl = sorted(students, key=get_school_sort())
+    cno = 0
+    no = 0
+    last_s = None 
+    for s in sl:
+        if (not last_s is None) and  diffclass(s,last_s):
+            cno=0
+        last_s = s
+        cno+=1
+        no+=1
+        s.x_class_no = cno
+        s.x_no = no
+
+    return sl
 
 def sort_students_pair(students):
 
