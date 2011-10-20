@@ -234,7 +234,7 @@ def students_enroll(output,students):
             stu = 'Ano'
         else:
             stu = 'Ne'
-        t = Table([
+        data = [
             ["oslovení",s.addressing_loc()],
             ["jméno",s.name],
             ["přijmení",s.surname],
@@ -243,12 +243,31 @@ def students_enroll(output,students):
             ["e-mail",s.email],
             ["telefon",s.phone],
             ["adresa","%s %s"%(s.street,s.street_no)],
-            ["","%s %s"%(s.post_code,s.city)]
-        ], colWidths=[3*cm,9*cm],
+            ["","%s %s"%(s.post_code,s.city)],
+        ]
+
+        if s.school != '' or s.school_class!= '':
+            data.append(['škola',"%s, %s"%(s.school,s.school_class)])
+
+        if (not s.partner_ref_code is None) and s.partner_ref_code != '':
+            data.append(['partner',s.partner_ref_code])
+    
+        if (not s.comment is None) and (s.comment != ''):
+            data.append(['poznámka',s.comment])
+
+
+        ipad=1
+        t = Table(data, colWidths=[3*cm,9*cm],
         style=[
             ('GRID',(0,0),(-1,-1),0.5, colors.gray),
             ('FONT', (1,0), (1,-1), 'DejaVuSansBold'),
             ('FONT', (0,0), (0,-1), 'DejaVuSansMono'),
+            ('FONTSIZE', (0,0), (-1,-1), 8),
+            ('LEFTPADDING',(0,0),(-1,-1),ipad),
+            ('RIGHTPADDING',(0,0),(-1,-1),ipad),
+            ('TOPPADDING',(0,0),(-1,-1),ipad),
+            ('BOTTOMPADDING',(0,0),(-1,-1),ipad),
+ 
         ])
         elements.append(t)
         elements.append(PageBreak())

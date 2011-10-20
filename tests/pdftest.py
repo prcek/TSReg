@@ -57,6 +57,7 @@ class FakeStudent():
     comment = 'poznamka'
     student = False
     student_check = False
+    partner_ref_code = 'pref'
     def course_season(self):
         return "season"
     def course_code(self):
