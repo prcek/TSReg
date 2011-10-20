@@ -231,9 +231,11 @@ def attend_pair(request,course):
                 st1.save()
                 st2.save()
 
-                ref_code = st1.ref_key
+                ref_code1 = st1.ref_key
+                ref_code2 = st2.ref_key
                 plan_send_student_email('CHECK_EMAIL',st1)
-                return HttpResponseRedirect('/zapis/prihlaska/%s/'%ref_code)
+                plan_send_student_email('CHECK_EMAIL',st2)
+                return HttpResponseRedirect('/zapis/prihlasky/%s/%s/'%(ref_code1,ref_code2))
 
     else:
         form1 = EnrollForm(prefix='p1')
@@ -263,7 +265,10 @@ def attend(request,course_id):
     if not course.is_open():
         raise Http404
 
-    return attend_single(request,course)
+    if course.only_pair_enroll():
+        return attend_pair(request,course)
+    else:
+        return attend_single(request,course)
 
 
 def show(request,ref_code):
@@ -273,6 +278,18 @@ def show(request,ref_code):
     else:
         course = None
     return render_to_response('enroll/show.html', RequestContext(request, { 'course': course, 'student':student, 'ref_code':ref_code }))
+
+def show_pair(request,ref_code1, ref_code2):
+    student1 = Student.get_by_ref_key(ref_code1)
+    if student1:
+        course = Course.get(student1.course_key) 
+    else:
+        course = None
+    student2 = Student.get_by_ref_key(ref_code2)
+ 
+    
+    return render_to_response('enroll/show_pair.html', RequestContext(request, { 'course': course, 'student1':student1, 'ref_code1':ref_code1, 'student2':student2, 'ref_code2':ref_code2 }))
+
 
 def confirm(request,confirm_code):
     student = Student.get_by_confirm_key(confirm_code)

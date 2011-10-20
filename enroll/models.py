@@ -158,6 +158,9 @@ class Course(BaseModel):
     def can_enroll(self):
         return (self.usage<self.capacity)
 
+    def only_pair_enroll(self):
+        return (self.group_mode == 'Pair')
+
     def group_mode_loc(self):
         if self.group_mode == 'Single':
             return 'jednotlivci'
