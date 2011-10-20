@@ -15,6 +15,13 @@ from string import maketrans
 #transtab = maketrans(intab, outtab)
 #transtab_r = maketrans(outtab,intab)
 
+def Bool2AnoNe(b):
+    if b:
+        return "Ano"
+    else:
+        return "Ne"
+
+
 class Season(BaseModel):
     name = db.StringProperty(default='')
     public_name = db.StringProperty(default='')
@@ -108,7 +115,8 @@ class Course(BaseModel):
     hidden = db.BooleanProperty(default=False)
     card_line_1 = db.StringProperty(default='')
     card_line_2 = db.StringProperty(default='')
-
+    modify_datetime = db.DateTimeProperty()
+    backup_datetime = db.DateTimeProperty()
 
     def folder_name(self):
         return Folder.get_name_by_key(self.folder_key)
@@ -179,6 +187,12 @@ class Course(BaseModel):
             return 'F'
         return '?'
 
+    def mark_as_modify(self):
+        self.modify_datetime = datetime.datetime.utcnow()        
+
+    def mark_as_backup(self):
+        self.backup_datetime = datetime.datetime.utcnow()        
+
 
 
 
@@ -215,12 +229,16 @@ class Student(BaseModel):
     school = db.StringProperty(default='')
     school_class = db.StringProperty(default='')
     comment = db.StringProperty(default='')
+    modify_datetime = db.DateTimeProperty()
 
     x_pair_empty_slot = False
     x_pair_no = 0
     x_pair_complete = False
     x_pair_first = False
     x_pair_second = False
+
+    x_no = 0
+    x_class_no = 0
 
     x_import_no_1 = None
     x_import_no_2 = None
@@ -469,7 +487,34 @@ class Student(BaseModel):
             return 'vyřazen'
         return '?' 
 
-    def as_csv_row(self):
-        return [self.key().id(), self.name, self.surname]
  
+    def mark_as_modify(self):
+        self.modify_datetime = datetime.datetime.utcnow()        
 
+
+    def as_csv_row(self):
+        if (self.x_no!=0):
+            no1 = self.x_no
+        else:
+            no1 = ''
+       
+        if (self.x_pair_no!=0):
+            no2 = self.x_pair_no
+        elif (self.x_class_no!=0):
+            no2 = self.x_class_no
+        else:
+            no2 = ''
+ 
+        if self.addressing == '-':
+            addressing=''
+        else:
+            addressing=self.addressing
+ 
+        return [
+            no1,no2,addressing,self.surname,self.name, self.to_pay, self.balance_due, self.discount,
+            self.school,self.school_class, self.street, self.street_no, self.city, self.post_code, self.phone,
+            self.email, Bool2AnoNe(not self.no_email_ad), Bool2AnoNe(self.student), Bool2AnoNe(self.student_check),
+            self.comment,
+            self.status, Bool2AnoNe(self.reg_by_admin), self.reg_datetime, self.enroll_datetime, self.ref_base, self.ref_key, self.confirm_key,
+            Bool2AnoNe(self.long_period), Bool2AnoNe(self.paid_ok), self.year, Bool2AnoNe(self.no_email_info), self.partner_ref_code, self.modify_datetime
+        ]

@@ -17,6 +17,7 @@ class FakeStudent():
     x_pair_complete = False
     x_pair_first = False
     x_pair_second = True
+    x_no = 0
     name = None
     surname = None
     def get_sex(self):
@@ -107,6 +108,10 @@ def sort_students_pair(students):
         l.append(a)
         l.append(b)
         
+    no = 0
+    for a in l:
+        no+=1
+        a.x_no = no
 
 #    l =  sorted(l, key=get_compl()) 
 #    l.append(FakeStudent())
