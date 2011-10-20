@@ -36,17 +36,35 @@ class FakeCourse():
     
 
 class FakeStudent():
+    x_pair_empty_slot = False
+    x_no = 1
+    x_class_no = 1
+    reg_datetime = None
     ref_key='ref_key'
     surname='surename'
     name='name'
+    email = 'mail'
+    phone = 'telf'
     to_pay = '9999'
     balance_due = '9999'
     discount = 'dův'
     school = 'skola'
     school_class = 'trida'
+    city='mesto'
+    post_code = 'psc'
+    street = 'ulice'
+    street_no = '37a'
     comment = 'poznamka'
     student = False
     student_check = False
+    def course_season(self):
+        return "season"
+    def course_code(self):
+        return "code"
+
+    def addressing_loc(self):
+        return "osl."
+    
 
 def test_students_table():
     course = FakeCourse()

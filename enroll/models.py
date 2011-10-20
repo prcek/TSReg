@@ -154,6 +154,17 @@ class Course(BaseModel):
         return c.code
 
     @staticmethod
+    def get_season_by_key(course_key):
+        if course_key is None:
+            return None
+        c = Course.get(course_key)
+        if c is None:
+            return None
+        return c.season_name()
+
+
+
+    @staticmethod
     def get_COURSE_CHOICES():
         clist = Course.list()
         res = []
@@ -437,6 +448,10 @@ class Student(BaseModel):
     
     def course_code(self):
         return Course.get_code_by_key(self.course_key)
+
+    def course_season(self):
+        return Course.get_season_by_key(self.course_key)
+
 
     def get_course(self):
         return Course.get(self.course_key)

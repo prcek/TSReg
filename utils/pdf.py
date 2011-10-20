@@ -44,6 +44,8 @@ def getNow():
 
     return local_now.strftime("%Y-%m-%d %H:%M:%S")
 
+
+
 def getStyleSheet():
     stylesheet = StyleSheet1()
     stylesheet.add(ParagraphStyle(name='Normal',
@@ -221,7 +223,33 @@ def students_enroll(output,students):
     elements = []
     
     for s in students:
-        t = Table([["enroll table"]])
+        rd = s.reg_datetime
+        if rd is None:
+            rd = '?'
+        else:
+            rd = rd.strftime("%Y-%m-%d")
+
+        elements.append(Paragraph(u"Přihláška %s do kurzu %s %s, ze dne %s"%(escape(s.ref_key),escape(s.course_code()),escape(s.course_season()), escape(rd)),styleT))
+        if s.student:
+            stu = 'Ano'
+        else:
+            stu = 'Ne'
+        t = Table([
+            ["oslovení",s.addressing_loc()],
+            ["jméno",s.name],
+            ["přijmení",s.surname],
+            ["cena",s.to_pay],
+            ["student",stu],
+            ["e-mail",s.email],
+            ["telefon",s.phone],
+            ["adresa","%s %s"%(s.street,s.street_no)],
+            ["","%s %s"%(s.post_code,s.city)]
+        ], colWidths=[3*cm,9*cm],
+        style=[
+            ('GRID',(0,0),(-1,-1),0.5, colors.gray),
+            ('FONT', (1,0), (1,-1), 'DejaVuSansBold'),
+            ('FONT', (0,0), (0,-1), 'DejaVuSansMono'),
+        ])
         elements.append(t)
         elements.append(PageBreak())
                 
