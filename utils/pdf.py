@@ -156,8 +156,8 @@ def students_table(output,course,students):
 
 
     if course.group_mode == 'School':
-        widths = [ 0.8*cm, 3*cm, 4*cm, 3*cm, 1.1*cm, 1.1*cm, 3*cm,5*cm,1.5*cm,4.5*cm ]
-        data = [ ['č.','kód','přijmení','jméno','platba','dopl.', 'sleva', 'škola', 'třída', 'poznámka'] ]
+        widths = [ 0.8*cm, 0.8*cm, 3*cm, 4*cm, 3*cm, 1.1*cm, 1.1*cm, 3*cm,5*cm,1.2*cm,4.0*cm ]
+        data = [ ['č.','t.č','kód','přijmení','jméno','platba','dopl.', 'sleva', 'škola', 'třída', 'poznámka'] ]
     elif course.group_mode == 'Pair':
         widths = [ 0.8*cm, 0.8*cm, 3*cm, 4*cm, 3*cm, 1.1*cm, 1.1*cm, 3*cm, 0.5*cm,0.5*cm, 4.5*cm]
         data = [ ['č.','p.č','kód','přijmení','jméno', 'platba','dopl.', 'sleva', 'st.', 'ov.',  'poznámka'] ]
@@ -170,7 +170,7 @@ def students_table(output,course,students):
             data.append([i,'---','---'])    
         else:
             if course.group_mode == 'School':
-                data.append([i,s.ref_key,s.surname,s.name,s.to_pay,s.balance_due,s.discount,s.school,s.school_class, s.comment])
+                data.append([s.x_no,s.x_class_no,s.ref_key,s.surname,s.name,s.to_pay,s.balance_due,s.discount,s.school,s.school_class, s.comment])
             else:
                 if s.student:
                     st = 'A'
@@ -181,7 +181,7 @@ def students_table(output,course,students):
                 else:
                     stc = ''
                 if course.group_mode == 'Pair':
-                    data.append([i,s.x_pair_no,s.ref_key,s.surname,s.name,s.to_pay,s.balance_due,s.discount,st,stc,s.comment])
+                    data.append([s.x_no,s.x_pair_no,s.ref_key,s.surname,s.name,s.to_pay,s.balance_due,s.discount,st,stc,s.comment])
                 else:
                     data.append([i,s.ref_key,s.surname,s.name,s.to_pay,s.balance_due,s.discount,st,stc,s.comment])
         i+=1
