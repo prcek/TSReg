@@ -9,6 +9,10 @@ import re
 def valid_email(e):
     return re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$",e)
 
+def chunks(l, n):
+    for i in xrange(0, len(l), n):
+        yield l[i:i+n]
+
 
 def process_template(templ, student, course, signature):
     link = config.getConfigString('ENROLL_CHECK_URL_BASE','') 

@@ -12,7 +12,7 @@ from admin.student_sort import sort_students_single, sort_students_school, sort_
 import utils.config as cfg
 import utils.mail as mail
 import utils.pdf as pdf
-from utils.mail import valid_email
+from utils.mail import valid_email,chunks
 import logging
 from operator import attrgetter
 import urllib
@@ -613,6 +613,7 @@ class EmailSelectForm(forms.Form):
     include_spare = forms.BooleanField(label='náhradníky', error_messages=ERROR_MESSAGES, required=False)
     email_ad = forms.BooleanField(label='i těm co nechtějí reklamy', error_messages=ERROR_MESSAGES, required=False)
     email_info = forms.BooleanField(label='i těm co nechtějí žádné zpravy', error_messages=ERROR_MESSAGES, required=False)
+    gsize = forms.IntegerField(label='skupinky po', error_messages=ERROR_MESSAGES,  required=False, initial=20)
  
  
 
@@ -622,27 +623,37 @@ def course_emails(request, course_id):
         raise Http404
 
 
-
     emails = None
+    groups = None
     ecount = None
     if request.method == 'POST':
         form = EmailSelectForm(request.POST)
         if form.is_valid():
             studs = []
-            if form.cleaned_data['include_enroll']:
-                studs.extend(Student.list_for_course_to_enroll(course.key()))
             if form.cleaned_data['include_spare']:
+                studs.extend(Student.list_for_course_to_enroll(course.key()))
+            if form.cleaned_data['include_enroll']:
                 studs.extend(Student.list_for_course_enrolled(course.key()))
             if not form.cleaned_data['email_ad']:
                 studs = filter(lambda x: not x.no_email_ad,studs)
             if not form.cleaned_data['email_info']:
                 studs = filter(lambda x: not x.no_email_info,studs)
+            if form.cleaned_data['gsize']:
+                gsize = form.cleaned_data['gsize']
+            else: 
+                gsize = 0
 
 
             emails = map(attrgetter('email'),studs)
             emails = filter(valid_email,emails)
             emails = list(set(emails))
             ecount = len(emails)            
+          
+            if (gsize) and (gsize>0): 
+                groups = chunks(emails,gsize) 
+            else:
+                groups = [emails]
+                
 
             
     else: 
@@ -652,8 +663,10 @@ def course_emails(request, course_id):
     student_list_enrolled=Student.list_for_course_enrolled(course.key())
 
     return render_to_response('admin/course_emails.html', RequestContext(request, { 
+        'course':course,
         'form':form,
         'list': emails,  
+        'groups': groups,
         'count': ecount,
     }))
 

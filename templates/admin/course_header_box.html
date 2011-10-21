@@ -1,0 +1,10 @@
+
+{% if course %}
+    <table>
+    <tr><th> {{ course.code }} </th> <th> {{ course.name }} ({{course.folder_name|nonone}}, {{course.season_name|nonone}})</th> </tr>
+    </table>
+
+
+{% else %}
+    kurz není
+{% endif %}
