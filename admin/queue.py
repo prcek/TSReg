@@ -14,7 +14,7 @@ import urllib
 
 def plan_send_student_email(template_key, student, course=None):
 
-    if student.no_email_info:
+    if student.no_email_notification:
         logging.info('info emails disabled for this student, ignore request') 
         return
 

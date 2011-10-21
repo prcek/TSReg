@@ -6,12 +6,14 @@ from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext,Context, loader
 import utils.config as cfg
 from utils.data import UnicodeReader
+from utils.mail import valid_email
 from enroll.models import Course,Student
 from admin.models import FileBlob
 import logging
 import cStringIO
 import datetime
 from utils.locale import local_timezone
+
 
 ERROR_MESSAGES={'required': 'Položka musí být vyplněna', 'invalid': 'Neplatná hodnota'}
 
@@ -226,7 +228,10 @@ def import_student(course,row):
     else:
         st.no_email_ad = True
 
-    st.no_email_info = True
+    st.no_email_notification = True
+    st.no_email_info = not valid_email(st.email)
+    if st.no_email_info:
+        st.no_email_ad = True
     st.phone = row[14]
     st.street = row[10]
     st.street_no = row[11]

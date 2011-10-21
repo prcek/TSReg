@@ -229,6 +229,7 @@ class Student(BaseModel):
     paid_ok = db.BooleanProperty(default=False)
     year = db.IntegerProperty(default=0)
     email = db.StringProperty(default='') 
+    no_email_notification = db.BooleanProperty(default=False)
     no_email_info = db.BooleanProperty(default=False)
     no_email_ad = db.BooleanProperty(default=False)
     phone = db.StringProperty(default='')  
@@ -276,6 +277,7 @@ class Student(BaseModel):
 #        s.paid_ok 
         s.year = self.year
         s.email = self.email
+        s.no_email_notification = self.no_email_notification
         s.no_email_info = self.no_email_info
         s.no_email_ad = self.no_email_ad
         s.phone = self.phone
@@ -531,5 +533,5 @@ class Student(BaseModel):
             self.email, Bool2AnoNe(not self.no_email_ad), Bool2AnoNe(self.student), Bool2AnoNe(self.student_check),
             self.comment,
             self.status, Bool2AnoNe(self.reg_by_admin), self.reg_datetime, self.enroll_datetime, self.ref_base, self.ref_key, self.confirm_key,
-            Bool2AnoNe(self.long_period), Bool2AnoNe(self.paid_ok), self.year, Bool2AnoNe(self.no_email_info), self.partner_ref_code, self.modify_datetime
+            Bool2AnoNe(self.long_period), Bool2AnoNe(self.paid_ok), self.year, Bool2AnoNe(self.no_email_info), Bool2AnoNe(self.no_email_notification), self.partner_ref_code, self.modify_datetime
         ]

@@ -53,8 +53,9 @@ class StudentForm(forms.ModelForm):
     name = forms.CharField(label='jméno', error_messages=ERROR_MESSAGES)
     surname = forms.CharField(label='příjmení', error_messages=ERROR_MESSAGES)
     email = forms.EmailField(label='email', error_messages=ERROR_MESSAGES)
-    no_email_info = forms.BooleanField(label='ne informace', error_messages=ERROR_MESSAGES, required=False)
-    no_email_ad = forms.BooleanField(label='ne reklamu', error_messages=ERROR_MESSAGES, required=False)
+    no_email_notification = forms.BooleanField(label='nezasílat změny přihlášky', error_messages=ERROR_MESSAGES, required=False)
+    no_email_info = forms.BooleanField(label='nezasílat informace', error_messages=ERROR_MESSAGES, required=False)
+    no_email_ad = forms.BooleanField(label='nezasílat reklamu', error_messages=ERROR_MESSAGES, required=False)
     student = forms.BooleanField(label='student', error_messages=ERROR_MESSAGES, required=False)
     long_period = forms.BooleanField(label='celoroční', error_messages=ERROR_MESSAGES, required=False)
     to_pay = forms.IntegerField(label='cena', error_messages=ERROR_MESSAGES)
@@ -81,7 +82,7 @@ class StudentForm(forms.ModelForm):
 
     class Meta:
         model = Student
-        fields = ( 'addressing', 'name', 'surname', 'email', 'no_email_info', 'no_email_ad', 'student','long_period', 'to_pay', 'balance_due', 'discount', 'paid_ok', 'phone', 'year', 'street', 'street_no', 'city', 'post_code', 'school', 'school_class', 'partner_ref_code', 'comment' )
+        fields = ( 'addressing', 'name', 'surname', 'email', 'no_email_info', 'no_email_ad', 'no_email_notification', 'student','long_period', 'to_pay', 'balance_due', 'discount', 'paid_ok', 'phone', 'year', 'street', 'street_no', 'city', 'post_code', 'school', 'school_class', 'partner_ref_code', 'comment' )
 
 #    def __init__(self,data = None, **kwargs):
 #        super(self.__class__,self).__init__(data, **kwargs)
@@ -94,8 +95,9 @@ class StudentFormAdd(StudentForm):
     name = forms.CharField(label='jméno', error_messages=ERROR_MESSAGES)
     surname = forms.CharField(label='příjmení', error_messages=ERROR_MESSAGES)
     email = forms.EmailField(label='email', error_messages=ERROR_MESSAGES)
-    no_email_info = forms.BooleanField(label='ne informace', error_messages=ERROR_MESSAGES, required=False)
-    no_email_ad = forms.BooleanField(label='ne reklamu', error_messages=ERROR_MESSAGES, required=False)
+    no_email_notification = forms.BooleanField(label='nezasílat změny přihlášky', error_messages=ERROR_MESSAGES, required=False)
+    no_email_info = forms.BooleanField(label='nezasílat informace', error_messages=ERROR_MESSAGES, required=False)
+    no_email_ad = forms.BooleanField(label='nezasílat reklamu', error_messages=ERROR_MESSAGES, required=False)
     student = forms.BooleanField(label='student', error_messages=ERROR_MESSAGES, required=False)
     long_period = forms.BooleanField(label='celoroční', error_messages=ERROR_MESSAGES, required=False)
     to_pay = forms.IntegerField(label='cena', error_messages=ERROR_MESSAGES)
@@ -118,7 +120,7 @@ class StudentFormAdd(StudentForm):
 
     class Meta:
         model = Student
-        fields = ( 'addressing', 'name', 'surname', 'email', 'no_email_info', 'no_email_ad', 'student','long_period', 'to_pay', 'paid_ok', 'phone', 'year', 'street', 'street_no', 'city', 'post_code', 'partner_ref_code', 'comment' )
+        fields = ( 'addressing', 'name', 'surname', 'email', 'no_email_info', 'no_email_ad', 'no_email_notification', 'student','long_period', 'to_pay', 'paid_ok', 'phone', 'year', 'street', 'street_no', 'city', 'post_code', 'partner_ref_code', 'comment' )
 
    
 
