@@ -4,29 +4,24 @@
 {% block title %} Administrace zápisu {% endblock %}
 
 {% block content %}
-    <a class='button' href='..'>zpět na žáky</a>
-    <a class='button' href='.'>přenačíst</a>
 
-    <br><br>Přehled emailů záků k zápisu<br><br>
 
-{% if student_list_to_enroll %}
-    {% for s in student_list_to_enroll %}
-            {{s.email}}, 
+<form method="post" name="form">
+<table>
+{{ form.as_table }}
+</table>
+<input class="button" type="submit" value="zobrazit">
+<a class='button' href='..'>zpět</a>
+</form>
+ 
+{% if list %}
+ <br><br>Přehled emailů (celkem {{ count }}):<br><br>
+    {% for l in list %}
+            {{l}}, 
     {% endfor %}
 {% else %}
-    žádný student k zápisu
 {% endif %}
     
-
-    <br><br>Přehled emailů žáků v kurzu<br><br>
-
-{% if student_list_enrolled %}
-    {% for s in student_list_enrolled %}
-            {{s.email}},
-    {% endfor %}
-{% else %}
-    žádný student v kurzu<br>
-{% endif %}
 
 
 {% endblock %}

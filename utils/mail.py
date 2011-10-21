@@ -4,6 +4,10 @@ from google.appengine.api import mail
 from utils import config
 from string import Template
 import logging
+import re
+
+def valid_email(e):
+    return re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$",e)
 
 
 def process_template(templ, student, course, signature):

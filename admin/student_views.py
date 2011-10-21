@@ -12,7 +12,9 @@ from admin.student_sort import sort_students_single, sort_students_school, sort_
 import utils.config as cfg
 import utils.mail as mail
 import utils.pdf as pdf
+from utils.mail import valid_email
 import logging
+from operator import attrgetter
 import urllib
 
 
@@ -605,16 +607,54 @@ def view(request,student_id,course_id=None):
         'student':student,'course':course
     }))
 
+
+class EmailSelectForm(forms.Form):
+    include_enroll = forms.BooleanField(label='zapsané', error_messages=ERROR_MESSAGES, required=False)
+    include_spare = forms.BooleanField(label='náhradníky', error_messages=ERROR_MESSAGES, required=False)
+    email_ad = forms.BooleanField(label='i těm co nechtějí reklamy', error_messages=ERROR_MESSAGES, required=False)
+    email_info = forms.BooleanField(label='i těm co nechtějí žádné zpravy', error_messages=ERROR_MESSAGES, required=False)
+ 
  
 
 def course_emails(request, course_id):
     course = Course.get_by_id(int(course_id))  
+    if course is None:
+        raise Http404
+
+
+
+    emails = None
+    ecount = None
+    if request.method == 'POST':
+        form = EmailSelectForm(request.POST)
+        if form.is_valid():
+            studs = []
+            if form.cleaned_data['include_enroll']:
+                studs.extend(Student.list_for_course_to_enroll(course.key()))
+            if form.cleaned_data['include_spare']:
+                studs.extend(Student.list_for_course_enrolled(course.key()))
+            if not form.cleaned_data['email_ad']:
+                studs = filter(lambda x: not x.no_email_ad,studs)
+            if not form.cleaned_data['email_info']:
+                studs = filter(lambda x: not x.no_email_info,studs)
+
+
+            emails = map(attrgetter('email'),studs)
+            emails = filter(valid_email,emails)
+            emails = list(set(emails))
+            ecount = len(emails)            
+
+            
+    else: 
+        form = EmailSelectForm()
+
     student_list_to_enroll=Student.list_for_course_to_enroll(course.key())
     student_list_enrolled=Student.list_for_course_enrolled(course.key())
 
     return render_to_response('admin/course_emails.html', RequestContext(request, { 
-        'student_list_to_enroll': student_list_to_enroll,  
-        'student_list_enrolled': student_list_enrolled,  
+        'form':form,
+        'list': emails,  
+        'count': ecount,
     }))
 
 def course_as_csv(request, course_id):
