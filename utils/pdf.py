@@ -229,7 +229,8 @@ def students_enroll(output,students):
         else:
             rd = rd.strftime("%Y-%m-%d")
 
-        elements.append(Paragraph(u"Přihláška %s do kurzu %s %s, ze dne %s"%(escape(s.ref_key),escape(s.course_code()),escape(s.course_season()), escape(rd)),styleT))
+        elements.append(Paragraph(u"Přihláška %s"%(escape(s.ref_key)),styleT))
+        elements.append(Paragraph(u"dne %s, kurz %s %s"%(escape(rd),escape(s.course_code()),escape(s.course_season())),styleT))
         if s.student:
             stu = 'Ano'
         else:
@@ -307,7 +308,7 @@ def students_card(output,cards):
         info_empty = (c.info_line_1 is None or c.info_line_1=='') and (c.info_line_2 is None or c.info_line_2=='')
         
             
-        c00 = Paragraph("<font size=14>STARLET</font><br/><forn size=8>TANEČNÍ ŠKOLA<br/>MANŽELŮ BURYANOVÝCH</font>",styleHeaderLeft)
+        c00 = Paragraph("<font size=12>STARLET</font><br/><font size=8>TANEČNÍ ŠKOLA<br/>MANŽELŮ BURYANOVÝCH</font>",styleHeaderLeft)
         c01 = Paragraph("ČÍSLO<br/>KURZU",styleHeaderRight)
 
         c10_n = Paragraph(escape(c.name),styleName)
@@ -440,7 +441,7 @@ def students_invitation(output,invitations):
    
     rows = len(data) 
     bigtable = Table(data,rowHeights= rows*[3*cm], style=[
-        ('GRID',(0,0),(-1,-1),0.5,colors.gray),
+#        ('GRID',(0,0),(-1,-1),0.5,colors.gray),
 
         ('ALIGN',(0,0),(-1,-1),'CENTER'),
         ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
