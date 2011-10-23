@@ -83,10 +83,29 @@ class CourseForm(forms.ModelForm):
 
 
 
-def index(request):
-    course_list=Course.list()
+class SeasonCategoryFilterForm(forms.Form):
+    season_key = SeasonField(label='sezóna', error_messages=ERROR_MESSAGES)
+    folder_key = FolderField(label='kategorie', error_messages=ERROR_MESSAGES)
+    def __init__(self,data = None, **kwargs):
+        super(self.__class__,self).__init__(data, **kwargs)
+        self.fields['folder_key']._set_choices(Folder.get_FOLDER_CHOICES())
+        self.fields['season_key']._set_choices(Season.get_SEASON_CHOICES())
+    
 
-    return render_to_response('admin/courses_index.html', RequestContext(request, { 'course_list': course_list }))
+
+def index(request):
+
+    course_list =None
+    if request.method == 'POST':
+        form = SeasonCategoryFilterForm(request.POST)
+        if form.is_valid():
+            season_key = form.cleaned_data['season_key']
+            folder_key = form.cleaned_data['folder_key']
+            course_list=Course.list_filter(season_key,folder_key)
+    else:
+        form = SeasonCategoryFilterForm()
+
+    return render_to_response('admin/courses_index.html', RequestContext(request, { 'form':form, 'course_list': course_list }))
 
 
 

@@ -4,13 +4,19 @@
 {% block title %} Administrace zápisu {% endblock %}
 
 {% block content %}
-    <a class='button' href='add'>přidat kurz</a>
-    <a class='button' href='../nahled/zapis/'>náhled zápisu</a>
-    <a class='button' href='.'>přenačíst</a>
 
-    <br><br>Přehled kurzů<br>
+<form method="post" name="form">
+<table>
+{{ form.as_table }}
+</table>
+<input class="button" type="submit" value="zobrazit">
+</form>
+
+
 
 {% if course_list %}
+    <br><br>Přehled kurzů<br>
+
     <table>
     <tr>
         <th>aktivní</th>
@@ -71,9 +77,10 @@
     {% endfor %}
     </table>
 {% else %}
-    no course<br>
 {% endif %}
-
+    <br><br>
+    <a class='button' href='add'>přidat kurz</a>
+    <a class='button' href='../nahled/zapis/'>náhled zápisu</a>
 
 {% endblock %}
 

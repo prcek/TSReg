@@ -24,6 +24,14 @@ indexes:
 
 - kind: Course
   properties:
+  - name: folder_key
+  - name: hidden
+  - name: season_key
+  - name: order_value
+  - name: code
+
+- kind: Course
+  properties:
   - name: hidden
   - name: order_value
   - name: code

@@ -140,6 +140,11 @@ class Course(BaseModel):
         return Course.all().filter('hidden',False).order('order_value').order('code')
 
     @staticmethod
+    def list_filter(season_key,folder_key):
+        return Course.all().filter('hidden',False).filter('season_key',season_key).filter('folder_key',folder_key).order('order_value').order('code')
+        
+
+    @staticmethod
     def list_for_enroll():
         return Course.all().filter('hidden',False).filter('active',True).order('order_value').order('code')
 
