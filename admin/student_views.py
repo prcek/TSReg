@@ -275,20 +275,22 @@ def action_course(request,course_id):
     return HttpResponseRedirect('../')
 
 
+
 SUBA_CHOICES=(
     ('email_check','kontrola emailu'),
-    ('email_block_notif','zakazat notifikaci emailem'),
-    ('email_block_info','zakazat info emaily'),
-    ('email_block_ad','zakazat reklamni emaily'),
+    ('email_block_notif','nastavit notifikaci emailem'),
+    ('email_block_info','nastavit info emaily'),
+    ('email_block_ad','nastavit reklamni emaily'),
     ('addressing_d','osloveni na pani'),
     ('addressing_s','osloveni na slecna'),
     ('addressing_p','osloveni na pan'),
-    ('student_yes','nastavit studenta'),
+    ('student','nastavit studenta'),
     ('set_cost','nastavit kurzovne'),
 )
 
 class ExtraActionForm(forms.Form):
     sub_action = forms.CharField(label='akce', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=SUBA_CHOICES))
+    bool_value = forms.BooleanField(label='ano/ne parametr', error_messages=ERROR_MESSAGES,  required=False)
     int_value = forms.IntegerField(label='ciselny parametr', error_messages=ERROR_MESSAGES,  required=False)
     str_value = forms.CharField(label='textovy parametr', error_messages=ERROR_MESSAGES,  required=False)
  
@@ -298,6 +300,8 @@ class TargetCoursePickForm(forms.Form):
     def __init__(self, data = None, courses = []):
         super(self.__class__,self).__init__(data)
         self.fields['course_key'].choices=courses
+
+       
 
 def action_do_extra(request, source_course=None, student_ids=None):
     logging.info('student_ids = %s'%student_ids)
@@ -311,6 +315,48 @@ def action_do_extra(request, source_course=None, student_ids=None):
     if request.method=='POST' and 'sub_action' in request.POST:
         form = ExtraActionForm(request.POST)     
         if form.is_valid():
+            suba = form.cleaned_data['sub_action']
+            iv = form.cleaned_data['int_value']
+            sv = form.cleaned_data['str_value']
+            bv = form.cleaned_data['bool_value']
+            for s_id in student_ids:
+                s = Student.get_by_id(int(s_id))
+                logging.info('s before: %s'%s)
+                if not (s is None):
+                    if suba=='email_check':
+                        if not valid_email(s.email):
+                            s.no_email_info = True
+                            s.no_email_notification = True
+                            s.no_email_ad = True
+                            s.save()
+                    elif suba=='email_block_notif':
+                        s.no_email_notification = bv
+                        s.save()
+                    elif suba=='email_block_info':
+                        s.no_email_info= bv
+                        s.save()
+                    elif suba=='email_block_ad':
+                        s.no_email_ad= bv
+                        s.save()
+                    elif suba=='addressing_d':
+                        s.addressing = 'd'
+                        s.save()
+                    elif suba=='addressing_s':
+                        s.addressing = 's'
+                        s.save()
+                    elif suba=='addressing_p':
+                        s.addressing = 'p'
+                        s.save()
+                    elif suba=='student':
+                        s.student = bv
+                        s.save()
+                    elif suba=='set_cost':
+                        logging.info('set_cost %s'%(iv))
+                        s.to_pay = iv
+                        s.save()
+ 
+                logging.info('s after: %s'%s)
+
             
             return redirect('..')
     else:
