@@ -83,5 +83,7 @@ urlpatterns = patterns('admin',
     (r'^import/(?P<file_id>\d+)/import_students/lines/(?P<start_line>\d+)/(?P<end_line>\d+)/to/(?P<course_id>\d+)/$', 'import_views.import_students_do'),
  
 
+    (r'^backup/$', 'backup_views.index'),
+
     (r'^opt/$', 'opt_views.index'),
 )

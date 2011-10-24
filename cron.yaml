@@ -4,3 +4,13 @@ cron:
   schedule: every 5 minutes synchronized
   timezone: Europe/Prague
 
+- description: check for course backup
+  url: /cron/check_for_course_backup/
+  schedule: every 5 minutes synchronized
+  timezone: Europe/Prague
+
+- description: plan course backup
+  url: /cron/plan_course_backup/
+  schedule: every 1 hours synchronized
+  timezone: Europe/Prague
+

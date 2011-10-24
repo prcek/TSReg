@@ -211,4 +211,14 @@ class FileBlob(BaseModel):
         self.tmp = tmp
         self.data = data
       
-     
+class CourseBackup(BaseModel):
+    create_datetime = db.DateTimeProperty()
+    data = db.BlobProperty()
+    course_key = db.StringProperty()
+    info = db.StringProperty(default='')
+    def init(self, data, course):
+        self.create_datetime = datetime.datetime.utcnow()
+        self.course_key = str(course.key())
+        self.info = "%s %s %s"%(course.code,course.folder_name(), course.season_name())
+        self.data = data
+

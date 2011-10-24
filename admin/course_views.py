@@ -122,6 +122,7 @@ def edit(request, course_id):
             logging.info('edit course before %s'% course)
             form.save(commit=False)
             logging.info('edit course after %s'% course)
+            course.mark_as_modify()
             course.save()
             taskqueue.add(url='/task/recount_capacity/', params={'course_id':course.key().id()})
             return HttpResponseRedirect('../..')
@@ -139,6 +140,7 @@ def create(request):
             logging.info('edit course before %s'% course)
             form.save(commit=False)
             logging.info('edit course after %s'% course)
+            course.mark_as_modify()
             course.save()
             return HttpResponseRedirect('..')
     else:
@@ -166,6 +168,7 @@ def delete(request, course_id):
     taskqueue.add(url='/task/hide_course_students/', params={'course_id':course.key().id()})
 
     course.hidden = True
+    course.mark_as_modify()
     course.save()
 
     return redirect("../..")

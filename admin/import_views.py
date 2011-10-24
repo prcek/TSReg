@@ -80,7 +80,7 @@ def import_students(request,file_id, seq_id=None):
     curr = None
     line = 0
     for row in r:
-        if len(row)>6 and row[0].startswith('#export kurz'):
+        if len(row)>6 and (row[0].startswith('#export kurz') or row[0].startswith('#zaloha kurz'))
             logging.info(row)
             if not curr is None:
                 curr["end_line"]=line

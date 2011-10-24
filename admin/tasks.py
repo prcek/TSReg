@@ -3,14 +3,17 @@
 from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from enroll.models import Student,Course
-from admin.models import Job,Card,Invitation
+from admin.models import Job,Card,Invitation,CourseBackup
 import utils.config as cfg
 import utils.mail as mail
 from google.appengine.api import mail as gmail
 from google.appengine.api import taskqueue
 import admin.inflector as inflector
 
+from admin.student_sort import sort_students_single, sort_students_school, sort_students_pair, sort_students_spare_single, sort_students_spare_school, sort_students_spare_pair
 
+from utils.data import dump_to_csv
+import cStringIO
 
 import logging
 
@@ -237,6 +240,7 @@ def recount_course_capacity(course):
 
 
     course.suspend = not (cap_open or pend_open)
+    course.mark_as_modify()
 
 
 def recount_capacity(request):
@@ -266,6 +270,9 @@ def hide_course_students(request):
     for s in list:
         s.hidden = True
         s.save()
+
+    course.mark_as_modify()
+    course.save()
  
     return HttpResponse('ok')
 
@@ -519,3 +526,46 @@ def prepare_invitations(request):
 
     return HttpResponse('ok')
 
+def course_backup(request):
+    logging.info(request.POST)
+    course_id = request.POST['course_id']
+    course = Course.get_by_id(int(course_id))
+    if course is None:
+        raise Http404 
+
+    logging.info('course=%s'%course)
+
+
+    student_list_to_enroll=Student.list_for_course_to_enroll(course.key())
+    student_list_enrolled=Student.list_for_course_enrolled(course.key())
+
+
+    if course.group_mode == 'Single':
+        student_list_to_enroll = sort_students_spare_single(student_list_to_enroll)
+        student_list_enrolled = sort_students_single(student_list_enrolled)
+    elif course.group_mode == 'School':
+        student_list_to_enroll = sort_students_spare_school(student_list_to_enroll)
+        student_list_enrolled = sort_students_school(student_list_enrolled)
+    elif course.group_mode == 'Pair':
+        student_list_to_enroll = sort_students_spare_pair(student_list_to_enroll)
+        student_list_enrolled = sort_students_pair(student_list_enrolled)
+
+    students = []
+    students.extend(student_list_enrolled)
+    students.extend(student_list_to_enroll)
+
+    data = [ ['#zaloha kurz',course.code,course.folder_name(),course.season_name()]]
+    for s in students:
+        if not s.x_pair_empty_slot:
+            data.append(s.as_csv_row())
+    
+    out = cStringIO.StringIO()
+    dump_to_csv(data,out)
+    logging.info(out)
+    cb = CourseBackup()
+    cb.init(str(out),course=course)
+    cb.save()
+    course.mark_as_backup()
+    course.save()
+ 
+    return HttpResponse('ok')

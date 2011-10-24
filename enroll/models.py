@@ -59,6 +59,8 @@ class Season(BaseModel):
         return res
 
 
+
+
 class Folder(BaseModel):
     name = db.StringProperty(default='')
     public_name = db.StringProperty(default='')
@@ -126,6 +128,7 @@ class Course(BaseModel):
     card_line_2 = db.StringProperty(default='')
     modify_datetime = db.DateTimeProperty()
     backup_datetime = db.DateTimeProperty()
+    backup_flag = db.BooleanProperty(default=False)
 
     def folder_name(self):
         return Folder.get_name_by_key(self.folder_key)
@@ -160,6 +163,14 @@ class Course(BaseModel):
     @staticmethod
     def list_for_enroll():
         return Course.all().filter('hidden',False).filter('active',True).order('order_value').order('code')
+
+    @staticmethod
+    def list_for_backup_check(time_limit):
+        return Course.all().filter('hidden',False).filter('modify_datetime >',time_limit).filter('backup_flag',False)
+
+    @staticmethod
+    def list_for_backup():
+        return Course.all().filter('hidden',False).filter('backup_flag',True)
 
 
     @staticmethod
@@ -221,8 +232,9 @@ class Course(BaseModel):
 
     def mark_as_backup(self):
         self.backup_datetime = datetime.datetime.utcnow()        
+        self.backup_flag = False 
 
-
+    
 
 
 class Student(BaseModel):
@@ -450,6 +462,7 @@ class Student(BaseModel):
     @staticmethod
     def list_for_cleanup(time_limit):
         return Student.all().filter('hidden',False).filter('status','n').filter('reg_datetime <',time_limit).order('reg_datetime')
+
 
     @staticmethod
     def list_for_course(course_key):

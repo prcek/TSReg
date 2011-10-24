@@ -24,6 +24,12 @@ indexes:
 
 - kind: Course
   properties:
+  - name: backup_flag
+  - name: hidden
+  - name: modify_datetime
+
+- kind: Course
+  properties:
   - name: folder_key
   - name: hidden
   - name: season_key

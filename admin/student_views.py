@@ -517,7 +517,9 @@ def action_do_pair(request, source_course=None, student_ids=None):
         raise Http404
 
     s1.partner_ref_code = s2.ref_key
+    s1.mark_as_modify()
     s2.partner_ref_code = s1.ref_key
+    s2.mark_as_modify()
 
     s1.save()
     s2.save()
@@ -526,11 +528,13 @@ def action_do_pair(request, source_course=None, student_ids=None):
     for s in Student.list_by_partner(s1.ref_key):
         if s.key().id != s2.key().id:
             s.partner_ref_code=""
+            s.mark_as_modify()
             s.save()
     
     for s in Student.list_by_partner(s2.ref_key):
         if s.key().id != s1.key().id:
             s.partner_ref_code=""
+            s.mark_as_modify()
             s.save()
  
     return redirect('..')
@@ -550,6 +554,7 @@ def edit(request, student_id,course_id=None):
             logging.info('edit student before %s'% student)
             form.save(commit=False)
             logging.info('edit student after %s'% student)
+            student.mark_as_modify()
             student.save()
 
             course_id = student.get_course_id()
@@ -585,6 +590,7 @@ def create(request, course_id):
             logging.info('create student after %s'% student)
             student.save()
             student.init_ref_codes()
+            student.mark_as_modify()
             student.save()
 
             course_id = student.get_course_id()
@@ -641,6 +647,9 @@ def create_pair(request, course_id):
 
             student1.partner_ref_code = student2.ref_key
             student2.partner_ref_code = student1.ref_key
+            
+            student1.mark_as_modify()
+            student2.mark_as_modify()
             student1.save()
             student2.save()
 
@@ -678,6 +687,7 @@ def enroll(request,student_id,course_id=None):
 
     if student.status == 's':
         student.status = 'e'
+        student.mark_as_modify()
         student.init_enroll()
         student.save()
         plan_send_student_email('CONFIRM_ENROLL_EMAIL', student)
@@ -692,6 +702,7 @@ def kick(request,student_id,course_id=None):
 
     if (student.status == 's') or (student.status == 'e'):
         student.status = 'k'
+        student.mark_as_modify()
         student.save()
         plan_send_student_email('NOTIFY_KICK_EMAIL', student)
         plan_update_course(course_id)
@@ -705,6 +716,7 @@ def spare(request,student_id,course_id=None):
 
     if (student.status == 'e') or (student.status == 'k'):
         student.status = 's'
+        student.mark_as_modify()
         student.save()
         plan_update_course(course_id)
  
@@ -817,7 +829,7 @@ def course_as_csv(request, course_id):
     students.extend(student_list_enrolled)
     students.extend(student_list_to_enroll)
 
-    data = [ ['#export kurz',course.code]]
+    data = [ ['#export kurz',course.code,course.folder_name(),course.season_name()]]
     for s in students:
         if not s.x_pair_empty_slot:
             data.append(s.as_csv_row())
