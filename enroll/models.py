@@ -50,6 +50,15 @@ class Season(BaseModel):
         return res 
 
 
+    def get_COURSE_CHOICES(self):
+        clist = Course.list_season(str(self.key()))
+        res = []
+        for c in clist:
+            res.append((c.key().__str__(),c.code))
+        logging.info('season.get_COURSE_CHOICES: %s'%res)
+        return res
+
+
 class Folder(BaseModel):
     name = db.StringProperty(default='')
     public_name = db.StringProperty(default='')
@@ -142,6 +151,10 @@ class Course(BaseModel):
     @staticmethod
     def list_filter(season_key,folder_key):
         return Course.all().filter('hidden',False).filter('season_key',season_key).filter('folder_key',folder_key).order('order_value').order('code')
+
+    @staticmethod
+    def list_season(season_key):
+        return Course.all().filter('hidden',False).filter('season_key',season_key).order('order_value').order('code')
         
 
     @staticmethod

@@ -9,6 +9,24 @@
 {{info}}
 <br>
 
+{% if filter_form %}
+    <form action="." method="POST">   
+<input type="hidden" name="operation" value="{{operation}}" />
+{% for s in all_select %}
+<input type="hidden" name="all_select" value="{{s}}" />
+{% endfor %}
+
+<table>
+{{ filter_form.as_table }}
+</table>
+ 
+    <input class="button" type="submit" value="vybrat">
+    </form>
+
+
+{% endif %}
+
+
 {% if form %}
     <form action="." method="POST">   
 
@@ -16,6 +34,7 @@
 {% for s in all_select %}
 <input type="hidden" name="all_select" value="{{s}}" />
 {% endfor %}
+
 <table>
 {{ form.as_table }}
 </table>

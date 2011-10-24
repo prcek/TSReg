@@ -6,7 +6,7 @@ from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext,Context, loader
 #from google.appengine.api import taskqueue
 
-from enroll.models import Student,Course
+from enroll.models import Student,Course,Season
 from admin.queue import plan_send_student_email, plan_update_course, plan_job_transfer_students, plan_job_card_for_students, plan_job_invitation_for_students, plan_job_makecopy_students
 from admin.student_sort import sort_students_single, sort_students_school, sort_students_pair, sort_students_spare_single, sort_students_spare_school, sort_students_spare_pair
 import utils.config as cfg
@@ -194,6 +194,18 @@ def index_course(request, course_id):
         'student_list_enrolled': student_list_enrolled,  
     }))
 
+class SeasonField(forms.ChoiceField):
+    def valid_value(self, value):
+        self._set_choices(Season.get_SEASON_CHOICES())
+        return super(SeasonField,self).valid_value(value)
+
+class SeasonFilterForm(forms.Form):
+    season_key = SeasonField(label='sezóna', error_messages=ERROR_MESSAGES)
+    def __init__(self,data = None, **kwargs):
+        super(self.__class__,self).__init__(data, **kwargs)
+        self.fields['season_key']._set_choices(Season.get_SEASON_CHOICES())
+ 
+
 def action_course(request,course_id):
     course = Course.get_by_id(int(course_id))  
     if course is None:
@@ -226,6 +238,12 @@ def action_course(request,course_id):
 
         logging.info('en_sel=%s, spare_sel=%s, all_sel=%s'%(en_sel,sp_sel,all_sel))
 
+        if 'season_key' in request.POST:
+            target_season = Season.get(request.POST['season_key'])
+        else:
+            target_season = None
+
+
         if 'course_key' in request.POST:
             target_course = Course.get(request.POST['course_key'])
         else:
@@ -233,10 +251,10 @@ def action_course(request,course_id):
         
 
         if op == 'action_transfer':
-            return action_do_transfer(request, source_course=course, student_ids = all_sel, target_course=target_course)
+            return action_do_transfer(request, source_course=course, student_ids = all_sel, target_course=target_course, target_season=target_season)
 
         if op == 'action_makecopy':
-            return action_do_makecopy(request, source_course=course, student_ids = all_sel, target_course=target_course)
+            return action_do_makecopy(request, source_course=course, student_ids = all_sel, target_course=target_course, target_season=target_season)
 
         if op == 'action_card':
             return action_do_card(request, source_course=course, student_ids = all_sel)
@@ -261,7 +279,7 @@ class TargetCoursePickForm(forms.Form):
 
 
 
-def action_do_transfer(request, source_course=None, student_ids=None, target_course=None):
+def action_do_transfer(request, source_course=None, student_ids=None, target_course=None, target_season=None):
     logging.info('student_ids = %s'%student_ids)
 
 
@@ -272,16 +290,21 @@ def action_do_transfer(request, source_course=None, student_ids=None, target_cou
     if target_course is None:
 
         info = 'přeřazení žáků do jiného kurzu'
-        form = TargetCoursePickForm(courses = Course.get_COURSE_CHOICES())
+        if target_season is None:
+            filter_form = SeasonFilterForm()
+            form = None
+        else:
+            filter_form = SeasonFilterForm({'season_key':target_season.key()})       
+            form = TargetCoursePickForm(courses = target_season.get_COURSE_CHOICES())
 
-        return render_to_response('admin/action_transfer.html', RequestContext(request, {'form':form, 'info':info, 'operation':request.POST['operation'], 'all_select':student_ids}))
+        return render_to_response('admin/action_transfer.html', RequestContext(request, {'filter_form': filter_form, 'form':form, 'info':info, 'operation':request.POST['operation'], 'all_select':student_ids}))
 
     job_id=plan_job_transfer_students(request.auth_info.email,student_ids,source_course, target_course)
 
 
     return HttpResponseRedirect('../wait/%d/'%job_id)
 
-def action_do_makecopy(request, source_course=None, student_ids=None, target_course=None):
+def action_do_makecopy(request, source_course=None, student_ids=None, target_course=None, target_season=None):
     logging.info('student_ids = %s'%student_ids)
 
 
@@ -292,9 +315,15 @@ def action_do_makecopy(request, source_course=None, student_ids=None, target_cou
     if target_course is None:
 
         info = 'kopie žáků do jiného kurzu'
-        form = TargetCoursePickForm(courses = Course.get_COURSE_CHOICES())
+        if target_season is None:
+            filter_form = SeasonFilterForm()
+            form = None
+        else:
+            filter_form = SeasonFilterForm({'season_key':target_season.key()})       
+            form = TargetCoursePickForm(courses = target_season.get_COURSE_CHOICES())
 
-        return render_to_response('admin/action_makecopy.html', RequestContext(request, {'form':form, 'info':info, 'operation':request.POST['operation'], 'all_select':student_ids}))
+
+        return render_to_response('admin/action_makecopy.html', RequestContext(request, {'filter_form':filter_form, 'form':form, 'info':info, 'operation':request.POST['operation'], 'all_select':student_ids}))
 
     job_id=plan_job_makecopy_students(request.auth_info.email,student_ids,source_course, target_course)
 

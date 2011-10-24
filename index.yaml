@@ -36,6 +36,13 @@ indexes:
   - name: order_value
   - name: code
 
+- kind: Course
+  properties:
+  - name: hidden
+  - name: season_key
+  - name: order_value
+  - name: code
+
 - kind: Folder
   properties:
   - name: order_value
