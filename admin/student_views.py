@@ -265,11 +265,33 @@ def action_course(request,course_id):
         if op == 'action_pair':
             return action_do_pair(request, source_course=course, student_ids = all_sel)
 
+        if op == 'action_extra':
+            return action_do_extra(request, source_course=course, student_ids = all_sel)
+
 
 
     logging.info('unhandled action!')
 
     return HttpResponseRedirect('../')
+
+
+SUBA_CHOICES=(
+    ('email_check','kontrola emailu'),
+    ('email_block_notif','zakazat notifikaci emailem'),
+    ('email_block_info','zakazat info emaily'),
+    ('email_block_ad','zakazat reklamni emaily'),
+    ('addressing_d','osloveni na pani'),
+    ('addressing_s','osloveni na slecna'),
+    ('addressing_p','osloveni na pan'),
+    ('student_yes','nastavit studenta'),
+    ('set_cost','nastavit kurzovne'),
+)
+
+class ExtraActionForm(forms.Form):
+    sub_action = forms.CharField(label='akce', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=SUBA_CHOICES))
+    int_value = forms.IntegerField(label='ciselny parametr', error_messages=ERROR_MESSAGES,  required=False)
+    str_value = forms.CharField(label='textovy parametr', error_messages=ERROR_MESSAGES,  required=False)
+ 
 
 class TargetCoursePickForm(forms.Form):
     course_key = forms.ChoiceField(label='Do kurzu')
@@ -277,7 +299,24 @@ class TargetCoursePickForm(forms.Form):
         super(self.__class__,self).__init__(data)
         self.fields['course_key'].choices=courses
 
+def action_do_extra(request, source_course=None, student_ids=None):
+    logging.info('student_ids = %s'%student_ids)
 
+    if (student_ids is None) or (len(student_ids)==0):
+        info = 'nebyl vybrán žádný žák'
+        return render_to_response('admin/action_extra.html', RequestContext(request, {'info':info}))
+
+
+    info = 'extra operace'
+    if request.method=='POST' and 'sub_action' in request.POST:
+        form = ExtraActionForm(request.POST)     
+        if form.is_valid():
+            
+            return redirect('..')
+    else:
+        form = ExtraActionForm()     
+ 
+    return render_to_response('admin/action_extra.html', RequestContext(request, { 'form':form, 'info':info, 'operation':request.POST['operation'], 'all_select':student_ids}))
 
 def action_do_transfer(request, source_course=None, student_ids=None, target_course=None, target_season=None):
     logging.info('student_ids = %s'%student_ids)

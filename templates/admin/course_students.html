@@ -232,6 +232,11 @@
             <option value="action_makecopy">kopie do jiného kurzu</option>
             <option value="action_card">generuj legitimace</option>
             <option value="action_invitation">generuj pozvánky</option>
+
+{% if request.auth_info.admin %}
+            <option value="action_extra">extra</option>
+{% endif %}
+
         </select>
         <input class="button" type="submit" value="provést">
         (s označenýma)
