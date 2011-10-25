@@ -373,9 +373,19 @@ def students_card(output,cards):
             line=[]
 
     if len(line)>0:
+        line.extend((2-len(line))*" ")
         data.append(line)
    
     rows = len(data) 
+
+    if rows==0:
+        elements = []
+        elements.append(Paragraph(u"žádné karty",styleN))
+        doc.build(elements)
+        return
+
+
+
     bigtable = Table(data,colWidths=[8.5*cm,8.5*cm], rowHeights= rows*[5.43*cm], style=[
         ('GRID',(0,0),(-1,-1),0.5,colors.gray),
         ('ALIGN',(0,0),(-1,-1),'CENTER'),
@@ -392,19 +402,32 @@ def students_card(output,cards):
         elements.append(Paragraph(u"žádná data",styleH))
     doc.build(elements)
 
-def students_invitation(output,invitations):
+def students_invitation(output,invitations,mode='A'):
+
+
+    
+    if mode == 'A' or mode is None:
+        dims = {'topMargin':1*cm, 'bottomMargin':1.2*cm, 'rowHeight':3*cm, 'colWidth':7*cm} 
+    elif mode == 'B':
+        dims = {'topMargin':0.4*cm, 'bottomMargin':0*cm, 'rowHeight':3.2*cm, 'colWidth':7*cm} 
+    else:
+        return
+    
 
     width = 150
     height = 12
     ipad = 1
     pad = 5
 
-    doc = SimpleDocTemplate(output, pagesize=A4 ,leftMargin=0, rightMargin=0, topMargin=1*cm, bottomMargin=1.2*cm, showBoundary=0)
+    doc = SimpleDocTemplate(output, pagesize=A4 ,leftMargin=0, rightMargin=0, topMargin=dims['topMargin'], bottomMargin=dims['bottomMargin'], showBoundary=0)
     styles = getStyleSheet()
     styleN = styles['Normal']
     styleH = styles['Heading']
     styleT = styles['Title']
     styleP = styles['Post']
+
+
+
 
     elements = []
 
@@ -416,7 +439,7 @@ def students_invitation(output,invitations):
         pl_2 = Paragraph(escape(p_lines[2]),styleP)
         pl_3 = Paragraph(escape(p_lines[3]),styleP)
         invtable = Table([ [pl_0],[pl_1],[pl_2],[pl_3] ], colWidths=[width],rowHeights=4*[height], style=[
-#            ('GRID',(0,0),(-1,-1),0.5, colors.gray),
+            ('GRID',(0,0),(-1,-1),0.5, colors.gray),
             ('LEFTPADDING',(0,0),(-1,-1),ipad),
             ('RIGHTPADDING',(0,0),(-1,-1),ipad),
             ('TOPPADDING',(0,0),(-1,-1),ipad),
@@ -437,11 +460,20 @@ def students_invitation(output,invitations):
             line=[]
 
     if len(line)>0:
+        line.extend((3-len(line))*" ")
         data.append(line)
    
     rows = len(data) 
-    bigtable = Table(data,rowHeights= rows*[3*cm], style=[
-#        ('GRID',(0,0),(-1,-1),0.5,colors.gray),
+
+    if rows==0:
+        elements = []
+        elements.append(Paragraph(u"žádná adresy",styleH))
+        doc.build(elements)
+        return
+
+
+    bigtable = Table(data,colWidths=3*[dims['colWidth']],rowHeights= rows*[dims['rowHeight']], style=[
+        ('GRID',(0,0),(-1,-1),0.5,colors.gray),
 
         ('ALIGN',(0,0),(-1,-1),'CENTER'),
         ('VALIGN',(0,0),(-1,-1),'MIDDLE'),

@@ -145,6 +145,8 @@ class Invitation(BaseModel):
 
     def get_print_lines(self):
         line_0 = self.addressing
+        if line_0 is None:
+            line_0 = ""
         if self.mode == 'parents':
             line_1 = "%s %s"%(self.name_inflected, self.surname_inflected)
         else:

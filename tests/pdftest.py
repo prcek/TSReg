@@ -23,7 +23,8 @@ class FakeInvitation():
 
 def test_inivitations():
     i = FakeInvitation()
-    utils.pdf.students_invitation('invitations.pdf',27*[i])
+    utils.pdf.students_invitation('invitations_a.pdf',4*[i],mode='A')
+    utils.pdf.students_invitation('invitations_b.pdf',1*[i],mode='B')
 
 class FakeCourse():
     code='X123'
@@ -98,6 +99,7 @@ def test_students_card():
     card4.info_line_1 = u"xxxx"
     card4.info_line_2 = u""
  
+   # utils.pdf.students_card('students_card.pdf',[card,card2])
     utils.pdf.students_card('students_card.pdf',2*[card,card2,card3,card4,card2])
 
 def test_students_enroll():

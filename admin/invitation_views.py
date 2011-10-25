@@ -137,7 +137,9 @@ def print_all(request):
 
     invitation_list=Invitation.list_my(request.auth_info.email)
 
-    pdf.students_invitation(r,invitation_list)
+    mode = request.GET.get('mode',None)
+
+    pdf.students_invitation(r,invitation_list,mode=mode)
 
     return r
 
