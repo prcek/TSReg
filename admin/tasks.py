@@ -563,7 +563,7 @@ def course_backup(request):
     dump_to_csv(data,out)
     logging.info(out)
     cb = CourseBackup()
-    cb.init(str(out),course=course)
+    cb.init(out.getvalue(),course=course)
     cb.save()
     course.mark_as_backup()
     course.save()

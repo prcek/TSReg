@@ -123,8 +123,17 @@ def index(request):
 
     if (season is None) or (folder is None):
         course_list = None
+        if request.GET.get('all',None):
+            logging.info('all mode')
+            course_list=Course.list()
+ 
     else:
-        course_list=Course.list_filter(str(season.key()),str(folder.key()))
+        if request.GET.get('all',None):
+            logging.info('all mode')
+            course_list=Course.list()
+        else:
+            course_list=Course.list_filter(str(season.key()),str(folder.key()))
+
     return render_to_response('admin/courses_index.html', RequestContext(request, { 'form':form, 'course_list': course_list }))
 
 
