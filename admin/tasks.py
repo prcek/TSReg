@@ -567,5 +567,48 @@ def course_backup(request):
     cb.save()
     course.mark_as_backup()
     course.save()
- 
+
+
+    if cfg.getConfigBool('BACKUP_EMAIL_ON',False):
+        taskqueue.add(url='/task/send_backup/', params={'coursebackup_id':cb.key().id()})
+        logging.info('send task plan ok, cbid=%s'%(cb.key().id()))
+    else:
+        logging.info('BACKUP_EMAIL_ON is OFF!')
+    return HttpResponse('ok')
+
+def send_backup(request):
+
+    logging.info(request.POST)
+
+
+    if not cfg.getConfigBool('BACKUP_EMAIL_ON',False):
+        logging.info('BACKUP_EMAIL_ON is OFF!')
+        return HttpResponse('ok')
+
+    cb_id = request.POST['coursebackup_id']
+    cb = CourseBackup.get_by_id(int(cb_id))
+    if cb is None:
+        raise Http404 
+
+    logging.info('cb=%s'%cb)
+
+
+    sender = cfg.getConfigString('BACKUP_EMAIL_SENDER',None)
+    to = cfg.getConfigString('BACKUP_EMAIL_TO',None)
+
+    if sender is None:
+        logging.info('no sender')
+        return HttpResponse('ok')
+
+    if to is None:
+        logging.info('no to')
+        return HttpResponse('ok')
+
+    subject = "Zaloha %s"%(cb.info)
+    body = "Zaloha %s, porizeno %s"%(cb.info,cb.create_datetime)
+    
+    gmail.send_mail(sender=sender, to=to,subject=subject,body=body,attachments=[(cb.filename,cb.data)])
+    logging.info('send ok')
+
+
     return HttpResponse('ok')

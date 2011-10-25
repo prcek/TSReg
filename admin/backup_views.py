@@ -9,6 +9,8 @@ from utils.data import UnicodeReader
 from utils.mail import valid_email
 from enroll.models import Course,Student,Season
 from admin.models import FileBlob
+from google.appengine.api import taskqueue
+
 import logging
 import cStringIO
 import datetime
@@ -44,4 +46,13 @@ def index(request):
         course_list = None
     return render_to_response('admin/backup_index.html', RequestContext(request, { 'filter_form':filter_form, 'course_list': course_list}))
 
+def plan_backup(request,course_id):
 
+    course = Course.get_by_id(int(course_id))
+    if course is None:
+        raise Http404
+
+    logging.info('course: %s'%course)
+    taskqueue.add(url='/task/course_backup/', params={'course_id':course.key().id()})
+
+    return HttpResponseRedirect('../..')

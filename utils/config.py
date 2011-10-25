@@ -122,3 +122,9 @@ def setupConfig():
     createConfig('CRYPTO_TABLE_I','0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ') 
     createConfig('CRYPTO_TABLE_O','0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ') 
 
+    createConfig('BACKUP_CHECK_MINUTES','180')
+    createConfig('BACKUP_EMAIL_SENDER','info@appid.appspotmail.com')
+    createConfig('BACKUP_EMAIL_TO','backup@tsstarlet.net')
+    createConfig('BACKUP_EMAIL_ON','0')
+    createConfig('BACKUP_ON','0')
+

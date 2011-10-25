@@ -24,6 +24,10 @@ def clean_expired_enrolls(request):
 
 
 def check_for_course_backup(request):
+    if not cfg.getConfigBool('BACKUP_ON',False):
+        logging.info('BACKUP_ON is OFF!')
+        return HttpResponse('ok')
+    
     now = datetime.datetime.utcnow()
     exp_min = cfg.getConfigInt('BACKUP_CHECK_MINUTES',180)
     td = datetime.timedelta(minutes=exp_min)
@@ -43,6 +47,10 @@ def check_for_course_backup(request):
     return HttpResponse('ok')
 
 def plan_course_backup(request):
+    if not cfg.getConfigBool('BACKUP_ON',False):
+        logging.info('BACKUP_ON is OFF!')
+        return HttpResponse('ok')
+ 
     course_list = Course.list_for_backup().fetch(100)
     for c in course_list:
         logging.info('course: %s'%c)

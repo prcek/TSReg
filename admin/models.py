@@ -216,9 +216,11 @@ class CourseBackup(BaseModel):
     data = db.BlobProperty()
     course_key = db.StringProperty()
     info = db.StringProperty(default='')
+    filename = db.StringProperty(default='')
     def init(self, data, course):
         self.create_datetime = datetime.datetime.utcnow()
         self.course_key = str(course.key())
         self.info = "%s %s %s"%(course.code,course.folder_name(), course.season_name())
+        self.filename = "kurz_%s.csv"%(course.code)
         self.data = data
 
