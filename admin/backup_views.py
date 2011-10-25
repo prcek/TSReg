@@ -32,21 +32,49 @@ class SeasonFilterForm(forms.Form):
         self.fields['season_key']._set_choices(Season.get_SEASON_CHOICES())
  
 
-def index(request):
+def index(request,season_id=None):
+
+    if season_id is None:
+        season = None
+        bsid = request.session.get('backup_season_id',None)
+        logging.info('bsid=%s'%(bsid))
+        if not bsid is None:
+            season =  Season.get_by_id(int(bsid))
+            if not season is None:
+                return HttpResponseRedirect('%d/'%(season.key().id()))
+    else:
+        season =  Season.get_by_id(int(season_id))
+        if season is None:
+            raise Http404
 
     if request.method == 'POST':
         filter_form = SeasonFilterForm(request.POST)
         if filter_form.is_valid():
-            course_list = Course.list_season(str(filter_form.cleaned_data['season_key']))
+            season = Season.get(str(filter_form.cleaned_data['season_key']))
+            if not season is None:
+                request.session['backup_season_id']=str(season.key().id())
+                if season_id is None:
+                    return HttpResponseRedirect('%d/'%(season.key().id()))
+                else:
+                    return HttpResponseRedirect('../%d/'%(season.key().id()))
         else:
-            course_list = None
+            season = None
  
     else:
-        filter_form = SeasonFilterForm()
+        if season is None:
+            filter_form = SeasonFilterForm()
+        else:
+            filter_form = SeasonFilterForm({'season_key':str(season.key())})
+
+
+    if season is None:
         course_list = None
+    else:
+        course_list = Course.list_season(str(season.key())) 
+
     return render_to_response('admin/backup_index.html', RequestContext(request, { 'filter_form':filter_form, 'course_list': course_list}))
 
-def plan_backup(request,course_id):
+def plan_backup(request,season_id,course_id):
 
     course = Course.get_by_id(int(course_id))
     if course is None:

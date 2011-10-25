@@ -85,7 +85,7 @@ MIDDLEWARE_CLASSES = (
     'utils.middleware.Auth',
     'utils.middleware.Gae',
 
-#    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
 #    'django.contrib.auth.middleware.AuthenticationMiddleware',
 #    'django.middleware.doc.XViewMiddleware',
 )
@@ -117,6 +117,6 @@ INSTALLED_APPS = (
 #     'vital',
 #    'django.contrib.auth',
 #    'django.contrib.contenttypes',
-#    'django.contrib.sessions',
+    'django.contrib.sessions',
 #    'django.contrib.sites',
 )
