@@ -87,4 +87,5 @@ urlpatterns = patterns('admin',
     (r'^backup/(?P<course_id>\d+)/do/$', 'backup_views.plan_backup'),
 
     (r'^opt/$', 'opt_views.index'),
+    (r'^help/$', 'help_views.index'),
 )
