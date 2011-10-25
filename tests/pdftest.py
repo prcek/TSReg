@@ -23,8 +23,8 @@ class FakeInvitation():
 
 def test_inivitations():
     i = FakeInvitation()
-    utils.pdf.students_invitation('invitations_a.pdf',4*[i],mode='A')
-    utils.pdf.students_invitation('invitations_b.pdf',1*[i],mode='B')
+    utils.pdf.students_invitation('invitations_a.pdf',27*[i],mode='A')
+    utils.pdf.students_invitation('invitations_b.pdf',27*[i],mode='B')
 
 class FakeCourse():
     code='X123'

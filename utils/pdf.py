@@ -439,7 +439,7 @@ def students_invitation(output,invitations,mode='A'):
         pl_2 = Paragraph(escape(p_lines[2]),styleP)
         pl_3 = Paragraph(escape(p_lines[3]),styleP)
         invtable = Table([ [pl_0],[pl_1],[pl_2],[pl_3] ], colWidths=[width],rowHeights=4*[height], style=[
-            ('GRID',(0,0),(-1,-1),0.5, colors.gray),
+        #    ('GRID',(0,0),(-1,-1),0.5, colors.gray),
             ('LEFTPADDING',(0,0),(-1,-1),ipad),
             ('RIGHTPADDING',(0,0),(-1,-1),ipad),
             ('TOPPADDING',(0,0),(-1,-1),ipad),
@@ -473,7 +473,7 @@ def students_invitation(output,invitations,mode='A'):
 
 
     bigtable = Table(data,colWidths=3*[dims['colWidth']],rowHeights= rows*[dims['rowHeight']], style=[
-        ('GRID',(0,0),(-1,-1),0.5,colors.gray),
+#        ('GRID',(0,0),(-1,-1),0.5,colors.gray),
 
         ('ALIGN',(0,0),(-1,-1),'CENTER'),
         ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
