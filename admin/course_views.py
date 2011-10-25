@@ -96,15 +96,35 @@ class SeasonCategoryFilterForm(forms.Form):
 def index(request):
 
     course_list =None
+    season = None
+    folder = None
     if request.method == 'POST':
         form = SeasonCategoryFilterForm(request.POST)
         if form.is_valid():
-            season_key = form.cleaned_data['season_key']
-            folder_key = form.cleaned_data['folder_key']
-            course_list=Course.list_filter(season_key,folder_key)
+            season = Season.get(str(form.cleaned_data['season_key']))
+            folder = Folder.get(str(form.cleaned_data['folder_key']))
+            if not season is None:
+                request.session['course_season_key']=str(season.key())
+            if not folder is None:
+                request.session['course_folder_key']=str(folder.key())
     else:
-        form = SeasonCategoryFilterForm()
+        cskey = request.session.get('course_season_key',None)
+        if not cskey is None:
+            season =  Season.get(str(cskey))
+        cfkey = request.session.get('course_folder_key',None)
+        if not cfkey is None:
+            folder =  Folder.get(str(cfkey))
 
+
+        if (season is None) or (folder is None):
+            form = SeasonCategoryFilterForm()
+        else:
+            form = SeasonCategoryFilterForm({'season_key':str(season.key()), 'folder_key':str(folder.key())})
+
+    if (season is None) or (folder is None):
+        course_list = None
+    else:
+        course_list=Course.list_filter(str(season.key()),str(folder.key()))
     return render_to_response('admin/courses_index.html', RequestContext(request, { 'form':form, 'course_list': course_list }))
 
 
