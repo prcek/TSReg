@@ -40,11 +40,11 @@ def index(request):
         if filter_form.is_valid():
             season = Season.get(str(filter_form.cleaned_data['season_key']))
             if not season is None:
-                request.session['backup_season_id']=str(season.key().id())
+                request.session['backup_season_key']=str(season.key())
     else:
-        bsid = request.session.get('backup_season_id',None)
-        if not bsid is None:
-            season =  Season.get_by_id(int(bsid))
+        bskey = request.session.get('backup_season_key',None)
+        if not bskey is None:
+            season =  Season.get(str(bskey))
         if season is None:
             filter_form = SeasonFilterForm()
         else:
