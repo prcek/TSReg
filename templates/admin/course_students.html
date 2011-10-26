@@ -61,10 +61,14 @@
     {% for s in student_list_to_enroll %}
         <tr>
             <td> 
-              <div class="check-area">  <input class="check-action" id='select-s-slave' type="checkbox" value="{{ s.key.id }}" {% if l.selected %}checked{% endif %} name="spare_select" /> </div>
+              <div class="check-area"> 
+                {% if not s.x_pair_empty_slot %}
+                 <input class="check-action" id='select-s-slave' type="checkbox" value="{{ s.key.id }}" {% if l.selected %}checked{% endif %} name="spare_select" /> 
+                {% endif %}
+              </div>
             </td>
  
-            <td>{{forloop.counter}}</td>
+            <td>{{s.x_no}}</td>
             {% if mode == 'Single' %}
             {% include "admin/st_table_single_row.html" %}
             {% endif %}
@@ -158,10 +162,14 @@
         <tr>
 
             <td> 
-              <div class="check-area">  <input class="check-action" id='select-e-slave' type="checkbox" value="{{ s.key.id }}" {% if l.selected %}checked{% endif %} name="enroll_select" /> </div>
+              <div class="check-area">  
+              {% if not s.x_pair_empty_slot %}
+                <input class="check-action" id='select-e-slave' type="checkbox" value="{{ s.key.id }}" {% if l.selected %}checked{% endif %} name="enroll_select" /> 
+              {% endif %}
+              </div>
             </td>
  
-            <td>{{forloop.counter}}</td>
+            <td>{{s.x_no}}</td>
             {% if mode == 'Single' %}
             {% include "admin/st_table_single_row_e.html" %}
             {% endif %}

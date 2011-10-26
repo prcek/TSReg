@@ -59,7 +59,13 @@ def sort_students_spare_pair(students):
     return sort_students_pair(students)
 
 def sort_students_single(students):
-    return sorted(students, key=get_single_sort()) 
+    sl = sorted(students, key=get_single_sort()) 
+    no = 0
+    for s in sl:
+        no+=1
+        s.x_no = no
+    return sl
+ 
 
 def sort_students_school(students):
     sl = sorted(students, key=get_school_sort())

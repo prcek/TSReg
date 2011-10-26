@@ -40,6 +40,17 @@ for x in range(1900,2011):
 
 ERROR_MESSAGES={'required': 'Prosím vyplň tuto položku', 'invalid': 'Neplatná hodnota'}
 
+
+def is_valid_int(s):
+    if s is None:
+        return False
+    try:
+        r = int(s)
+    except:
+        return False
+    return True
+
+
 class CourseField(forms.ChoiceField):
     def valid_value(self, value):
         self._set_choices(Course.get_COURSE_CHOICES())
@@ -249,6 +260,8 @@ def action_course(request,course_id):
         else:
             target_course = None
         
+
+        all_sel = filter(is_valid_int,all_sel)
 
         if op == 'action_transfer':
             return action_do_transfer(request, source_course=course, student_ids = all_sel, target_course=target_course, target_season=target_season)

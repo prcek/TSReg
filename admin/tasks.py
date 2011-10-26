@@ -416,12 +416,14 @@ def prepare_card(owner, student_id, season_name, course_code, info_line_1, info_
     student = Student.get_by_id(int(student_id))
     if student is None:
         return
-  
- 
+    
     card = Card() 
     card.init(owner=owner,name=student.name, surname=student.surname, season_name=season_name,  course_code=course_code, info_line_1=info_line_1, info_line_2=info_line_2)
     card.save()
     logging.info('card=%s'%card)
+
+
+    
 
 def prepare_cards(request):
     logging.info(request.POST)
@@ -442,7 +444,10 @@ def prepare_cards(request):
 
     logging.info('student list %s'%student_ids) 
     for student_id in student_ids:
-        prepare_card(owner, student_id, season_name, course_code, info_line_1, info_line_2)        
+        try:
+            prepare_card(owner, student_id, season_name, course_code, info_line_1, info_line_2)        
+        except:
+            logging.info("can't prepare card")
     
 
 
@@ -522,7 +527,10 @@ def prepare_invitations(request):
 
     logging.info('student list %s'%student_ids) 
     for student_id in student_ids:
-        prepare_invitation(owner, student_id, mode,addressing_parents, addressing_p, addressing_s, addressing_d)        
+        try:
+            prepare_invitation(owner, student_id, mode,addressing_parents, addressing_p, addressing_s, addressing_d)        
+        except:
+            logging.info("can't prepare invitation")
 
 
     job.finish()
