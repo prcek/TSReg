@@ -45,6 +45,12 @@ def getNow():
     return local_now.strftime("%Y-%m-%d %H:%M:%S")
 
 
+def nonone(s):
+    if s is None:
+        return ""
+    return s
+
+
 
 def getStyleSheet():
     stylesheet = StyleSheet1()
@@ -237,17 +243,17 @@ def students_enroll(output,students):
             stu = 'Ne'
         data = [
             ["oslovení",s.addressing_loc()],
-            ["jméno",s.name],
-            ["přijmení",s.surname],
-            ["cena",s.to_pay],
+            ["jméno",nonone(s.name)],
+            ["přijmení",nonone(s.surname)],
+            ["cena",nonone(s.to_pay)],
             ["student",stu],
-            ["e-mail",s.email],
-            ["telefon",s.phone],
-            ["adresa","%s %s"%(s.street,s.street_no)],
-            ["","%s %s"%(s.post_code,s.city)],
+            ["e-mail",nonone(s.email)],
+            ["telefon",nonone(s.phone)],
+            ["adresa","%s %s"%(nonone(s.street),nonone(s.street_no))],
+            ["","%s %s"%(nonone(s.post_code),nonone(s.city))],
         ]
 
-        if s.school != '' or s.school_class!= '':
+        if nonone(s.school) != '' or nonone(s.school_class)!= '':
             data.append(['škola',"%s, %s"%(s.school,s.school_class)])
 
         if (not s.partner_ref_code is None) and s.partner_ref_code != '':
@@ -311,11 +317,11 @@ def students_card(output,cards):
         c00 = Paragraph("<font size=12>STARLET</font><br/><font size=8>TANEČNÍ ŠKOLA<br/>MANŽELŮ BURYANOVÝCH</font>",styleHeaderLeft)
         c01 = Paragraph("ČÍSLO<br/>KURZU",styleHeaderRight)
 
-        c10_n = Paragraph(escape(c.name),styleName)
-        c10_s = Paragraph(escape(c.surname),styleSurname)
+        c10_n = Paragraph(escape(nonone(c.name)),styleName)
+        c10_s = Paragraph(escape(nonone(c.surname)),styleSurname)
 
 
-        code = c.course_code
+        code = nonone(c.course_code)
         if len(code)<=3:
             code_p = escape(code) 
         else:
@@ -347,7 +353,7 @@ def students_card(output,cards):
         ])
         
         c20 = Paragraph(str(info_text),styleIL)
-        c21 = Paragraph(c.season_name,styleSeason)
+        c21 = Paragraph(nonone(c.season_name),styleSeason)
 
         cc = Table([ [c00,c01],[c10,c11],[c20,c21] ], colWidths=[5.9*cm,1.5*cm],rowHeights=[1.50*cm,1.95*cm,0.95*cm], style=[
             ('GRID',(0,0),(-1,-1),1, colors.black),

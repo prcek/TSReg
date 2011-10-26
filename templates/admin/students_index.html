@@ -20,6 +20,7 @@
         <th>stav</th>
         <th>čas přihlášky</th>
         <th>kurz</th>
+        <th>sezóna</th>
         <th>referenční číslo</th>
         <th>oslovení</th>
         <th>jméno</th>
@@ -40,11 +41,12 @@
             <td>{{s.status_loc}}</td>
             <td>{{s.reg_datetime}}</td>
             <td>{{s.course_code}}</td>
+            <td>{{s.course_season}}</td>
             <td>{{s.ref_key}}</td>
             <td>{{s.addressing_loc}}</td>
             <td>{{s.name}}</td>
             <td>{{s.surname}}</td>
-            <td>{{s.email}}</td>
+            <td>{{s.email|nonone}}</td>
             <td>{{s.phone|nonone}}</td>
             <td>{% if s.year %}{{s.year}}{% else %}&nbsp;{%endif%}</td>
             <td>{{s.street|nonone}}</td>

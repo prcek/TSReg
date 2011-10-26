@@ -52,7 +52,7 @@ class StudentForm(forms.ModelForm):
     addressing = forms.CharField(label='oslovení', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=ADDRESSING_CHOICES))
     name = forms.CharField(label='jméno', error_messages=ERROR_MESSAGES)
     surname = forms.CharField(label='příjmení', error_messages=ERROR_MESSAGES)
-    email = forms.EmailField(label='email', error_messages=ERROR_MESSAGES)
+    email = forms.EmailField(label='email', error_messages=ERROR_MESSAGES, required=False)
     no_email_notification = forms.BooleanField(label='nezasílat změny přihlášky', error_messages=ERROR_MESSAGES, required=False)
     no_email_info = forms.BooleanField(label='nezasílat informace', error_messages=ERROR_MESSAGES, required=False)
     no_email_ad = forms.BooleanField(label='nezasílat reklamu', error_messages=ERROR_MESSAGES, required=False)
@@ -94,7 +94,7 @@ class StudentFormAdd(StudentForm):
     addressing = forms.CharField(label='oslovení', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=ADDRESSING_CHOICES))
     name = forms.CharField(label='jméno', error_messages=ERROR_MESSAGES)
     surname = forms.CharField(label='příjmení', error_messages=ERROR_MESSAGES)
-    email = forms.EmailField(label='email', error_messages=ERROR_MESSAGES)
+    email = forms.EmailField(label='email', error_messages=ERROR_MESSAGES, required=False)
     no_email_notification = forms.BooleanField(label='nezasílat změny přihlášky', error_messages=ERROR_MESSAGES, required=False)
     no_email_info = forms.BooleanField(label='nezasílat informace', error_messages=ERROR_MESSAGES, required=False)
     no_email_ad = forms.BooleanField(label='nezasílat reklamu', error_messages=ERROR_MESSAGES, required=False)
@@ -591,6 +591,7 @@ def create(request, course_id):
             student.save()
             student.init_ref_codes()
             student.mark_as_modify()
+            
             student.save()
 
             course_id = student.get_course_id()

@@ -11,6 +11,12 @@ from utils import crypt
 from string import maketrans
 
 
+def nonone(s):
+    if s is None:
+        return ""
+    return s
+
+
 class Job(BaseModel):
     active = db.BooleanProperty(default=False)
     create_datetime = db.DateTimeProperty()
@@ -148,16 +154,16 @@ class Invitation(BaseModel):
         if line_0 is None:
             line_0 = ""
         if self.mode == 'parents':
-            line_1 = "%s %s"%(self.name_inflected, self.surname_inflected)
+            line_1 = "%s %s"%(nonone(self.name_inflected), nonone(self.surname_inflected))
         else:
-            line_1 = "%s %s"%(self.name,self.surname)
+            line_1 = "%s %s"%(nonone(self.name),nonone(self.surname))
 
         if self.street is None or (self.street.strip() == ""):
-            line_2 = "%s %s"%(self.city, self.street_no)
-            line_3 = "%s"%(self.post_code)
+            line_2 = "%s %s"%(nonone(self.city), nonone(self.street_no))
+            line_3 = "%s"%(nonone(self.post_code))
         else:
-            line_2 = "%s %s"%(self.street, self.street_no)
-            line_3 = "%s %s"%(self.post_code, self.city)
+            line_2 = "%s %s"%(nonone(self.street), nonone(self.street_no))
+            line_3 = "%s %s"%(nonone(self.post_code), nonone(self.city))
  
          
         return [line_0,line_1,line_2,line_3]

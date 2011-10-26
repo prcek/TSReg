@@ -48,6 +48,10 @@ def send_student_email(request):
         logging.info('no sender, skip')
         return HttpResponse('ok')
 
+    if not mail.valid_email(student.email):
+        logging.info('no valid student email')
+        return HttpResponse('ok')
+
     recipient = student.email.__str__()
  
     (subject,body) = mail.prepare_email_text(template_key, student,course)

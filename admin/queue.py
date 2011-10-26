@@ -18,6 +18,10 @@ def plan_send_student_email(template_key, student, course=None):
         logging.info('info emails disabled for this student, ignore request') 
         return
 
+    if not mail.valid_email(student.email):
+        logging.info('no valid email')
+        return
+
     if not template_key in mail.MAIL_TEMPLATES:
         logging.info('plan_send_student_email - invalid template - "%s"'%template_key)
         raise Http404

@@ -485,7 +485,6 @@ class Student(BaseModel):
     def course_season(self):
         return Course.get_season_by_key(self.course_key)
 
-
     def get_course(self):
         return Course.get(self.course_key)
 
