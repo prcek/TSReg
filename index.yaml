@@ -49,6 +49,17 @@ indexes:
   - name: order_value
   - name: code
 
+- kind: CourseBackup
+  properties:
+  - name: course_key
+  - name: create_datetime
+
+- kind: CourseBackup
+  properties:
+  - name: course_key
+  - name: create_datetime
+    direction: desc
+
 - kind: Folder
   properties:
   - name: order_value

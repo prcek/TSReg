@@ -8,9 +8,9 @@ import utils.config as cfg
 from utils.data import UnicodeReader
 from utils.mail import valid_email
 from enroll.models import Course,Student,Season
-from admin.models import FileBlob
+from admin.models import FileBlob,CourseBackup
 from google.appengine.api import taskqueue
-
+import urllib
 import logging
 import cStringIO
 import datetime
@@ -69,3 +69,32 @@ def plan_backup(request,course_id):
     taskqueue.add(url='/task/course_backup/', params={'course_id':course.key().id()})
 
     return HttpResponseRedirect('../..')
+
+def index_course(request, course_id):
+    course = Course.get_by_id(int(course_id))
+    if course is None:
+        raise Http404
+
+    logging.info('course: %s'%course)
+    backup_list = CourseBackup.list_for_course(str(course.key()))
+    
+    return render_to_response('admin/backup_list.html', RequestContext(request, { 'backup_list': backup_list, 'course':course}))
+   
+def get_backup(request, course_id, course_backup_id):
+    course = Course.get_by_id(int(course_id))
+    if course is None:
+        raise Http404
+
+    course_backup = CourseBackup.get_by_id(int(course_backup_id))
+    if course_backup is None:
+        raise Http404
+
+
+    r =  HttpResponse(course_backup.data,mimetype='application/vnd.ms-excel')
+    file_name = urllib.quote(course_backup.filename)
+    logging.info(file_name)
+    r['Content-Disposition'] = "attachment; filename*=UTF-8''%s"%file_name
+    return r
+
+
+

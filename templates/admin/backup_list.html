@@ -1,0 +1,44 @@
+
+{% extends "admin/base.html" %}
+
+{% block title %} backup {% endblock %}
+
+{% block content %}
+
+
+zálohy kurzu
+{% if course %}
+
+    {% include "admin/course_header_box.html" %}
+
+{% endif %}
+
+<a class='button' href='..'>zpět</a>
+
+{% if backup_list %}
+    <br><br>Přehled záloh kurzu<br>
+
+    <table>
+    <tr>
+        <th>datum a čas</th>
+        <th>info</th>
+        <th>soubor</th>
+        <th>operace</th>
+    </tr>
+    {% for c in backup_list %}
+        <tr>
+            <td>{{c.create_datetime}}</td>
+            <td>{{c.info}}</td>
+            <td>{{c.filename}}</td>
+            <td>
+                <a class='button' href='{{c.key.id}}/'>stáhnout</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+{% else %}
+{% endif %}
+    <br><br>
+
+{% endblock %}
+

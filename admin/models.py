@@ -232,3 +232,7 @@ class CourseBackup(BaseModel):
         self.filename = "kurz_%s.csv"%(course.code)
         self.data = data
 
+    @staticmethod
+    def list_for_course(course_key):
+        return CourseBackup.all().filter('course_key',course_key).order('-create_datetime')
+ 
