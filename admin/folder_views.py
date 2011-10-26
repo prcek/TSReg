@@ -8,7 +8,7 @@ from django.template import RequestContext,Context, loader
 from google.appengine.api import taskqueue
 
 
-from enroll.models import Folder,rebuild_folder_dict
+from enroll.models import Folder,rebuild_folders
 import utils.config as cfg
 import logging
 
@@ -47,7 +47,7 @@ def edit(request, folder_id):
             form.save(commit=False)
             logging.info('edit folder after %s'% folder)
             folder.save()
-            rebuild_folder_dict()
+            rebuild_folders()
             return redirect('../..')
     else:
         form = FolderForm(instance=folder)
@@ -64,7 +64,7 @@ def create(request):
             form.save(commit=False)
             logging.info('edit folder after %s'% folder)
             folder.save()
-            rebuild_folder_dict() 
+            rebuild_folders() 
             return redirect('..')
     else:
         form = FolderForm(instance=folder)
@@ -78,7 +78,7 @@ def delete(request, folder_id):
         raise Http404
 
     folder.delete()
-    rebuild_folder_dict() 
+    rebuild_folders() 
     return redirect('../..')
 
 

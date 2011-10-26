@@ -34,15 +34,16 @@ class Season(BaseModel):
 
     @staticmethod
     def list():
-        return Season.all().order('order_value').order('name')
+        return get_season_list()
+
 
     @staticmethod
     def get_SEASON_CHOICES():
-        clist = Season.list()
+        clist = get_season_list()
         res = []
         for c in clist:
             res.append((c.key().__str__(),c.name))
-        logging.info('get_SEASON_CHOICES: %s'%res)
+#        logging.info('get_SEASON_CHOICES: %s'%res)
         return res 
 
 
@@ -51,7 +52,7 @@ class Season(BaseModel):
         res = []
         for c in clist:
             res.append((c.key().__str__(),c.code))
-        logging.info('season.get_COURSE_CHOICES: %s'%res)
+ #       logging.info('season.get_COURSE_CHOICES: %s'%res)
         return res
 
 
@@ -68,15 +69,15 @@ class Folder(BaseModel):
 
     @staticmethod
     def list():
-        return Folder.all().order('order_value').order('name')
+        return get_folder_list()
 
     @staticmethod
     def get_FOLDER_CHOICES():
-        clist = Folder.list()
+        clist = get_folder_list()
         res = []
         for c in clist:
             res.append((c.key().__str__(),c.name))
-        logging.info('get_FOLDER_CHOICES: %s'%res)
+#        logging.info('get_FOLDER_CHOICES: %s'%res)
         return res 
 
 
@@ -190,7 +191,7 @@ class Course(BaseModel):
         res = []
         for c in clist:
             res.append((c.key().__str__(),c.code))
-        logging.info('get_COURSE_CHOICES: %s'%res)
+#        logging.info('get_COURSE_CHOICES: %s'%res)
         return res 
 
 
@@ -568,6 +569,15 @@ def build_season_dict():
         d[str(s.key())]=s
     return d
 
+def build_season_list():
+    q = Season.all().order('order_value').order('name')
+    d=[]
+    for s in q:
+        d.append(s)
+    return d
+
+
+
 def get_season_dict():
     d = cache.get('season_dict')
     if d is None:
@@ -575,11 +585,27 @@ def get_season_dict():
         cache.set('season_dict',d)
     return d
 
+def get_season_list():
+    d = cache.get('season_list')
+    if d is None:
+        d = build_season_list()
+        cache.set('season_list',d)
+    return d
+
+
+
 def build_folder_dict():
     q = Folder.all()
     d=dict()
     for f in q:
         d[str(f.key())]=f
+    return d
+
+def build_folder_list():
+    q = Folder.all().order('order_value').order('name')
+    d=[]
+    for f in q:
+        d.append(f)
     return d
 
 def get_folder_dict():
@@ -589,11 +615,21 @@ def get_folder_dict():
         cache.set('folder_dict',d)
     return d
 
-def rebuild_season_dict():
+def get_folder_list():
+    d = cache.get('folder_list')
+    if d is None:
+        d = build_folder_list()
+        cache.set('folder_list',d)
+    return d
+
+
+def rebuild_seasons():
     cache.delete('season_dict')    
+    cache.delete('season_list')    
     
-def rebuild_folder_dict():
+def rebuild_folders():
     cache.delete('folder_dict')    
+    cache.delete('folder_list')    
 
 def season_key_2_name(season_key):
     s=get_season_dict().get(season_key)
