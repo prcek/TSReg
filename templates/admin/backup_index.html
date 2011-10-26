@@ -44,7 +44,9 @@
             <td>{{c.backup_flag}}</td>
             <td>
                 <a class='button' href='{{c.key.id}}/'>zálohy</a>
+{% if request.auth_info.admin %}
                 <a class='button' href='{{c.key.id}}/do/'>zálohuj</a>
+{% endif %}
             </td>
         </tr>
     {% endfor %}
