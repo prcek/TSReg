@@ -163,6 +163,19 @@ def edit(request, course_id):
 def create(request):
 
     course = Course()
+    cskey = request.session.get('course_season_key',None)
+    if not cskey is None:
+        season =  Season.get(str(cskey))
+    cfkey = request.session.get('course_folder_key',None)
+    if not cfkey is None:
+        folder =  Folder.get(str(cfkey))
+
+    if not( (folder is None) or (Season is None) ):
+        course.folder_key = cfkey
+        course.season_key = cskey
+
+
+
     if request.method == 'POST':
         form = CourseForm(request.POST, instance=course)
         if form.is_valid():
