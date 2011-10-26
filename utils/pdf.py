@@ -413,9 +413,9 @@ def students_invitation(output,invitations,mode='A'):
 
     
     if mode == 'A' or mode is None:
-        dims = {'topMargin':1*cm, 'bottomMargin':1.2*cm, 'rowHeight':3*cm, 'colWidth':7*cm} 
+        dims = { 'leftMargin': 0.6*cm, 'rightMargin':0.6*cm, 'topMargin':1.5*cm, 'bottomMargin':1.2*cm, 'rowHeight':2.95*cm, 'colWidth':6.4*cm} 
     elif mode == 'B':
-        dims = {'topMargin':0.4*cm, 'bottomMargin':0*cm, 'rowHeight':3.2*cm, 'colWidth':7*cm} 
+        dims = { 'leftMargin': 0, 'rightMargin':0, 'topMargin':0.4*cm, 'bottomMargin':0*cm, 'rowHeight':3.2*cm, 'colWidth':7*cm} 
     else:
         return
     
@@ -425,7 +425,7 @@ def students_invitation(output,invitations,mode='A'):
     ipad = 1
     pad = 5
 
-    doc = SimpleDocTemplate(output, pagesize=A4 ,leftMargin=0, rightMargin=0, topMargin=dims['topMargin'], bottomMargin=dims['bottomMargin'], showBoundary=0)
+    doc = SimpleDocTemplate(output, pagesize=A4 ,leftMargin=dims['leftMargin'], rightMargin=dims['rightMargin'], topMargin=dims['topMargin'], bottomMargin=dims['bottomMargin'], showBoundary=0)
     styles = getStyleSheet()
     styleN = styles['Normal']
     styleH = styles['Heading']
@@ -445,7 +445,7 @@ def students_invitation(output,invitations,mode='A'):
         pl_2 = Paragraph(escape(p_lines[2]),styleP)
         pl_3 = Paragraph(escape(p_lines[3]),styleP)
         invtable = Table([ [pl_0],[pl_1],[pl_2],[pl_3] ], colWidths=[width],rowHeights=4*[height], style=[
-        #    ('GRID',(0,0),(-1,-1),0.5, colors.gray),
+#            ('GRID',(0,0),(-1,-1),0.5, colors.gray),
             ('LEFTPADDING',(0,0),(-1,-1),ipad),
             ('RIGHTPADDING',(0,0),(-1,-1),ipad),
             ('TOPPADDING',(0,0),(-1,-1),ipad),
