@@ -12,6 +12,10 @@
 <input class="button" type="submit" value="zobrazit">
 </form>
 
+{% if request.auth_info.admin %}
+    <br>
+    <a class='button' href='?all=1'>bez filtru</a>
+{% endif %}
 
 
 {% if course_list %}
