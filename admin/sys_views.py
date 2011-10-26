@@ -3,6 +3,7 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext,Context, loader
 import utils.config as cfg
+from utils import cache
 
 import logging
 
@@ -42,3 +43,9 @@ def config_edit(request, config_id):
 def config_setup(request):
     cfg.setupConfig()
     return redirect('/admin/sys/')
+
+
+def flush_cache(request):
+    r = cache.flush_all()
+    return HttpResponse('ok %s'%(r))
+    

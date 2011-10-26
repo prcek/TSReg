@@ -7,6 +7,7 @@ import logging
 import random
 
 from utils import crypt
+from utils import cache
 
 from string import maketrans
 
@@ -29,12 +30,7 @@ class Season(BaseModel):
 
     @staticmethod
     def get_name_by_key(season_key):
-        if season_key is None:
-            return None
-        s = Season.get(season_key)
-        if s is None:
-            return None
-        return s.name
+        return season_key_2_name(season_key)
 
     @staticmethod
     def list():
@@ -68,12 +64,7 @@ class Folder(BaseModel):
 
     @staticmethod
     def get_name_by_key(folder_key):
-        if folder_key is None:
-            return None
-        f = Folder.get(folder_key)
-        if f is None:
-            return None
-        return f.name
+        return folder_key_2_name(folder_key)
 
     @staticmethod
     def list():
@@ -565,3 +556,54 @@ class Student(BaseModel):
             self.status, Bool2AnoNe(self.reg_by_admin), self.reg_datetime, self.enroll_datetime, self.ref_base, self.ref_key, self.confirm_key,
             Bool2AnoNe(self.long_period), Bool2AnoNe(self.paid_ok), self.year, Bool2AnoNe(self.no_email_info), Bool2AnoNe(self.no_email_notification), self.partner_ref_code, self.modify_datetime
         ]
+
+
+
+
+
+def build_season_dict():
+    q = Season.all()
+    d=dict()
+    for s in q:
+        d[str(s.key())]=s
+    return d
+
+def get_season_dict():
+    d = cache.get('season_dict')
+    if d is None:
+        d = build_season_dict()
+        cache.set('season_dict',d)
+    return d
+
+def build_folder_dict():
+    q = Folder.all()
+    d=dict()
+    for f in q:
+        d[str(f.key())]=f
+    return d
+
+def get_folder_dict():
+    d = cache.get('folder_dict')
+    if d is None:
+        d = build_folder_dict()
+        cache.set('folder_dict',d)
+    return d
+
+def rebuild_season_dict():
+    cache.delete('season_dict')    
+    
+def rebuild_folder_dict():
+    cache.delete('folder_dict')    
+
+def season_key_2_name(season_key):
+    s=get_season_dict().get(season_key)
+    if s is None:
+        return None
+    return s.name
+
+def folder_key_2_name(folder_key):
+    f=get_folder_dict().get(folder_key)
+    if f is None:
+        return None
+    return f.name
+

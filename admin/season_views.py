@@ -8,7 +8,7 @@ from django.template import RequestContext,Context, loader
 from google.appengine.api import taskqueue
 
 
-from enroll.models import Season
+from enroll.models import Season,rebuild_season_dict
 import utils.config as cfg
 import logging
 
@@ -47,6 +47,7 @@ def edit(request, season_id):
             form.save(commit=False)
             logging.info('edit season after %s'% season)
             season.save()
+            rebuild_season_dict()
             return redirect('../..')
     else:
         form = SeasonForm(instance=season)
@@ -63,6 +64,7 @@ def create(request):
             form.save(commit=False)
             logging.info('edit season after %s'% season)
             season.save()
+            rebuild_season_dict()
             return redirect('..')
     else:
         form = SeasonForm(instance=season)
@@ -76,6 +78,7 @@ def delete(request, season_id):
         raise Http404
 
     season.delete()
+    rebuild_season_dict()
     return redirect('../..')
 
 
