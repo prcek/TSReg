@@ -79,10 +79,12 @@
             {% include "admin/st_table_pair_row.html" %}
             {% endif %}
             <td class='nowrap'>
+                {% if not s.x_pair_empty_slot %}
                 <a class='button' href='{{s.key.id}}/edit/'>editovat</a>
                 <a class='button' href='{{s.key.id}}/view/'>zobrazit</a>
                 <a class='button' href='{{s.key.id}}/enroll/'>zapsat</a>
                 <a class='kbutton' href='{{s.key.id}}/kick/'>vyřadit</a>
+                {% endif %}
             </td>
         </tr>
     {% endfor %}
@@ -181,10 +183,12 @@
             {% endif %}
  
             <td class='nowrap'>
+              {% if not s.x_pair_empty_slot %}
                 <a class='button' href='{{s.key.id}}/edit/'>editovat</a>
                 <a class='button' href='{{s.key.id}}/view/'>zobrazit</a>
                 <a class='button' href='{{s.key.id}}/spare/'>náhradník</a>
                 <a class='kbutton' href='{{s.key.id}}/kick/'>vyřadit</a>
+              {% endif %}
             </td>
         </tr>
     {% endfor %}
@@ -203,7 +207,7 @@
         {% include "admin/st_table_school_sep_line.html" %}
         {% endif %}
         {% if mode == 'Pair' %}
-        {% include "admin/st_table_school_sep_line.html" %}
+        {% include "admin/st_table_pair_sep_line.html" %}
         {% endif %}
  
         {% endwith %}
