@@ -78,10 +78,10 @@
             {% if mode == 'Pair' %}
             {% include "admin/st_table_pair_row.html" %}
             {% endif %}
-            <td>
+            <td class='nowrap'>
+                <a class='button' href='{{s.key.id}}/edit/'>editovat</a>
                 <a class='button' href='{{s.key.id}}/view/'>zobrazit</a>
                 <a class='button' href='{{s.key.id}}/enroll/'>zapsat</a>
-                <a class='button' href='{{s.key.id}}/edit/'>editovat</a>
                 <a class='kbutton' href='{{s.key.id}}/kick/'>vyřadit</a>
             </td>
         </tr>
@@ -180,10 +180,10 @@
             {% include "admin/st_table_pair_row_e.html" %}
             {% endif %}
  
-            <td>
+            <td class='nowrap'>
+                <a class='button' href='{{s.key.id}}/edit/'>editovat</a>
                 <a class='button' href='{{s.key.id}}/view/'>zobrazit</a>
                 <a class='button' href='{{s.key.id}}/spare/'>náhradník</a>
-                <a class='button' href='{{s.key.id}}/edit/'>editovat</a>
                 <a class='kbutton' href='{{s.key.id}}/kick/'>vyřadit</a>
             </td>
         </tr>

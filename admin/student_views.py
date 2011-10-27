@@ -587,6 +587,7 @@ def create(request, course_id):
         raise Http404
 
     student = Student()
+    student.no_email_notification = True
     student.set_course_key(str(course.key()))
     student.init_reg()
     student.init_ref_base()
@@ -622,6 +623,7 @@ def create_pair(request, course_id):
         raise Http404
 
     student1 = Student()
+    student1.no_email_notification = True
     student1.set_course_key(str(course.key()))
     student1.init_reg()
     student1.init_ref_base()
@@ -629,6 +631,7 @@ def create_pair(request, course_id):
     student1.status = '-'
  
     student2 = Student()
+    student2.no_email_notification = True
     student2.set_course_key(str(course.key()))
     student2.init_reg()
     student2.init_ref_base()

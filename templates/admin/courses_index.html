@@ -28,11 +28,13 @@
         <th>řazení</th>
         <th>kód</th>
         <th>název</th>
+{% if request.auth_info.admin %}
         <th>sezóna</th>
         <th>kategorie</th>
+{% endif %}
         <th>režim</th>
         <th>termín</th>
-        <th>první lekce</th>
+        <th>zahájení</th>
         <th>místo</th>
         <th>lektor</th>
         <th>cena A</th>
@@ -41,10 +43,10 @@
         <th>cena SB</th>
         <th>mód ceny</th>
         <th>sleva</th>
-        <th>kapacita</th>
-        <th>obsazeno</th>
-        <th>náhradníci</th>
-        <th>limit náhradníků</th>
+        <th>žáků</th>
+        <th>max ž.</th>
+        <th>náhr.</th>
+        <th>max n.</th>
         <th>operace</th>
     </tr>
     {% for c in course_list %}
@@ -54,8 +56,10 @@
             <td>{{c.order_value}}</td>
             <td>{{c.code}}</td>
             <td>{{c.name}}</td>
+{% if request.auth_info.admin %}
             <td>{{c.season_name|nonone}}</td>
             <td>{{c.folder_name|nonone}}</td>
+{% endif %}
             <td>{{c.group_mode_loc}}</td>
             <td>{{c.period}}</td>
             <td>{{c.first_period}}</td>
@@ -67,11 +71,11 @@
             <td>{{c.cost_sb}}</td>
             <td>{{c.cost_mode_loc}}</td>
             <td>{{c.cost_sale|anone}}</td>
-            <td>{{c.capacity}}</td>
             <td>{{c.usage}}</td>
+            <td>{{c.capacity}}</td>
             <td>{{c.pending}}</td>
             <td>{{c.pending_limit}}</td>
-            <td>
+            <td class='nowrap'>
                 <a class='button' href='{{c.key.id}}/zaci/'>žáci</a>
                 <a class='button' href='{{c.key.id}}/recount/'>přepočítat</a>
                 <a class='button' href='{{c.key.id}}/edit/'>editovat</a>

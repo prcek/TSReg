@@ -49,7 +49,7 @@ class CourseForm(forms.ModelForm):
     season_key = SeasonField(label='sezóna', error_messages=ERROR_MESSAGES)
     folder_key = FolderField(label='kategorie', error_messages=ERROR_MESSAGES)
     period = forms.CharField(label='termín', error_messages=ERROR_MESSAGES)
-    first_period = forms.CharField(label='první lekce', error_messages=ERROR_MESSAGES)
+    first_period = forms.CharField(label='zahájení', error_messages=ERROR_MESSAGES)
     place = forms.CharField(label='místo', error_messages=ERROR_MESSAGES)
     teacher = forms.CharField(label='lektor', error_messages=ERROR_MESSAGES)
     cost_a = forms.IntegerField(label='cena A', error_messages=ERROR_MESSAGES)

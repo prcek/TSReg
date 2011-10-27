@@ -244,3 +244,7 @@ a.navi {
     margin-bottom: 20px;
 }
 
+td.nowrap {
+    white-space:nowrap;
+}
+
