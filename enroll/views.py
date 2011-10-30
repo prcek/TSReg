@@ -149,16 +149,16 @@ def form2student(form,course):
     
     if course.cost_mode == 'Normal':
         if (st.student):
-            st.to_pay = b
+            st.course_cost = b
         else:
-            st.to_pay = a
+            st.course_cost = a
     elif course.cost_mode == 'Period':
         if (st.long_period):
-            st.to_pay = a 
+            st.course_cost = a 
         else:
-            st.to_pay = b
+            st.course_cost = b
     elif course.cost_mode == 'Fix':
-        st.to_pay = a
+        st.course_cost = a
 
 
     st.save()

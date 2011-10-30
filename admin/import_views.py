@@ -200,17 +200,23 @@ def import_student(course,row):
         pass
 
 # 5 6 7 - prachy
+
     try:
-        st.to_pay = int(row[5])
+        paid = int(row[5])
     except:
-        pass
+        paid = 0
     try:
-        st.balance_due = int(row[6])
-        if st.balance_due == 0:
-            st.paid_ok = True
+        to_pay = int(row[6])
     except:
-        pass
+        to_pay = 0
+        
+    st.course_cost = paid+to_pay
+    st.paid = paid
+        
+    if to_pay == 0:
+        st.paid_ok = True
     st.discount = row[7]
+    logging.info('sleva: %s'%st.discount)    
 
 # 8,9 skola  trida
     st.school = row[8]

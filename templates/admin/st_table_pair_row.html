@@ -3,7 +3,7 @@
             <td rowspan=2>{{s.x_pair_no}}</td>
 {% endif %}
 {% if s.x_pair_empty_slot %}
-            <td colspan=17>&nbsp;</td>
+            <td colspan=19>&nbsp;</td>
 {% else %}
             <td>{{s.reg_datetime}}</td>
 <!--            <td>{{s.course_code}}</td> --!>
@@ -13,10 +13,12 @@
             <td>{{s.surname}}</td>
             <td>{{s.email|nonone}}</td>
             <td>{{s.phone|nonone}}</td>
-            <td>{% if s.year %}{{s.year}}{% else %}&nbsp;{%endif%}</td>
             <td>{{s.student|anone}}</td>
-            <td>{{s.to_pay|nonone}}</td>
-            <td>{{s.paid_ok|anone}}</td>
+            <td>{{s.course_cost|nonone}}</td>
+            <td>{{s.paid|nonone}}</td>
+            <td>{{s.balance_due|nonone}}</td>
+            <td>{{s.pay_info|nonone}}</td>
+            <td>{{s.card_out|anone}}</td>
             <td>{{s.street|nonone}}</td>
             <td>{{s.street_no|nonone}}</td>
             <td>{{s.city|nonone}}</td>

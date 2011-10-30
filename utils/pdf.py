@@ -175,10 +175,10 @@ def students_table(output,course,students):
     i=1;
     for s in students:
         if s.x_pair_empty_slot:
-            data.append([i,'---','---'])    
+            data.append([i,'---','---','','','','',''])    
         else:
             if course.group_mode == 'School':
-                data.append([s.x_no,s.x_class_no,s.ref_key,s.surname,s.name,s.to_pay,s.balance_due,s.discount,s.school,s.school_class, s.comment])
+                data.append([s.x_no,s.x_class_no,s.ref_key,s.surname,s.name,s.paid,s.balance_due(),s.discount,s.school,s.school_class, s.comment])
             else:
                 if s.student:
                     st = 'A'
@@ -189,33 +189,31 @@ def students_table(output,course,students):
                 else:
                     stc = ''
                 if course.group_mode == 'Pair':
-                    data.append([s.x_no,s.x_pair_no,s.ref_key,s.surname,s.name,s.to_pay,s.balance_due,s.discount,st,stc,s.comment])
+                    data.append([s.x_no,s.x_pair_no,s.ref_key,s.surname,s.name,s.paid,s.balance_due(),s.discount,st,stc,s.comment])
                 else:
-                    data.append([i,s.ref_key,s.surname,s.name,s.to_pay,s.balance_due,s.discount,st,stc,s.comment])
+                    data.append([i,s.ref_key,s.surname,s.name,s.paid,s.balance_due(),s.discount,st,stc,s.comment])
         i+=1
    # logging.info(data) 
 
-    #TODO: add spare students
-    pad = 1
-    t=Table(data,colWidths=widths)
-    t.setStyle(TableStyle([
+    if len(data)>1:
+        pad = 1
+        t=Table(data,colWidths=widths)
+        t.setStyle(TableStyle([
 #        ('BACKGROUND',(1,1),(-2,-2),colors.green),
 #        ('TEXTCOLOR',(0,0),(1,-1),colors.red),
         ('GRID',(0,1),(-1,-1),0.3, colors.gray),
-        ('FONT', (0,0), (-1,1), 'DejaVuSansBold'),
-        ('FONT', (0,1), (-1,-1), 'DejaVuSansMono'),
-        ('FONTSIZE', (0,0), (-1,-1), 8),
-        ('LEFTPADDING',(0,0),(-1,-1),pad),
-        ('RIGHTPADDING',(0,0),(-1,-1),pad),
-        ('TOPPADDING',(0,0),(-1,-1),pad),
-        ('BOTTOMPADDING',(0,0),(-1,-1),pad),
+            ('FONT', (0,0), (-1,1), 'DejaVuSansBold'),
+            ('FONT', (0,1), (-1,-1), 'DejaVuSansMono'),
+            ('FONTSIZE', (0,0), (-1,-1), 8),
+            ('LEFTPADDING',(0,0),(-1,-1),pad),
+            ('RIGHTPADDING',(0,0),(-1,-1),pad),
+            ('TOPPADDING',(0,0),(-1,-1),pad),
+            ('BOTTOMPADDING',(0,0),(-1,-1),pad),
             ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
             ('ALIGN',(0,0),(-1,-1),'LEFT'),
- 
+        ]))
+        elements.append(t)
 
-    ]))
- 
-    elements.append(t)
     doc.build(elements)
 
 
@@ -245,7 +243,7 @@ def students_enroll(output,students):
             ["oslovení",s.addressing_loc()],
             ["jméno",nonone(s.name)],
             ["přijmení",nonone(s.surname)],
-            ["cena",nonone(s.to_pay)],
+            ["kurzovné",nonone(s.course_cost)],
             ["student",stu],
             ["e-mail",nonone(s.email)],
             ["telefon",nonone(s.phone)],

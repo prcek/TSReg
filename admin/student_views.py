@@ -68,11 +68,14 @@ class StudentForm(forms.ModelForm):
     no_email_info = forms.BooleanField(label='nezasílat informace', error_messages=ERROR_MESSAGES, required=False)
     no_email_ad = forms.BooleanField(label='nezasílat reklamu', error_messages=ERROR_MESSAGES, required=False)
     student = forms.BooleanField(label='student', error_messages=ERROR_MESSAGES, required=False)
+    student_check = forms.BooleanField(label='st. ověřen', error_messages=ERROR_MESSAGES, required=False)
     long_period = forms.BooleanField(label='celoroční', error_messages=ERROR_MESSAGES, required=False)
-    to_pay = forms.IntegerField(label='cena', error_messages=ERROR_MESSAGES)
-    balance_due = forms.IntegerField(label='doplatek', error_messages=ERROR_MESSAGES,  required=False)
+    course_cost = forms.IntegerField(label='kurzovné', error_messages=ERROR_MESSAGES)
+    paid = forms.IntegerField(label='platba', error_messages=ERROR_MESSAGES)
     discount = forms.CharField(label='sleva', error_messages=ERROR_MESSAGES, required=False)
     paid_ok = forms.BooleanField(label='zaplaceno', error_messages=ERROR_MESSAGES, required=False)
+    pay_info = forms.CharField(label='platební info', error_messages=ERROR_MESSAGES, required=False)
+    card_out = forms.BooleanField(label='karta vydána', error_messages=ERROR_MESSAGES, required=False)
     phone = forms.CharField(label='telefon', error_messages=ERROR_MESSAGES, required=False)
     year = forms.IntegerField(label='rok nar.', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=YEAR_CHOICES))
     street = forms.CharField(label='ulice', error_messages=ERROR_MESSAGES, required=False)
@@ -93,7 +96,7 @@ class StudentForm(forms.ModelForm):
 
     class Meta:
         model = Student
-        fields = ( 'addressing', 'name', 'surname', 'email', 'no_email_info', 'no_email_ad', 'no_email_notification', 'student','long_period', 'to_pay', 'balance_due', 'discount', 'paid_ok', 'phone', 'year', 'street', 'street_no', 'city', 'post_code', 'school', 'school_class', 'partner_ref_code', 'comment' )
+        fields = ( 'addressing', 'name', 'surname', 'email', 'no_email_info', 'no_email_ad', 'no_email_notification', 'student', 'student_check', 'long_period', 'course_cost', 'paid', 'discount', 'paid_ok', 'pay_info', 'card_out', 'phone', 'year', 'street', 'street_no', 'city', 'post_code', 'school', 'school_class', 'partner_ref_code', 'comment' )
 
 #    def __init__(self,data = None, **kwargs):
 #        super(self.__class__,self).__init__(data, **kwargs)
@@ -110,14 +113,21 @@ class StudentFormAdd(StudentForm):
     no_email_info = forms.BooleanField(label='nezasílat informace', error_messages=ERROR_MESSAGES, required=False)
     no_email_ad = forms.BooleanField(label='nezasílat reklamu', error_messages=ERROR_MESSAGES, required=False)
     student = forms.BooleanField(label='student', error_messages=ERROR_MESSAGES, required=False)
+    student_check = forms.BooleanField(label='st. ověřen', error_messages=ERROR_MESSAGES, required=False)
     long_period = forms.BooleanField(label='celoroční', error_messages=ERROR_MESSAGES, required=False)
-    to_pay = forms.IntegerField(label='cena', error_messages=ERROR_MESSAGES)
+    course_cost = forms.IntegerField(label='kurzovné', error_messages=ERROR_MESSAGES)
+    paid = forms.IntegerField(label='platba', error_messages=ERROR_MESSAGES)
+    discount = forms.CharField(label='sleva', error_messages=ERROR_MESSAGES, required=False)
     paid_ok = forms.BooleanField(label='zaplaceno', error_messages=ERROR_MESSAGES, required=False)
+    pay_info = forms.CharField(label='platební info', error_messages=ERROR_MESSAGES, required=False)
+    card_out = forms.BooleanField(label='karta vydána', error_messages=ERROR_MESSAGES, required=False)
     phone = forms.CharField(label='telefon', error_messages=ERROR_MESSAGES, required=False)
     year = forms.IntegerField(label='rok nar.', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=YEAR_CHOICES))
     street = forms.CharField(label='ulice', error_messages=ERROR_MESSAGES, required=False)
     street_no = forms.CharField(label='číslo', error_messages=ERROR_MESSAGES, required=False)
     city = forms.CharField(label='město', error_messages=ERROR_MESSAGES, required=False)
+    school = forms.CharField(label='škola', error_messages=ERROR_MESSAGES, required=False)
+    school_class = forms.CharField(label='třída', error_messages=ERROR_MESSAGES, required=False)
     post_code = forms.CharField(label='psč', error_messages=ERROR_MESSAGES, required=False)
     partner_ref_code = forms.CharField(label='kód partnera', error_messages=ERROR_MESSAGES, required=False)
     comment = forms.CharField(label='poznámka', error_messages=ERROR_MESSAGES, required=False)
@@ -131,7 +141,7 @@ class StudentFormAdd(StudentForm):
 
     class Meta:
         model = Student
-        fields = ( 'addressing', 'name', 'surname', 'email', 'no_email_info', 'no_email_ad', 'no_email_notification', 'student','long_period', 'to_pay', 'paid_ok', 'phone', 'year', 'street', 'street_no', 'city', 'post_code', 'partner_ref_code', 'comment' )
+        fields = ( 'addressing', 'name', 'surname', 'email', 'no_email_info', 'no_email_ad', 'no_email_notification', 'student', 'student_check', 'long_period', 'course_cost', 'paid', 'discount', 'paid_ok', 'pay_info', 'card_out', 'phone', 'year', 'street', 'street_no', 'city', 'post_code', 'school', 'school_class', 'partner_ref_code', 'comment' )
 
    
 
@@ -365,7 +375,7 @@ def action_do_extra(request, source_course=None, student_ids=None):
                         s.save()
                     elif suba=='set_cost':
                         logging.info('set_cost %s'%(iv))
-                        s.to_pay = iv
+                        s.course_cost = iv
                         s.save()
  
                 logging.info('s after: %s'%s)
@@ -758,7 +768,7 @@ class EmailSelectForm(forms.Form):
     include_spare = forms.BooleanField(label='náhradníky', error_messages=ERROR_MESSAGES, required=False)
     email_ad = forms.BooleanField(label='i těm co nechtějí reklamy', error_messages=ERROR_MESSAGES, required=False)
     email_info = forms.BooleanField(label='i těm co nechtějí žádné zpravy', error_messages=ERROR_MESSAGES, required=False)
-    gsize = forms.IntegerField(label='skupinky po', error_messages=ERROR_MESSAGES,  required=False, initial=20)
+    gsize = forms.IntegerField(label='skupinky po', error_messages=ERROR_MESSAGES,  required=False, initial=40)
  
  
 
@@ -791,7 +801,7 @@ def course_emails(request, course_id):
 
             emails = map(attrgetter('email'),studs)
             emails = filter(valid_email,emails)
-            emails = list(set(emails))
+            emails = sorted(list(set(emails)))
             ecount = len(emails)            
           
             if (gsize) and (gsize>0): 

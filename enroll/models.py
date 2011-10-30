@@ -245,10 +245,12 @@ class Student(BaseModel):
     student = db.BooleanProperty(default=False)
     student_check = db.BooleanProperty(default=False)
     long_period = db.BooleanProperty(default=False)
-    to_pay = db.IntegerProperty(default=0)
-    balance_due = db.IntegerProperty(default=0)
+    course_cost = db.IntegerProperty(default=0)
+    paid = db.IntegerProperty(default=0)
     discount = db.StringProperty(default='')
     paid_ok = db.BooleanProperty(default=False)
+    pay_info = db.StringProperty(default='')
+    card_out = db.BooleanProperty(default=False)
     year = db.IntegerProperty(default=0)
     email = db.StringProperty(default='') 
     no_email_notification = db.BooleanProperty(default=False)
@@ -297,6 +299,7 @@ class Student(BaseModel):
 #        s.balance_due
 #        s.discount
 #        s.paid_ok 
+        s.card_cout = self.card_out
         s.year = self.year
         s.email = self.email
         s.no_email_notification = self.no_email_notification
@@ -525,6 +528,13 @@ class Student(BaseModel):
         elif self.status == 'k':
             return 'vyřazen'
         return '?' 
+        
+    def balance_due(self):
+        if (self.course_cost is None):
+            return 0
+        if (self.paid is None):
+            return self.course_cost
+        return self.course_cost - self.paid
 
  
     def mark_as_modify(self):
@@ -550,12 +560,12 @@ class Student(BaseModel):
             addressing=self.addressing
  
         return [
-            no1,no2,addressing,self.surname,self.name, self.to_pay, self.balance_due, self.discount,
+            no1,no2,addressing,self.surname,self.name, self.course_cost, self.paid, self.discount,
             self.school,self.school_class, self.street, self.street_no, self.city, self.post_code, self.phone,
             self.email, Bool2AnoNe(not self.no_email_ad), Bool2AnoNe(self.student), Bool2AnoNe(self.student_check),
             self.comment,
             self.status, Bool2AnoNe(self.reg_by_admin), self.reg_datetime, self.enroll_datetime, self.ref_base, self.ref_key, self.confirm_key,
-            Bool2AnoNe(self.long_period), Bool2AnoNe(self.paid_ok), self.year, Bool2AnoNe(self.no_email_info), Bool2AnoNe(self.no_email_notification), self.partner_ref_code, self.modify_datetime
+            Bool2AnoNe(self.long_period), Bool2AnoNe(self.paid_ok), self.pay_info, Bool2AnoNe(self.card_out), self.year, Bool2AnoNe(self.no_email_info), Bool2AnoNe(self.no_email_notification), self.partner_ref_code, self.modify_datetime
         ]
 
 

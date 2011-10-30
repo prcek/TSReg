@@ -16,9 +16,10 @@
 <br><br><br>
 referenční číslo: {{s.ref_key}}<br>
 oslovení: {{s.addressing_loc}}<br>
-jméno: {{s.name}}<br
+jméno: {{s.name}}<br>
 příjmení: {{s.surname}}<br>
 student: {{s.student|anone}}<br>
+student ověřeno: {{s.student_check|anone}}<br>
 email: {{s.email}}<br>
 nezasílat reklamu: {{s.no_email_ad|anone}}<br>
 nezasílat nic: {{s.no_email_info|anone}}<br> 
@@ -28,13 +29,16 @@ kurz: {{student.course_code}}<br>
 stav: {{student.status_loc}}<br>
 čas podání přihlášky:{{s.reg_datetime}}<br>
 čas zápisu:{{s.enroll_datetime|nonone}}<br>
-cena: {{s.to_pay|nonone}}<br>
+karta vydána: {{s.card_out|anone}}<br>
+kurzovné: {{s.course_cost|nonone}}<br>
+platba: {{s.paid}}<br>
 doplatit: {{s.balance_due}}<br>
+platební info: {{s.pay_info}}<br>
 sleva: {{s.discount}}<br>
 zaplaceno: {{s.paid_ok|anone}}<br>
 <br>
 telefon:{{s.phone|nonone}}<br>
-rok:{% if s.year %}{{s.year}}{% else %}&nbsp;{%endif%}<br>
+rok narození:{% if s.year %}{{s.year}}{% else %}&nbsp;{%endif%}<br>
 škola: {{ s.school }}<br>
 třída: {{ s.school_class }}<br>
 ulice:{{s.street|nonone}}<br>
