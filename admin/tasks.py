@@ -56,9 +56,9 @@ def send_student_email(request):
  
     (subject,body) = mail.prepare_email_text(template_key, student,course)
 
-    gmail.send_mail(sender, recipient, subject,body) 
+#    gmail.send_mail(sender, recipient, subject,body) 
     
-    logging.info('send ok')
+    logging.info('send comment out !')
 
     return HttpResponse('ok')
 

@@ -163,6 +163,8 @@ def edit(request, course_id):
 def create(request):
 
     course = Course()
+    season = None
+    folder = None
     cskey = request.session.get('course_season_key',None)
     if not cskey is None:
         season =  Season.get(str(cskey))
