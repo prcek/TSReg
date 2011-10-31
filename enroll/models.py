@@ -8,6 +8,7 @@ import random
 
 from utils import crypt
 from utils import cache
+from operator import itemgetter
 
 from string import maketrans
 
@@ -52,7 +53,10 @@ class Season(BaseModel):
         res = []
         for c in clist:
             res.append((c.key().__str__(),c.code))
- #       logging.info('season.get_COURSE_CHOICES: %s'%res)
+            
+        res = sorted(res,key=itemgetter(1))
+
+#        logging.info('season.get_COURSE_CHOICES: %s'%res)
         return res
 
 
