@@ -8,5 +8,6 @@ urlpatterns = patterns('admin',
     (r'^transfer_students/$', 'tasks.transfer_students'),
     (r'^makecopy_students/$', 'tasks.makecopy_students'),
     (r'^prepare_cards/$', 'tasks.prepare_cards'),
+    (r'^prepare_cardout/$', 'tasks.prepare_cardout'),
     (r'^prepare_invitations/$', 'tasks.prepare_invitations'),
 )

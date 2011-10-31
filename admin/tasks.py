@@ -456,6 +456,43 @@ def prepare_cards(request):
 
     return HttpResponse('ok')
 
+def mark_cardout(owner, student_id):
+    student = Student.get_by_id(int(student_id))
+    if student is None:
+        return
+
+    student.card_out=True
+    student.save()    
+
+
+
+def prepare_cardout(request):
+    logging.info(request.POST)
+    job_id = request.POST['job_id']
+    job = Job.get_by_id(int(job_id))
+
+    job.start()
+    job.save()
+
+
+    student_ids = request.POST.getlist('student_ids')
+    owner = request.POST['owner']
+
+    logging.info('student list %s'%student_ids) 
+    for student_id in student_ids:
+        try:
+            mark_cardout(owner, student_id)        
+        except:
+            logging.info("can't prepare card")
+    
+
+
+    job.finish()
+    job.save()
+
+    return HttpResponse('ok')
+
+
 def prepare_invitation(owner, student_id, mode, addressing_parents, addressing_p, addressing_s, addressing_d):
     student = Student.get_by_id(int(student_id))
     if student is None:

@@ -7,7 +7,7 @@ from django.template import RequestContext,Context, loader
 #from google.appengine.api import taskqueue
 
 from enroll.models import Student,Course,Season
-from admin.queue import plan_send_student_email, plan_update_course, plan_job_transfer_students, plan_job_card_for_students, plan_job_invitation_for_students, plan_job_makecopy_students
+from admin.queue import plan_send_student_email, plan_update_course, plan_job_transfer_students, plan_job_card_for_students, plan_job_invitation_for_students, plan_job_makecopy_students, plan_job_cardout_for_students
 from admin.student_sort import sort_students_single, sort_students_school, sort_students_pair, sort_students_spare_single, sort_students_spare_school, sort_students_spare_pair
 import utils.config as cfg
 import utils.mail as mail
@@ -288,6 +288,9 @@ def action_course(request,course_id):
         if op == 'action_pair':
             return action_do_pair(request, source_course=course, student_ids = all_sel)
 
+        if op == 'action_cardout':
+            return action_do_cardout(request, source_course=course, student_ids = all_sel)
+
         if op == 'action_extra':
             return action_do_extra(request, source_course=course, student_ids = all_sel)
 
@@ -480,6 +483,20 @@ def action_do_card(request, source_course=None, student_ids=None):
     info = 'generování průkazek' 
     return render_to_response('admin/action_card.html', RequestContext(request, {'form':form, 'info':info, 'operation':request.POST['operation'], 'all_select':student_ids}))
   
+
+
+def action_do_cardout(request, source_course=None, student_ids=None):
+    logging.info('student_ids = %s'%student_ids)
+
+    if (student_ids is None) or (len(student_ids)==0):
+        info = 'nebyl vybrán žádný žák'
+        return render_to_response('admin/action_cardout.html', RequestContext(request, {'info':info}))
+
+    job_id=plan_job_cardout_for_students(request.auth_info.email,student_ids)
+    return HttpResponseRedirect('../wait/%d/'%job_id)
+
+ 
+
 INVITATION_MODE_CHOICES = (
     ('direct','přímá adresa'),
     ('parents','adresa rodičům'),
