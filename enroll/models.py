@@ -251,7 +251,7 @@ class Student(BaseModel):
     paid_ok = db.BooleanProperty(default=False)
     pay_info = db.StringProperty(default='')
     card_out = db.BooleanProperty(default=False)
-    year = db.IntegerProperty(default=0)
+    year = db.IntegerProperty()
     email = db.StringProperty(default='') 
     no_email_notification = db.BooleanProperty(default=False)
     no_email_info = db.BooleanProperty(default=False)
