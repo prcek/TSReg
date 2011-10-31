@@ -16,6 +16,7 @@ from utils.mail import valid_email,chunks
 import logging
 from operator import attrgetter
 import urllib
+import re
 
 
 
@@ -49,6 +50,15 @@ def is_valid_int(s):
     except:
         return False
     return True
+
+def is_pay_info(s):
+    if s is None:
+        return False
+
+    if re.match('[^\d]+/[\d]+',s):
+        return True
+    return False
+    
 
 
 class CourseField(forms.ChoiceField):
@@ -312,6 +322,8 @@ SUBA_CHOICES=(
     ('addressing_p','osloveni na pan'),
     ('student','nastavit studenta'),
     ('set_cost','nastavit kurzovne'),
+    ('school2payinfo','skola do pl. infa'),
+    ('discount2payinfo','sleva do pl. infa'),
 )
 
 class ExtraActionForm(forms.Form):
@@ -380,6 +392,19 @@ def action_do_extra(request, source_course=None, student_ids=None):
                         logging.info('set_cost %s'%(iv))
                         s.course_cost = iv
                         s.save()
+                    elif suba=='school2payinfo':
+                        if (not (s.school is None)) and ((s.pay_info is None) or (s.pay_info=='')):
+                            if is_pay_info(s.school):
+                                s.pay_info = s.school
+                                s.school = ""
+                                s.save()                            
+                    elif suba=='discount2payinfo':
+                        if (not (s.discount is None)) and ((s.pay_info is None) or (s.pay_info=='')):
+                            if is_pay_info(s.discount):
+                                s.pay_info = s.discount
+                                s.discount = ""
+                                s.save()                            
+ 
  
                 logging.info('s after: %s'%s)
 
