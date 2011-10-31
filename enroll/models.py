@@ -115,6 +115,7 @@ class Course(BaseModel):
     stat_s_f =  db.IntegerProperty(default=0)
     stat_e_p =  db.IntegerProperty(default=0)
     stat_s_p =  db.IntegerProperty(default=0)
+    stat_paid = db.IntegerProperty(default=0)
     hidden = db.BooleanProperty(default=False)
     card_line_1 = db.StringProperty(default='')
     card_line_2 = db.StringProperty(default='')

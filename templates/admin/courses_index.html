@@ -37,16 +37,19 @@
         <th>zahájení</th>
         <th>místo</th>
         <th>lektor</th>
+<!--
         <th>cena A</th>
         <th>cena B</th>
         <th>cena SA</th>
         <th>cena SB</th>
         <th>mód ceny</th>
         <th>sleva</th>
+-->
         <th>žáků</th>
         <th>max ž.</th>
         <th>náhr.</th>
         <th>max n.</th>
+        <th>vyb. kurzovné</th>
         <th>operace</th>
     </tr>
     {% for c in course_list %}
@@ -65,16 +68,19 @@
             <td>{{c.first_period}}</td>
             <td>{{c.place}}</td>
             <td>{{c.teacher}}</td>
+<!--
             <td>{{c.cost_a}}</td>
             <td>{{c.cost_b}}</td>
             <td>{{c.cost_sa}}</td>
             <td>{{c.cost_sb}}</td>
             <td>{{c.cost_mode_loc}}</td>
             <td>{{c.cost_sale|anone}}</td>
-            <td>{{c.usage}}</td>
+-->
+            <td>{{c.usage}} (p: {{c.stat_e_m}}, d: {{c.stat_e_f}})</td>
             <td>{{c.capacity}}</td>
             <td>{{c.pending}}</td>
             <td>{{c.pending_limit}}</td>
+            <td>{{c.stat_paid}}</td>
             <td class='nowrap'>
                 <a class='button' href='{{c.key.id}}/zaci/'>žáci</a>
                 <a class='button' href='{{c.key.id}}/recount/'>přepočítat</a>
