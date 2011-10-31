@@ -350,7 +350,7 @@ def students_card(output,cards):
        #     ('GRID',(0,0),(-1,-1),1, colors.black)
         ])
         
-        c20 = Paragraph(str(info_text),styleIL)
+        c20 = Paragraph(nonone(info_text),styleIL)
         c21 = Paragraph(nonone(c.season_name),styleSeason)
 
         cc = Table([ [c00,c01],[c10,c11],[c20,c21] ], colWidths=[5.9*cm,1.5*cm],rowHeights=[1.50*cm,1.95*cm,0.95*cm], style=[
