@@ -3,7 +3,7 @@
             <td rowspan=2>{{s.x_pair_no}}</td>
 {% endif %}
 {% if s.x_pair_empty_slot %}
-            <td colspan=13>&nbsp;</td>
+            <td colspan=14>&nbsp;</td>
 {% else %}
             <td>{{s.reg_datetime}}</td>
 <!--            <td>{{s.course_code}}</td> -->
@@ -17,6 +17,7 @@
             <td>{{s.course_cost|nonone}}</td>
             <td>{{s.paid|nonone}}</td>
             <td>{{s.balance_due|nonone}}</td>
+            <td>{{s.discount|nonone}}</td>
             <td>{{s.pay_info|nonone}}</td>
             <td>{{s.card_out|anone}}</td>
 <!--
