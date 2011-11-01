@@ -59,7 +59,7 @@
         <th>operace</th>
     </tr>
     {% for s in student_list_to_enroll %}
-        <tr class='{% cycle 'row_a' 'row_b' %}'>
+        <tr class='{% cycle 'row_a' 'row_b' %} autohover'>
             <td> 
               <div class="check-area"> 
                 {% if not s.x_pair_empty_slot %}
@@ -161,7 +161,7 @@
         <th>operace</th>
     </tr>
     {% for s in student_list_enrolled %}
-        <tr class='{% cycle 'row_a' 'row_b' %}'>
+        <tr class='{% cycle 'row_a' 'row_b' %} autohover'>
 
             <td> 
               <div class="check-area">  
@@ -260,6 +260,7 @@
 
         TOOLS.bindSelect('select-s','select-s-slave');     
         TOOLS.bindSelect('select-e','select-e-slave');     
+        new TOOLS.autoHover('autohover','highlight');
 
 </script>
 
