@@ -21,7 +21,7 @@
     <table>
         <tr><th></th><th>x</th></tr>
         {% for l in lines %}
-        <tr>
+        <tr class='autohover'>
             <td> 
               <div class="check-area">  <input class="check-action" id='select-all-slave' type="checkbox" value="{{ l.key }}" {% if l.selected %}checked{% endif %} name="categories" /> </div>
             </td>
@@ -50,6 +50,7 @@
 <script type="text/javascript">
 
         TOOLS.bindSelect('select-all','select-all-slave');     
+        new TOOLS.autoHover('autohover','highlight');
 
 </script>
 

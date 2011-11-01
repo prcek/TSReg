@@ -59,7 +59,7 @@
         <th>operace</th>
     </tr>
     {% for s in student_list_to_enroll %}
-        <tr>
+        <tr class='{% cycle 'row_a' 'row_b' %}'>
             <td> 
               <div class="check-area"> 
                 {% if not s.x_pair_empty_slot %}
@@ -161,7 +161,7 @@
         <th>operace</th>
     </tr>
     {% for s in student_list_enrolled %}
-        <tr>
+        <tr class='{% cycle 'row_a' 'row_b' %}'>
 
             <td> 
               <div class="check-area">  

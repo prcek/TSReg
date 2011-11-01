@@ -26,6 +26,29 @@
         TOOLS = {}
 
 
+        TOOLS.hasClass =  function(element,className) {
+            var arr = element.className.split(" ");
+            for (var i=0;i<arr.length;i++) { 
+                if (arr[i] == className) { return true; } 
+            }
+            return false;
+        }
+
+
+        TOOLS.addClass = function(element,className) {
+            if (TOOLS.hasClass(element,className)) { return; }
+                element.className += " "+className;
+        }
+
+        TOOLS.removeClass = function(element,className) {
+            var names = element.className.split(" ");
+            var newClassArr = [];
+            for (var i=0;i<names.length;i++) {
+                if (names[i] != className) { newClassArr.push(names[i]); }
+            }
+            element.className = newClassArr.join(" ");
+        }
+
         TOOLS.stopEvent = function(e) {
             var e = e || window.event;
             if (e.stopPropagation){
@@ -178,6 +201,25 @@
 
         TOOLS.bindSelect = function (mark, slave) {
             s1  = new TOOLS.selector(mark,slave);
+        }
+
+        TOOLS.autoHover = function (classLn,classBg) {
+            var titles = TOOLS.getElementsByClass(classLn, null, null); 
+            this.classBg = classBg;
+            for (var i = 0; i< titles.length; i++) {
+                TOOLS.addListener(titles[i],"mouseover",this,'_hover');
+                TOOLS.addListener(titles[i],"mouseout",this,'_noHover');     
+            }
+        }
+
+
+        TOOLS.autoHover.prototype._hover = function(e, elm) {
+            TOOLS.addClass(elm,this.classBg);
+        }
+
+
+        TOOLS.autoHover.prototype._noHover = function(e, elm) {
+            TOOLS.removeClass(elm,this.classBg);
         }
 
 
