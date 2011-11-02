@@ -40,14 +40,16 @@ class FakeStudent():
     x_pair_empty_slot = False
     x_no = 1
     x_class_no = 1
+    x_pair_no = 1
     reg_datetime = None
     ref_key='ref_key'
     surname='surename'
     name='name'
     email = 'mail'
     phone = 'telf'
-    to_pay = '9999'
-    balance_due = '9999'
+    course_cost = '1234'
+    paid = '9999'
+    paid_ok = True
     discount = 'dův'
     school = 'skola'
     school_class = 'trida'
@@ -66,18 +68,26 @@ class FakeStudent():
 
     def addressing_loc(self):
         return "osl."
+
+    def balance_due(self):
+        return 123
     
 
 def test_students_table():
     course = FakeCourse()
     student = FakeStudent()
     student_2 = FakeStudent()
+    student_3 = FakeStudent()
     student_2.student = True
     student_2.student_check = True
+    student_3.paid_ok = False
     course.group_mode = 'School'
-    utils.pdf.students_table('students_table_1.pdf',course,120*[student])
+    utils.pdf.students_table('students_table_1.pdf',course,20*[student])
     course.group_mode = 'Single'
-    utils.pdf.students_table('students_table_2.pdf',course,120*[student,student_2])
+    utils.pdf.students_table('students_table_2.pdf',course,20*[student,student_2])
+    course.group_mode = 'Pair'
+    utils.pdf.students_table('students_table_3.pdf',course,20*[student,student_2,student_3])
+
 
 class FakeCard():
     name = u"Jxxxxxx"
