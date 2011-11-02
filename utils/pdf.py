@@ -202,7 +202,7 @@ def students_table(output,course,students):
    # logging.info(data) 
 
     if len(data)>1:
-        pad = 1
+        pad = 0
         styleData = [
 #        ('BACKGROUND',(1,1),(-2,-2),colors.green),
 #        ('TEXTCOLOR',(0,0),(1,-1),colors.red),
