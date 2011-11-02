@@ -614,7 +614,7 @@ def course_backup(request):
     
     out = cStringIO.StringIO()
     dump_to_csv(data,out)
-    logging.info(out)
+#    logging.info(out)
     cb = CourseBackup()
     cb.init(out.getvalue(),course=course)
     cb.save()
