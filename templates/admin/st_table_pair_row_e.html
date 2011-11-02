@@ -1,4 +1,3 @@
-<!--            <td>{{s.status_loc}}</td> -->
 {% if s.x_pair_first %}
             <td rowspan=2>{{s.x_pair_no}}</td>
 {% endif %}
@@ -7,8 +6,6 @@
             <td colspan=14>&nbsp;</td>
 {% else %}
             <td>{{s.enroll_datetime}}</td>
-<!--            <td>{{s.course_code}}</td> -->
-<!--            <td>{{s.ref_key}}</td> -->
             <td>{{s.addressing_loc}}</td>
             <td>{{s.name}}</td>
             <td>{{s.surname}}</td>
@@ -21,12 +18,5 @@
             <td>{{s.discount|nonone}}</td>
             <td>{{s.pay_info|nonone}}</td>
             <td>{{s.card_out|anone}}</td>
-<!--
-            <td>{{s.street|nonone}}</td>
-            <td>{{s.street_no|nonone}}</td>
-            <td>{{s.city|nonone}}</td>
-            <td>{{s.post_code|nonone}}</td>
-            <td>{{s.partner_ref_code|nonone}}</td>
--->
             <td>{{s.comment|nonone}}</td>
 {% endif %}
