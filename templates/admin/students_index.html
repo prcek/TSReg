@@ -37,7 +37,7 @@
         <th>operace</th>
     </tr>
     {% for s in student_list %}
-        <tr>
+        <tr class='autohover'>
             <td>{{s.status_loc}}</td>
             <td>{{s.reg_datetime}}</td>
             <td>{{s.course_code}}</td>
@@ -67,6 +67,12 @@
 {% if not_found %}
     <br><br><div> nenalezeno </div>
 {% endif %}
+
+<script type="text/javascript">
+
+        new TOOLS.autoHover('autohover','highlight');
+
+</script>
 
 
 {% endblock %}

@@ -37,7 +37,7 @@
         <th>operace</th>
     </tr>
     {% for i in invitation_list %}
-        <tr>
+        <tr class='autohover'>
             <td>{{forloop.counter}}</td>
 {% if request.auth_info.admin %}
             <td>{{i.owner}}</td>
@@ -64,6 +64,12 @@
 {% else %}
     no invitation<br>
 {% endif %}
+
+<script type="text/javascript">
+
+        new TOOLS.autoHover('autohover','highlight');
+
+</script>
 
 
 {% endblock %}

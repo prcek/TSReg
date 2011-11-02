@@ -31,7 +31,7 @@
         <th>operace</th>
     </tr>
     {% for c in card_list %}
-        <tr>
+        <tr class='autohover'>
             <td>{{forloop.counter}}</td>
 {% if request.auth_info.admin %}
             <td>{{c.owner}}</td>
@@ -54,6 +54,11 @@
     no card<br>
 {% endif %}
 
+<script type="text/javascript">
+
+        new TOOLS.autoHover('autohover','highlight');
+
+</script>
 
 {% endblock %}
 
