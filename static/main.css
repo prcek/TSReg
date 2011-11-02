@@ -252,3 +252,8 @@ td.nowrap {
 .highlight {
     background-color: #dddddd;    
 }
+
+.not_paid {
+    background-color: #ffdddd;    
+}
+
