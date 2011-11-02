@@ -579,6 +579,57 @@ def prepare_invitations(request):
 
     return HttpResponse('ok')
 
+
+def hide_student(owner, student_id):
+    student = Student.get_by_id(int(student_id))
+    if student is None:
+        return
+
+    student.hidden = True
+    student.save()    
+
+
+
+def hide_students(request):
+    logging.info(request.POST)
+    job_id = request.POST['job_id']
+    job = Job.get_by_id(int(job_id))
+
+    job.start()
+    job.save()
+
+
+    student_ids = request.POST.getlist('student_ids')
+    owner = request.POST['owner']
+    course_id = request.POST['course_id']
+
+    course = Course.get_by_id(int(course_id))
+    if course is None:
+        logging.info('missing course')
+        job.finish(error=True)
+        job.save()
+        return HttpResponse('error')
+
+
+    logging.info('student list %s'%student_ids) 
+    for student_id in student_ids:
+        try:
+            hide_student(owner, student_id)        
+        except:
+            logging.info("can't hide student")
+    
+    recount_course_capacity(course)
+    course.save()
+    logging.info(course)
+ 
+
+    job.finish()
+    job.save()
+
+    return HttpResponse('ok')
+
+
+
 def course_backup(request):
     logging.info(request.POST)
     course_id = request.POST['course_id']

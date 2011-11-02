@@ -116,3 +116,16 @@ def plan_job_invitation_for_students(owner,student_ids,mode, addressing_parents,
 
     return job.key().id()
 
+def plan_job_hide_students(owner,student_ids,course):
+    logging.info('hide students %s'%(student_ids))
+
+    job = Job()
+    job.init("delete students",target='../../', owner=owner)
+    job.save()
+ 
+    taskqueue.add(url='/task/hide_students/', params={'job_id':job.key().id(), 'owner':owner, 'student_ids':student_ids, 'course_id': course.key().id()})
+
+    logging.info('job_id %d'%(job.key().id())) 
+
+    return job.key().id()
+

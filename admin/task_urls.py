@@ -9,5 +9,6 @@ urlpatterns = patterns('admin',
     (r'^makecopy_students/$', 'tasks.makecopy_students'),
     (r'^prepare_cards/$', 'tasks.prepare_cards'),
     (r'^prepare_cardout/$', 'tasks.prepare_cardout'),
+    (r'^hide_students/$', 'tasks.hide_students'),
     (r'^prepare_invitations/$', 'tasks.prepare_invitations'),
 )
