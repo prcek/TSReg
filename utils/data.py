@@ -75,7 +75,7 @@ class UnicodeReader:
 def dump_to_csv(data,out):
     wr = UnicodeWriter(out,delimiter=',', quotechar='"', quoting=csv.QUOTE_NONNUMERIC)        
     for row in data:
-        logging.info(row)
+#        logging.info(row)
         wr.writerow(row)
  
 #def read_csv(f, X):
