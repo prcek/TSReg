@@ -304,6 +304,9 @@ def action_course(request,course_id):
         if op == 'action_delete':
             return action_do_delete(request, source_course=course, student_ids = all_sel)
 
+        if op == 'action_email':
+            return action_do_email(request, source_course=course, student_ids = all_sel)
+
         if op == 'action_extra':
             return action_do_extra(request, source_course=course, student_ids = all_sel)
 
@@ -417,6 +420,74 @@ def action_do_extra(request, source_course=None, student_ids=None):
         form = ExtraActionForm()     
  
     return render_to_response('admin/action_extra.html', RequestContext(request, { 'form':form, 'info':info, 'operation':request.POST['operation'], 'all_select':student_ids}))
+
+class EmailFilterForm(forms.Form):
+    email_ad = forms.BooleanField(label='včetně těch co nechtějí reklamy', error_messages=ERROR_MESSAGES, required=False, initial=True)
+    email_info = forms.BooleanField(label='včetně těch co nechtějí žádné zpravy', error_messages=ERROR_MESSAGES, required=False)
+    gsize = forms.IntegerField(label='skupinky po', error_messages=ERROR_MESSAGES,  required=True, initial=40)
+ 
+
+def action_do_email(request, source_course=None, student_ids=None):
+    logging.info('student_ids = %s'%student_ids)
+
+    if source_course is None:
+        raise Http404
+
+    if (student_ids is None) or (len(student_ids)==0):
+        info = 'nebyl vybrán žádný žák'
+        return render_to_response('admin/action_email.html', RequestContext(request, {'info':info}))
+
+    if not 'gsize' in request.POST:
+        form = EmailFilterForm()
+        info = 'přehled vybraných emailů - zvol nastavení' 
+        return render_to_response('admin/action_email.html', RequestContext(request, {'form':form, 'info':info, 'operation':request.POST['operation'], 'all_select':student_ids}))
+   
+    emails = None
+    groups = None
+    ecount = None
+ 
+    form = EmailFilterForm(request.POST)
+    if form.is_valid():
+        info = 'přehled vybraných emailů' 
+
+        studs = []
+        studs.extend(Student.list_for_course_to_enroll(source_course.key()))
+        studs.extend(Student.list_for_course_enrolled(source_course.key()))
+
+        studs = filter(lambda x: str(x.key().id()) in student_ids,studs)
+        
+
+        if not form.cleaned_data['email_ad']:
+            studs = filter(lambda x: not x.no_email_ad,studs)
+        if not form.cleaned_data['email_info']:
+            studs = filter(lambda x: not x.no_email_info,studs)
+
+        if form.cleaned_data['gsize']:
+            gsize = form.cleaned_data['gsize']
+        else: 
+            gsize = 0
+
+
+        emails = map(attrgetter('email'),studs)
+        emails = filter(valid_email,emails)
+        emails = sorted(list(set(emails)))
+        ecount = len(emails)            
+          
+        if (gsize) and (gsize>0): 
+            groups = chunks(emails,gsize) 
+        else:
+            groups = [emails]
+
+    else:
+        info = 'přehled vybraných emailů - zvol nastavení' 
+
+    return render_to_response('admin/action_email.html', RequestContext(request, {'form':form, 'info':info, 'operation':request.POST['operation'], 'all_select':student_ids,
+        'list': emails,  
+        'groups': groups,
+        'count': ecount,
+    }))
+ 
+
 
 def action_do_transfer(request, source_course=None, student_ids=None, target_course=None, target_season=None):
     logging.info('student_ids = %s'%student_ids)
