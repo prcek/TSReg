@@ -85,7 +85,9 @@
             <td>{{c.stat_paid}}</td>
             <td class='nowrap'>
                 <a class='button' href='{{c.key.id}}/zaci/'>žáci</a>
+{% if request.auth_info.admin %}
                 <a class='button' href='{{c.key.id}}/recount/'>přepočítat</a>
+{% endif %}
                 <a class='button' href='{{c.key.id}}/edit/'>editovat</a>
                 <a class='cbutton' href='{{c.key.id}}/del/'>smazat</a>
             </td>
