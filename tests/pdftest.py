@@ -50,6 +50,7 @@ class FakeStudent():
     course_cost = '1234'
     paid = '9999'
     paid_ok = True
+    pay_info ="XX/1234"
     discount = 'dův'
     school = 'skola'
     school_class = 'trida'
