@@ -110,16 +110,26 @@ class Course(BaseModel):
     cost_sale = db.BooleanProperty(default=False)
     capacity = db.IntegerProperty(default=0)
     usage = db.IntegerProperty(default=0)
-    pending_payment = db.IntegerProperty(default=0)
+    pending_payment = db.IntegerProperty(default=0) #obs
     pending = db.IntegerProperty(default=0)
     pending_limit = db.IntegerProperty(default=0)
     stat_e_m =  db.IntegerProperty(default=0)
     stat_s_m =  db.IntegerProperty(default=0)
     stat_e_f =  db.IntegerProperty(default=0)
     stat_s_f =  db.IntegerProperty(default=0)
-    stat_e_p =  db.IntegerProperty(default=0)
-    stat_s_p =  db.IntegerProperty(default=0)
+    stat_e_p =  db.IntegerProperty(default=0) #obs
+    stat_s_p =  db.IntegerProperty(default=0) #obs
     stat_paid = db.IntegerProperty(default=0)
+
+    stat_fp_m = db.IntegerProperty(default=0)
+    stat_pp_m = db.IntegerProperty(default=0)
+    stat_np_m = db.IntegerProperty(default=0)
+
+    stat_fp_f = db.IntegerProperty(default=0)
+    stat_pp_f = db.IntegerProperty(default=0)
+    stat_np_f = db.IntegerProperty(default=0)
+
+
     hidden = db.BooleanProperty(default=False)
     card_line_1 = db.StringProperty(default='')
     card_line_2 = db.StringProperty(default='')
@@ -303,7 +313,6 @@ class Student(BaseModel):
 #        s.to_pay 
 #        s.balance_due
 #        s.discount
-#        s.paid_ok 
         s.card_cout = self.card_out
         s.year = self.year
         s.email = self.email
@@ -541,6 +550,37 @@ class Student(BaseModel):
             return self.course_cost
         return self.course_cost - self.paid
 
+    def is_fp(self):
+        if self.course_cost is None:
+            return True 
+        if self.course_cost == 0:
+            return True
+        if self.paid is None:
+            return False
+
+        if self.course_cost == self.paid:
+            return True
+        return False
+        
+    def is_pp(self):
+        if self.course_cost is None:
+            return False
+        if self.paid is None:
+            return False
+
+        if (self.course_cost != 0) and (self.paid != 0):
+            return True 
+        return False
+
+    def is_np(self):
+        if self.course_cost is None:
+            return False
+        if self.paid is None:
+            return True
+
+        if (self.course_cost != 0) and (self.paid==0):
+            return True
+        return False
  
     def mark_as_modify(self):
         self.modify_datetime = datetime.datetime.utcnow()        
@@ -570,7 +610,7 @@ class Student(BaseModel):
             self.email, Bool2AnoNe(not self.no_email_ad), Bool2AnoNe(self.student), Bool2AnoNe(self.student_check),
             self.comment,
             self.status, Bool2AnoNe(self.reg_by_admin), self.reg_datetime, self.enroll_datetime, self.ref_base, self.ref_key, self.confirm_key,
-            Bool2AnoNe(self.long_period), Bool2AnoNe(self.paid_ok), self.pay_info, Bool2AnoNe(self.card_out), self.year, Bool2AnoNe(self.no_email_info), Bool2AnoNe(self.no_email_notification), self.partner_ref_code, self.modify_datetime
+            Bool2AnoNe(self.long_period), self.pay_info, Bool2AnoNe(self.card_out), self.year, Bool2AnoNe(self.no_email_info), Bool2AnoNe(self.no_email_notification), self.partner_ref_code, self.modify_datetime
         ]
 
 

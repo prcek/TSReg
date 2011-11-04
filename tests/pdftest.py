@@ -49,7 +49,6 @@ class FakeStudent():
     phone = 'telf'
     course_cost = '1234'
     paid = '9999'
-    paid_ok = True
     pay_info ="XX/1234"
     discount = 'dův'
     school = 'skola'
@@ -72,6 +71,8 @@ class FakeStudent():
 
     def balance_due(self):
         return 123
+    def is_fp(self):
+        return True
     
 
 def test_students_table():
@@ -81,7 +82,6 @@ def test_students_table():
     student_3 = FakeStudent()
     student_2.student = True
     student_2.student_check = True
-    student_3.paid_ok = False
     course.group_mode = 'School'
     utils.pdf.students_table('students_table_1.pdf',course,20*[student])
     course.group_mode = 'Single'

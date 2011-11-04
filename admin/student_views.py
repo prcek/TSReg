@@ -83,7 +83,6 @@ class StudentForm(forms.ModelForm):
     course_cost = forms.IntegerField(label='kurzovné', error_messages=ERROR_MESSAGES)
     paid = forms.IntegerField(label='platba', error_messages=ERROR_MESSAGES)
     discount = forms.CharField(label='sleva', error_messages=ERROR_MESSAGES, required=False)
-    paid_ok = forms.BooleanField(label='zaplaceno', error_messages=ERROR_MESSAGES, required=False)
     pay_info = forms.CharField(label='platební info', error_messages=ERROR_MESSAGES, required=False)
     card_out = forms.BooleanField(label='karta vydána', error_messages=ERROR_MESSAGES, required=False)
     phone = forms.CharField(label='telefon', error_messages=ERROR_MESSAGES, required=False)
@@ -106,7 +105,7 @@ class StudentForm(forms.ModelForm):
 
     class Meta:
         model = Student
-        fields = ( 'addressing', 'name', 'surname', 'email', 'no_email_info', 'no_email_ad', 'no_email_notification', 'student', 'student_check', 'long_period', 'course_cost', 'paid', 'discount', 'paid_ok', 'pay_info', 'card_out', 'phone', 'year', 'street', 'street_no', 'city', 'post_code', 'school', 'school_class', 'partner_ref_code', 'comment' )
+        fields = ( 'addressing', 'name', 'surname', 'email', 'no_email_info', 'no_email_ad', 'no_email_notification', 'student', 'student_check', 'long_period', 'course_cost', 'paid', 'discount',  'pay_info', 'card_out', 'phone', 'year', 'street', 'street_no', 'city', 'post_code', 'school', 'school_class', 'partner_ref_code', 'comment' )
 
 #    def __init__(self,data = None, **kwargs):
 #        super(self.__class__,self).__init__(data, **kwargs)
@@ -128,7 +127,6 @@ class StudentFormAdd(StudentForm):
     course_cost = forms.IntegerField(label='kurzovné', error_messages=ERROR_MESSAGES)
     paid = forms.IntegerField(label='platba', error_messages=ERROR_MESSAGES)
     discount = forms.CharField(label='sleva', error_messages=ERROR_MESSAGES, required=False)
-    paid_ok = forms.BooleanField(label='zaplaceno', error_messages=ERROR_MESSAGES, required=False)
     pay_info = forms.CharField(label='platební info', error_messages=ERROR_MESSAGES, required=False)
     card_out = forms.BooleanField(label='karta vydána', error_messages=ERROR_MESSAGES, required=False)
     phone = forms.CharField(label='telefon', error_messages=ERROR_MESSAGES, required=False)
@@ -151,7 +149,7 @@ class StudentFormAdd(StudentForm):
 
     class Meta:
         model = Student
-        fields = ( 'addressing', 'name', 'surname', 'email', 'no_email_info', 'no_email_ad', 'no_email_notification', 'student', 'student_check', 'long_period', 'course_cost', 'paid', 'discount', 'paid_ok', 'pay_info', 'card_out', 'phone', 'year', 'street', 'street_no', 'city', 'post_code', 'school', 'school_class', 'partner_ref_code', 'comment' )
+        fields = ( 'addressing', 'name', 'surname', 'email', 'no_email_info', 'no_email_ad', 'no_email_notification', 'student', 'student_check', 'long_period', 'course_cost', 'paid', 'discount',  'pay_info', 'card_out', 'phone', 'year', 'street', 'street_no', 'city', 'post_code', 'school', 'school_class', 'partner_ref_code', 'comment' )
 
    
 

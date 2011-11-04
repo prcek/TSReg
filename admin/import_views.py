@@ -213,8 +213,6 @@ def import_student(course,row):
     st.course_cost = paid+to_pay
     st.paid = paid
         
-    if to_pay == 0:
-        st.paid_ok = True
     st.discount = row[7]
     logging.info('sleva: %s'%st.discount)    
 

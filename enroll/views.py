@@ -309,10 +309,7 @@ def confirm(request,confirm_code):
                 student.status = 'e'
                 student.init_enroll()
                 student.save()
-                if student.paid_ok:
-                    plan_send_student_email('CONFIRM_ENROLL_EMAIL',student)
-                else:
-                    plan_send_student_email('CONFIRM_ENROLL_AND_PAY_EMAIL',student)
+                plan_send_student_email('CONFIRM_ENROLL_EMAIL',student)
             else:
                 student.status = 's'
                 student.save()

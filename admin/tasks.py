@@ -178,13 +178,21 @@ def recount_course_capacity(course):
     pending = 0
     pending_m = 0
     pending_f = 0
-    pending_p = 0
     enrolled = 0
     enrolled_m = 0
     enrolled_f = 0
-    enrolled_p = 0
-    pending_payment = 0
-    paid = 0
+
+    enrolled_paid = 0
+
+    stat_fp_m = 0
+    stat_pp_m = 0
+    stat_np_m = 0
+
+    stat_fp_f = 0
+    stat_pp_f = 0
+    stat_np_f = 0
+
+
     list = Student.list_for_course(course.key())
     for s in list:
         m = False
@@ -194,44 +202,60 @@ def recount_course_capacity(course):
         elif s.addressing == 's' or s.addressing == 'd':
             f=True
 
-        if not s.paid is None:
-            paid+=s.paid
-
         if s.status == 's':
             pending+=1
             if m:
                 pending_m+=1
             if f:
                 pending_f+=1
-            if s.paid_ok:
-                pending_p+=1
                 
         elif s.status == 'e':
+            if not s.paid is None:
+                enrolled_paid+=s.paid
+
             enrolled+=1
             if m:
                 enrolled_m+=1
             if f:
                 enrolled_f+=1
  
-            if not s.paid_ok:
-                pending_payment+=1
-            else:
-                enrolled_p+=1
+            if s.is_fp():
+                if m:
+                    stat_fp_m+=1   
+                if f:
+                    stat_fp_f+=1   
+            elif s.is_pp():
+                if m:
+                    stat_pp_m+=1   
+                if f:
+                    stat_pp_f+=1   
+            elif s.is_np():
+                if m:
+                    stat_np_m+=1   
+                if f:
+                    stat_np_f+=1   
+ 
+ 
 
 
     course.pending=pending
-    course.pending_payment=pending_payment
     course.usage=enrolled
 
     course.stat_e_m = enrolled_m
     course.stat_s_m = pending_m
     course.stat_e_f = enrolled_f
     course.stat_s_f = pending_f
-    course.stat_e_p = enrolled_p
-    course.stat_s_p = pending_p
-    course.stat_paid = paid
+    course.stat_paid = enrolled_paid
+    
+    course.stat_fp_m = stat_fp_m
+    course.stat_pp_m = stat_pp_m
+    course.stat_np_m = stat_np_m
 
-    logging.info('capacity stats: %d/%d, %d/%d, %d/%d'%( enrolled_m, pending_m, enrolled_f, pending_f, enrolled_p, pending_p))
+    course.stat_fp_f = stat_fp_f
+    course.stat_pp_f = stat_pp_f
+    course.stat_np_f = stat_np_f
+
+
 
 
 
@@ -249,6 +273,8 @@ def recount_course_capacity(course):
 
     course.suspend = not (cap_open or pend_open)
     course.mark_as_modify()
+
+
 
 
 def recount_capacity(request):

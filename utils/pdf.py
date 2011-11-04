@@ -180,7 +180,7 @@ def students_table(output,course,students):
         if s.x_pair_empty_slot:
             data.append([i,'---','---','','','','',''])    
         else:
-            if not s.paid_ok:
+            if not s.is_fp():
                 paid_mark.append(lc)
             if course.group_mode == 'School':
                 data.append([s.x_no,s.x_class_no,s.ref_key,s.surname,s.name,s.paid,s.balance_due(),s.discount,s.pay_info,s.school,s.school_class, s.comment])
