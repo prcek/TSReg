@@ -42,7 +42,7 @@
 {% if request.auth_info.admin %}
             <td>{{i.owner}}</td>
 {% endif %}
-            <td>{{i.create_datetime}}</td>
+            <td>{{i.create_datetime|shortdatetime}}</td>
             <td>{{i.get_mode_loc}}</td>
             <td>{{i.name|nonone}}</td>
             <td>{{i.surname|nonone}}</td>

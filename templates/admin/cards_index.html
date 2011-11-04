@@ -36,7 +36,7 @@
 {% if request.auth_info.admin %}
             <td>{{c.owner}}</td>
 {% endif %}
-            <td>{{c.create_datetime}}</td>
+            <td>{{c.create_datetime|shortdatetime}}</td>
             <td>{{c.season_name|nonone}}</td>
             <td>{{c.course_code|nonone}}</td>
             <td>{{c.info_line_1|nonone}}</td>

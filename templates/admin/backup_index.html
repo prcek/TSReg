@@ -39,8 +39,8 @@
             <td>{{c.name}}</td>
             <td>{{c.season_name|nonone}}</td>
             <td>{{c.folder_name|nonone}}</td>
-            <td>{{c.modify_datetime}}</td>
-            <td>{{c.backup_datetime}}</td>
+            <td>{{c.modify_datetime|shortdatetime}}</td>
+            <td>{{c.backup_datetime|shortdatetime}}</td>
             <td>{{c.backup_flag}}</td>
             <td>
                 <a class='button' href='{{c.key.id}}/'>zálohy</a>

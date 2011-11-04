@@ -25,3 +25,11 @@ def localdatetime(v):
         return None
     return local_timezone.fromutc(v)
     
+
+@register.filter
+def shortdatetime(v):
+    if v is None:
+        return None
+    return local_timezone.fromutc(v).strftime("%d.%m.%Y %H:%M")
+
+    

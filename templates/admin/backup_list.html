@@ -27,7 +27,7 @@ zálohy kurzu
     </tr>
     {% for c in backup_list %}
         <tr>
-            <td>{{c.create_datetime}}</td>
+            <td>{{c.create_datetime|shortdatetime}}</td>
             <td>{{c.info}}</td>
             <td>{{c.filename}}</td>
             <td>
