@@ -977,7 +977,7 @@ def course_as_csv(request, course_id):
 
 
     r =  HttpResponse(mimetype='application/vnd.ms-excel')
-    file_name = urllib.quote("kurz_%s.csv"%course.code)
+    file_name = urllib.quote((u"kurz_%s.csv"%course.code).encode('utf8'))
     logging.info(file_name)
     r['Content-Disposition'] = "attachment; filename*=UTF-8''%s"%file_name
     from utils.data import dump_to_csv
@@ -1015,7 +1015,7 @@ def course_as_pdf(request, course_id):
         raise Http404
 
     r =  HttpResponse(mimetype='application/pdf')
-    file_name = urllib.quote("kurz_%s.pdf"%course.code)
+    file_name = urllib.quote((u"kurz_%s.pdf"%course.code).encode('utf8'))
     logging.info(file_name)
     r['Content-Disposition'] = "attachment; filename*=UTF-8''%s"%file_name
     from utils.pdf import students_table
@@ -1049,7 +1049,7 @@ def enroll_as_pdf(request, course_id):
         raise Http404
 
     r =  HttpResponse(mimetype='application/pdf')
-    file_name = urllib.quote("prihlasky_%s.pdf"%course.code)
+    file_name = urllib.quote((u"prihlasky_%s.pdf"%course.code).encode('utf8'))
     logging.info(file_name)
     r['Content-Disposition'] = "attachment; filename*=UTF-8''%s"%file_name
     from utils.pdf import students_enroll
