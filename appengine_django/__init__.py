@@ -209,7 +209,7 @@ def LoadAppengineEnvironment():
     # Running as manage.py script, read from config file.
     try:
       from google.appengine.tools import dev_appserver
-      appconfig, unused_matcher = dev_appserver.LoadAppConfig(PARENT_DIR, {})
+      appconfig, unused_matcher, from_cache = dev_appserver.LoadAppConfig(PARENT_DIR, {})
       appid = appconfig.application
     except (ImportError, yaml_errors.EventListenerYAMLError), e:
       logging.warn("Could not read the Application ID from app.yaml. "
