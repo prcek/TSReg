@@ -7,7 +7,11 @@
 
    <a class='button' href='../..'>zpět na žáky</a>
    <a class='button' href='.'>přenačíst</a>
+
+{% if request.auth_info.edit %}
    <a class='button' href='../edit/'>editovat</a>
+{% endif %}
+
    <a class='button' href='../email/'>náhled emailů</a>
 
 {% with student as s %}

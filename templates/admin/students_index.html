@@ -56,7 +56,9 @@
             <td>{{s.partner_ref_code|nonone}}</td>
             <td>{{s.comment|nonone}}</td>
             <td>
+{% if request.auth_info.edit %}
                 <a class='button' href='{{s.key.id}}/edit/'>editovat</a>
+{% endif %}
                 <a class='button' href='../kurzy/{{s.get_course_id}}/zaci/'>kurz</a>
             </td>
         </tr>

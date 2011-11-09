@@ -17,8 +17,10 @@
 
 {% with course.group_mode as mode %}
 
+{% if request.auth_info.edit %}
     <a class='button' href='add'>přidat žáka</a>
     <a class='button' href='add_pair'>přidat pár</a>
+{% endif %}
     <a class='button' href='email'>emaily</a>
     <a class='button' href='csv'>stáhnout</a>
     <a class='button' href='pdf_list'>tisknout seznam</a>
@@ -80,10 +82,15 @@
             {% endif %}
             <td class='nowrap'>
                 {% if not s.x_pair_empty_slot %}
+{% if request.auth_info.edit %}
                 <a class='button' href='{{s.key.id}}/edit/'>editovat</a>
+{% endif %}
                 <a class='button' href='{{s.key.id}}/view/'>zobrazit</a>
+
+{% if request.auth_info.edit %}
                 <a class='button' href='{{s.key.id}}/enroll/'>zapsat</a>
                 <a class='kbutton' href='{{s.key.id}}/kick/'>vyřadit</a>
+{% endif %}
                 {% endif %}
             </td>
         </tr>
@@ -184,10 +191,15 @@
  
             <td class='nowrap'>
               {% if not s.x_pair_empty_slot %}
+{% if request.auth_info.edit %}
                 <a class='button' href='{{s.key.id}}/edit/'>editovat</a>
+{% endif %}
                 <a class='button' href='{{s.key.id}}/view/'>zobrazit</a>
+
+{% if request.auth_info.edit %}
                 <a class='button' href='{{s.key.id}}/spare/'>náhradník</a>
                 <a class='kbutton' href='{{s.key.id}}/kick/'>vyřadit</a>
+{% endif %}
               {% endif %}
             </td>
         </tr>
@@ -240,6 +252,8 @@
             <option value="action_none">-- zvol akci --</option>
 <!--            <option value="action_email">emaily</option> -->
             <option value="action_email">emaily</option>
+
+{% if request.auth_info.edit %}
             <option value="action_pair">spáruj dvojci</option>
             <option value="action_transfer">přesuň do jiného kurzu</option>
             <option value="action_makecopy">kopie do jiného kurzu</option>
@@ -247,6 +261,7 @@
             <option value="action_invitation">generuj pozvánky</option>
             <option value="action_cardout">vydání karty</option>
             <option value="action_delete">smazat</option>
+{% endif %}
 {% if request.auth_info.admin %}
             <option value="action_extra">extra</option>
 {% endif %}

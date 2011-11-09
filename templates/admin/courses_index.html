@@ -88,8 +88,10 @@
 {% if request.auth_info.admin %}
                 <a class='button' href='{{c.key.id}}/recount/'>přepočítat</a>
 {% endif %}
+{% if request.auth_info.edit %}
                 <a class='button' href='{{c.key.id}}/edit/'>editovat</a>
                 <a class='cbutton' href='{{c.key.id}}/del/'>smazat</a>
+{% endif %}
             </td>
         </tr>
     {% endfor %}
@@ -97,9 +99,11 @@
 {% else %}
 {% endif %}
     <br><br>
+
+{% if request.auth_info.edit %}
     <a class='button' href='add'>přidat kurz</a>
     <a class='button' href='../nahled/zapis/'>náhled zápisu</a>
-
+{% endif %}
 
 <script type="text/javascript">
 
