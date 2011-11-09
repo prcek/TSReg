@@ -1,0 +1,44 @@
+
+{% extends "admin/base.html" %}
+
+{% block title %} Administrace zápisu {% endblock %}
+
+{% block content %}
+    <a class='button' href='add/'>přidat uživatele</a>
+    <a class='button' href='.'>přenačíst</a>
+
+    <br><br>Přehled uživatelů<br>
+
+{% if list %}
+    <table>
+    <tr>
+        <th>aktivní</th>
+        <th>jméno</th>
+        <th>email (ID)</th>
+        <th>editace</th>
+        <th>platby</th>
+        <th>power</th>
+        <th>operace</th>
+    </tr>
+    {% for u in list %}
+        <tr>
+            <td>{{u.active|anone}}</td>
+            <td>{{u.name}}</td>
+            <td>{{u.email}}</td>
+            <td>{{u.edit|anone}}</td>
+            <td>{{u.pay|anone}}</td>
+            <td>{{u.power|anone}}</td>
+            <td>
+                <a class='button' href='{{u.key.id}}/edit/'>editovat</a>
+                <a class='cbutton' href='{{u.key.id}}/del/'>smazat</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+{% else %}
+    žádná uživatel <br>
+{% endif %}
+
+
+{% endblock %}
+

@@ -9,6 +9,11 @@ urlpatterns = patterns('admin',
     (r'^sys/test/$', 'test_views.index'),
     (r'^sys/jobs/$', 'jobs_views.index'),
     (r'^sys/jobs/(?P<job_id>\d+)/del/$', 'jobs_views.delete'),
+    (r'^sys/users/$', 'appuser_views.index'),
+    (r'^sys/users/add/$', 'appuser_views.create'),
+    (r'^sys/users/(?P<user_id>\d+)/edit/$', 'appuser_views.edit'),
+    (r'^sys/users/(?P<user_id>\d+)/del/$', 'appuser_views.delete'),
+    (r'^sys/users/flush/$', 'appuser_views.flush'),
 
 
     (r'^kurzy/$', 'course_views.index'),

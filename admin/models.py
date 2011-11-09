@@ -236,3 +236,17 @@ class CourseBackup(BaseModel):
     def list_for_course(course_key):
         return CourseBackup.all().filter('course_key',course_key).order('-create_datetime')
  
+
+class AppUser(BaseModel):
+    active = db.BooleanProperty()
+    name = db.StringProperty()
+    email = db.StringProperty()
+    edit = db.BooleanProperty()
+    pay = db.BooleanProperty()
+    power = db.BooleanProperty()
+
+    @staticmethod
+    def list_all():
+        return AppUser.all().order('email')
+
+
