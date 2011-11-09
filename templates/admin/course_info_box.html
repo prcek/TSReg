@@ -5,35 +5,11 @@
     <tr><td> místo;lektor;termíny </td> <td> {{course.place}};{{course.teacher}};{{course.first_period}}/{{course.period}} </td> </tr>
     <tr><td> aktivní;pozastaveno </td> <td>{{course.active|anone }};{{course.suspend|anone }}</td> </tr>
     <tr><td> kapacita (aktuální/max) </td> <td> zapsaní: {{course.usage}}/{{course.capacity}}, náhradníci: {{course.pending}}/{{course.pending_limit}} </td> </tr>
-    <tr><td> statistika (zapsaní./náhr.) </td> <td>  pánové:  {{course.stat_e_m}}/{{course.stat_s_m}}, dámy: {{course.stat_e_f}}/{{course.stat_s_f}}, zaplaceno: {{course.stat_e_p}}/{{course.stat_s_p}} </td></tr>
+    <tr><td> statistika (p/d) </td> <td> zaplaceno: {{course.stat_fp_m}}/{{course.stat_fp_f}}, záloha: {{course.stat_pp_m}}/{{course.stat_pp_f}}, nic:{{course.stat_np_m}}/{{course.stat_np_f}}  </td></tr>
+    <tr><td> platby </td> <td> platby zapsaných:{{course.stat_paid}}  </td></tr>
+    
     </table>
 
-
-{% if 0 %}
-  <td>{{c.active|anone }}</td>
-            <td>{{c.suspend|anone }}</td>
-            <td>{{c.order_value}}</td>
-            <td>{{c.code}}</td>
-            <td>{{c.name}}</td>
-            <td>{{c.season_name|nonone}}</td>
-            <td>{{c.folder_name|nonone}}</td>
-            <td>{{c.group_mode_loc}}</td>
-            <td>{{c.period}}</td>
-            <td>{{c.first_period}}</td>
-            <td>{{c.place}}</td>
-            <td>{{c.teacher}}</td>
-            <td>{{c.cost_a}}</td>
-            <td>{{c.cost_b}}</td>
-            <td>{{c.cost_sa}}</td>
-            <td>{{c.cost_sb}}</td>
-            <td>{{c.cost_mode_loc}}</td>
-            <td>{{c.cost_sale|anone}}</td>
-            <td>{{c.capacity}}</td>
-            <td>{{c.usage}}</td>
-            <td>{{c.pending}}</td>
-            <td>{{c.pending_limit}}</td>
-
-{% endif %}
 
 {% else %}
     kurz není
