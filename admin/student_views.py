@@ -351,6 +351,7 @@ class TargetCoursePickForm(forms.Form):
 
        
 
+@ar_edit
 def action_do_extra(request, source_course=None, student_ids=None):
     logging.info('student_ids = %s'%student_ids)
 
@@ -493,6 +494,7 @@ def action_do_email(request, source_course=None, student_ids=None):
  
 
 
+@ar_edit
 def action_do_transfer(request, source_course=None, student_ids=None, target_course=None, target_season=None):
     logging.info('student_ids = %s'%student_ids)
 
@@ -518,6 +520,7 @@ def action_do_transfer(request, source_course=None, student_ids=None, target_cou
 
     return HttpResponseRedirect('../wait/%d/'%job_id)
 
+@ar_edit
 def action_do_makecopy(request, source_course=None, student_ids=None, target_course=None, target_season=None):
     logging.info('student_ids = %s'%student_ids)
 
@@ -560,6 +563,7 @@ class CardPickForm(forms.Form):
             self.fields['info_line_2'].initial = course.card_line_2
 
     
+@ar_edit
 def action_do_card(request, source_course=None, student_ids=None):
     logging.info('student_ids = %s'%student_ids)
 
@@ -588,6 +592,7 @@ def action_do_card(request, source_course=None, student_ids=None):
   
 
 
+@ar_edit
 def action_do_cardout(request, source_course=None, student_ids=None):
     logging.info('student_ids = %s'%student_ids)
 
@@ -619,6 +624,7 @@ class InvitationPickForm(forms.Form):
 #TODO preselect mode by course type
             pass
 
+@ar_edit
 def action_do_invitation(request, source_course=None, student_ids=None):
     logging.info('student_ids = %s'%student_ids)
 
@@ -646,6 +652,7 @@ def action_do_invitation(request, source_course=None, student_ids=None):
     info = 'generování adres' 
     return render_to_response('admin/action_invitation.html', RequestContext(request, {'form':form, 'info':info, 'operation':request.POST['operation'], 'all_select':student_ids}))
 
+@ar_edit
 def action_do_pair(request, source_course=None, student_ids=None):
     logging.info('student_ids = %s'%student_ids)
 
@@ -686,6 +693,7 @@ class ConfirmForm(forms.Form):
     confirm = forms.BooleanField(label='opravdu to chci udělat', error_messages=ERROR_MESSAGES,  required=True)
  
 
+@ar_edit
 def action_do_delete(request, source_course=None, student_ids=None):
     logging.info('student_ids = %s'%student_ids)
 
@@ -740,6 +748,7 @@ def edit(request, student_id,course_id=None):
 
     return render_to_response('admin/students_edit.html', RequestContext(request, {'form':form}))
 
+@ar_edit
 def create(request, course_id):
 
     course = Course.get_by_id(int(course_id))  
@@ -776,6 +785,7 @@ def create(request, course_id):
         form = StudentFormAdd(instance=student)
     return render_to_response('admin/students_create.html', RequestContext(request, {'form':form}))
 
+@ar_edit
 def create_pair(request, course_id):
 
     course = Course.get_by_id(int(course_id))  
@@ -857,6 +867,7 @@ def email(request,student_id,course_id=None):
         'emails':emails
     }))
 
+@ar_edit
 def enroll(request,student_id,course_id=None):
     student = Student.get_by_id(int(student_id))
     if student is None:
@@ -872,6 +883,7 @@ def enroll(request,student_id,course_id=None):
 
     return HttpResponseRedirect('../..')
     
+@ar_edit
 def kick(request,student_id,course_id=None):
     student = Student.get_by_id(int(student_id))
     if student is None:
@@ -886,6 +898,7 @@ def kick(request,student_id,course_id=None):
  
     return HttpResponseRedirect('../..')
  
+@ar_edit
 def spare(request,student_id,course_id=None):
     student = Student.get_by_id(int(student_id))
     if student is None:

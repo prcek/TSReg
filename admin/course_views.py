@@ -9,6 +9,7 @@ from google.appengine.api import taskqueue
 
 
 from enroll.models import Course,Folder,Season
+from utils.decorators import ar_edit
 import utils.config as cfg
 import logging
 
@@ -137,7 +138,7 @@ def index(request):
     return render_to_response('admin/courses_index.html', RequestContext(request, { 'form':form, 'course_list': course_list }))
 
 
-
+@ar_edit
 def edit(request, course_id):
 
     course = Course.get_by_id(int(course_id))
@@ -160,6 +161,7 @@ def edit(request, course_id):
 
     return render_to_response('admin/courses_edit.html', RequestContext(request, {'form':form}))
 
+@ar_edit
 def create(request):
 
     course = Course()
@@ -202,6 +204,7 @@ def recount(request, course_id):
     return HttpResponseRedirect("../..")
 
 
+@ar_edit
 def delete(request, course_id):
 
     course = Course.get_by_id(int(course_id))
