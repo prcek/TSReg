@@ -13,6 +13,7 @@ import utils.config as cfg
 import utils.mail as mail
 import utils.pdf as pdf
 from utils.mail import valid_email,chunks
+from utils.decorators import ar_edit
 import logging
 from operator import attrgetter
 import urllib
@@ -711,7 +712,7 @@ def action_do_delete(request, source_course=None, student_ids=None):
 
 
 
-
+@ar_edit
 def edit(request, student_id,course_id=None):
 
     student = Student.get_by_id(int(student_id))
