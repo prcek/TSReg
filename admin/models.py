@@ -6,6 +6,7 @@ import datetime
 import logging
 import random
 
+from utils import cache
 from utils import crypt
 
 from string import maketrans
@@ -248,5 +249,23 @@ class AppUser(BaseModel):
     @staticmethod
     def list_all():
         return AppUser.all().order('email')
+
+    @staticmethod
+    def get_auth_dict():
+        d = cache.get('auth_dict')
+        if d is None:
+            q = AppUser.all().filter('active',True)
+            d = dict()       
+            for u in q:
+                d[u.email]=u
+            cache.set('auth_dict',d)
+        return d
+    @staticmethod
+    def flush_auth_dict():
+        cache.delete('auth_dict')
+
+
+
+
 
 

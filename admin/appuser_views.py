@@ -58,7 +58,7 @@ def edit(request, user_id):
 
 
 def flush(request):
-    #TODO flush user memcache
+    AppUser.flush_auth_dict()
     return redirect('..')
 
 

@@ -3,6 +3,22 @@
         {% if request.auth_info.admin %}
             <span><strong>ADMIN</strong></span>
         {% endif %}
+        {% if request.auth_info.guest %}
+            <span><strong>GUEST</strong></span>
+        {% endif %}
+{% comment %}
+         {% if request.auth_info.edit %}
+            <span><strong>EDIT</strong></span>
+        {% endif %}
+        {% if request.auth_info.pay %}
+            <span><strong>PAY</strong></span>
+        {% endif %}
+         {% if request.auth_info.power %}
+            <span><strong>POWER</strong></span>
+        {% endif %}
+{% endcomment %}
+ 
+ 
         <span> <a href="/admin/user/"><strong>{{ request.auth_info.name }}</strong></a> </span>
         <span class="separator">|</span>
         <span> <a href="{{ request.auth_info.logout_url }}"><strong>odhlásit</strong></a> </span>

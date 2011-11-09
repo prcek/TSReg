@@ -3,7 +3,7 @@ from django.http import HttpResponse, Http404, HttpResponseForbidden
 from django.shortcuts import render_to_response
 from django.template import RequestContext, Context, loader
 from google.appengine.api import users
-#from utils.models import User
+from admin.models import AppUser
 import logging
 import os
 
@@ -19,6 +19,10 @@ class AuthInfo:
     auth = False
 #    wrong = False
     admin = False
+    edit = False
+    pay = False
+    power = False
+    guest = True
 #    power = False
 #    cron = False
 #    task = False
@@ -50,6 +54,15 @@ class AuthInfo:
             self.auth = True
             self.name = self.gae_user.nickname()
             self.email = self.gae_user.email()
+
+            d = AppUser.get_auth_dict()
+            aur = d.get(self.email)
+            if aur:
+                self.edit = aur.edit
+                self.pay = aur.pay
+                self.power = aur.power
+                self.guest = False
+
  
 
         if self.gae_admin:
