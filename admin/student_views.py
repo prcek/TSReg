@@ -151,13 +151,22 @@ class StudentFormAdd(StudentForm):
         model = Student
         fields = ( 'addressing', 'name', 'surname', 'email', 'no_email_info', 'no_email_ad', 'no_email_notification', 'student', 'student_check', 'long_period', 'course_cost', 'paid', 'discount',  'pay_info', 'card_out', 'phone', 'year', 'street', 'street_no', 'city', 'post_code', 'school', 'school_class', 'partner_ref_code', 'comment' )
 
+class SeasonField(forms.ChoiceField):
+    def valid_value(self, value):
+        self._set_choices(Season.get_SEASON_CHOICES())
+        return super(SeasonField,self).valid_value(value)
    
 
 class FindForm(forms.Form):
+#    season_key = SeasonField(label='v sezóně', error_messages=ERROR_MESSAGES)
     ref_code = forms.CharField(label='referenční číslo', error_messages=ERROR_MESSAGES,required=False)
     surname = forms.CharField(label='příjmení', error_messages=ERROR_MESSAGES,required=False)
     email = forms.EmailField(label='email', error_messages=ERROR_MESSAGES,required=False)
         
+#    def __init__(self,data = None, **kwargs):
+#        super(self.__class__,self).__init__(data, **kwargs)
+#        self.fields['season_key']._set_choices(Season.get_SEASON_CHOICES())
+
 
 def index(request):
 
@@ -223,10 +232,6 @@ def index_course(request, course_id):
         'student_list_enrolled': student_list_enrolled,  
     }))
 
-class SeasonField(forms.ChoiceField):
-    def valid_value(self, value):
-        self._set_choices(Season.get_SEASON_CHOICES())
-        return super(SeasonField,self).valid_value(value)
 
 class SeasonFilterForm(forms.Form):
     season_key = SeasonField(label='sezóna', error_messages=ERROR_MESSAGES)
