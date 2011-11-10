@@ -47,11 +47,45 @@ def index(request):
     els = EMailList.list_all()
     return render_to_response('admin/email_index.html', RequestContext(request, { 'list': els  }))
 
+class EmailShowForm(forms.Form):
+    gsize = forms.IntegerField(label='skupinky po', error_messages=ERROR_MESSAGES,  required=False, initial=40)
+ 
 def show(request, el_id):
     el = EMailList.get_by_id(int(el_id))
     if el is None:
         raise Http404
-    return render_to_response('admin/email_show.html', RequestContext(request, { 'el': el  }))
+
+    gsize = 40
+    if request.method == 'POST':
+        form = EmailShowForm(request.POST)
+        if form.is_valid():
+            gsize = form.cleaned_data['gsize']
+        else:
+            gsize = None
+    else: 
+        form = EmailShowForm()
+
+
+    if gsize:
+        emails = el.emails
+        emails = sorted(list(set(emails)))
+        ecount = len(emails)            
+          
+        if gsize>0: 
+            groups = mail.chunks(emails,gsize) 
+        else:
+            groups = [emails]
+    else: 
+        emails=None
+        groups=None
+        ecount=None
+        
+
+    return render_to_response('admin/email_show.html', RequestContext(request, { 'form':form, 'el': el, 
+        'list': emails,  
+        'groups': groups,
+        'count': ecount,
+ }))
 
 def create(request):
     if request.method == 'POST':
