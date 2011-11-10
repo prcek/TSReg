@@ -5,7 +5,9 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext,Context, loader
 import utils.config as cfg
+import utils.mail as mail
 from admin.models import EMailList
+import re
 import logging
 
 
@@ -13,13 +15,22 @@ ERROR_MESSAGES={'required': 'Položka musí být vyplněna', 'invalid': 'Neplatn
 
 class EMailListField(forms.CharField):
     def clean(self, value):
-        logging.info('XXXXXXXXX CLEAN')
-        return value
+        value = re.sub(r'[,;]'," ",value)
+        s = set([])
+        for e in value.split():
+            if  re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$",e) != None:
+                s.add(e)
+        return u'\n'.join(sorted(s))
 
 
 class EMailListWidget(forms.Textarea):
     def render(self, name, value, attrs=None):
-        logging.info("XXXXXXXXXX RENDER")
+        l = value.split()  
+        gl = mail.chunks(l,5)
+        lines = []
+        for g in gl:
+            lines.append(u', '.join(g))
+        value = u'\n'.join(lines)
         return super(EMailListWidget,self).render(name,value,attrs)
 
 
