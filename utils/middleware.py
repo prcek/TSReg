@@ -62,12 +62,17 @@ class AuthInfo:
                 self.pay = aur.pay
                 self.power = aur.power
                 self.guest = False
-
+            elif self.gae_admin:
+                self.edit = True
+                self.pay = True
+                self.power = True
+                
  
 
         if self.gae_admin:
             logging.info('auth: gae admin')
             self.admin = True
+            
         
 class Gae(object):
   def process_request(self, request):
