@@ -81,6 +81,12 @@ urlpatterns = patterns('admin',
     
     (r'^nahled/zapis/$', 'preview_views.enroll'), 
 
+    (r'^email/$', 'email_views.index'),
+    (r'^email/add/$', 'email_views.create'),
+    (r'^email/(?P<el_id>\d+)/$', 'email_views.show'),
+    (r'^email/(?P<el_id>\d+)/edit/$', 'email_views.edit'),
+    (r'^email/(?P<el_id>\d+)/del/$', 'email_views.delete'),
+
 
 
     (r'^import/$', 'import_views.index'),

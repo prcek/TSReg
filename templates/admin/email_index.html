@@ -1,0 +1,37 @@
+
+{% extends "admin/base.html" %}
+
+{% block title %} Administrace zápisu {% endblock %}
+
+{% block content %}
+    <a class='button' href='add/'>přidat seznam</a>
+    <a class='button' href='.'>přenačíst</a>
+
+    <br><br>Přehled seznamů<br>
+
+{% if list %}
+    <table>
+    <tr>
+        <th>jméno</th>
+        <th>popis</th>
+        <th>operace</th>
+    </tr>
+    {% for i in list %}
+        <tr>
+            <td>{{i.name}}</td>
+            <td>{{i.desc}}</td>
+            <td>
+                <a class='button' href='{{i.key.id}}/'>zobrazit</a>
+                <a class='button' href='{{i.key.id}}/edit/'>editovat</a>
+                <a class='cbutton' href='{{i.key.id}}/del/'>smazat</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+{% else %}
+    žádný seznam<br>
+{% endif %}
+
+
+{% endblock %}
+
