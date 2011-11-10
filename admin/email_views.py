@@ -25,6 +25,8 @@ class EMailListField(forms.CharField):
 
 class EMailListWidget(forms.Textarea):
     def render(self, name, value, attrs=None):
+        if value is None:
+            return super(EMailListWidget,self).render(name,value,attrs)
         l = value.split()  
         gl = mail.chunks(l,5)
         lines = []
@@ -153,12 +155,49 @@ def action(request, el_id):
     el  = EMailList.get_by_id(int(el_id))
     if el is None:
         raise Http404
+
+    result = None
+    result_detail = None
     if request.method == 'POST':
         form = EMailActionForm(request.POST)
         if form.is_valid():
-            pass
+            a = form.cleaned_data['action']
+            logging.info('email list action %s'%a)
+            el_key = form.cleaned_data['list_key']
+            sel = EMailList.get(el_key)
+            if sel is None:
+                result = "chyba"
+                result = "druhá skupina nenalezena"
+            else:
+                if a == 'email_add':
+                    result = "ok"
+                    s1 = set(el.emails)
+                    s2 = set(sel.emails)
+                    el.emails = sorted(list(s1|s2))
+                    el.save()
+                    result_detail = u'skupina %s byla rozšířena o obsah skupiny %s'%(el.name,sel.name)
+                elif a == 'email_del':
+                    s1 = set(el.emails)
+                    s2 = set(sel.emails)
+                    el.emails = sorted(list(s1-s2))
+                    el.save()
+                    result = "ok"
+                    result_detail = u'ze skupiny %s byly odstraněny emaily ve skupině %s'%(el.name,sel.name)
+                elif a == 'email_assign':
+                    el.emails = sel.emails
+                    el.save()
+                    result = "ok"
+                    result_detail = u'obsah skupiny %s byl přepsán obsahem skupiny %s'%(el.name,sel.name)
+                else:
+                    result = "chyba"
+                    result = "nebyla zvolena akce"
+
     else:
         form = EMailActionForm()
  
-    return render_to_response('admin/email_action.html', RequestContext(request, { 'el':el, 'form': form }) ) 
+    return render_to_response('admin/email_action.html', RequestContext(request, { 
+        'el':el, 'form': form ,
+     'result':result,
+     'result_detail':result_detail,
+    }) ) 
 

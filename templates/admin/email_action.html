@@ -9,14 +9,23 @@
 {% if el %}
     <br><br>aktuální skupina emailů: <b>{{ el.name }}</b>  - {{ el.desc }}<br>
     <br> 
+{% if not result %}
+    <form method="post" name="form">
+    <table>
+    {{ form.as_table }}
+    </table>
+    <input class="button" type="submit" value="provést">
+    <a class='button' href='../../'>zpět</a>
+    </form>
+{% else %}
 
-<form method="post" name="form">
-<table>
-{{ form.as_table }}
-</table>
-<input class="button" type="submit" value="provést">
-<a class='button' href='../../'>zpět</a>
-</form>
+    <b>{{result}}</b><br>
+    {{result_detail}}<br><br>
+
+
+    <a class='button' href='../../'>zpět na přehled</a>
+
+{% endif %}
  
  {% else %}
     žádný seznam<br>
