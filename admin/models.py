@@ -277,27 +277,13 @@ class EMailList(BaseModel):
         return EMailList.all().order('name')
 
 
-    def emailsAsString(self,sep=' '):
-        f = True
-        o = ''
-        for e in self.emails:
-            if f:
-                f = False
-            else:
-                o += sep
-            o += e
-        return o
-
-    def emailsFromString(self,text):
-        text = re.sub(r'[,;]'," ",text)
-        s = set([])
-        for e in text.split():
-            if  re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$",e) != None:
-                s.add(e)
-        self.emails=[]
-        for e in sorted(s):
-            self.emails.append(e)
-
+    @staticmethod
+    def get_EMAILLIST_CHOICES():
+        el = EMailList.list_all()
+        res = []
+        for l in el:
+            res.append((l.key().__str__(),l.name))
+        return res
 
 
 

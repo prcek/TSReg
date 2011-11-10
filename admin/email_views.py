@@ -33,6 +33,10 @@ class EMailListWidget(forms.Textarea):
         value = u'\n'.join(lines)
         return super(EMailListWidget,self).render(name,value,attrs)
 
+class EMailListChoiceField(forms.ChoiceField):
+    def valid_value(self, value):
+        self._set_choices(EMailList.get_EMAILLIST_CHOICES())
+        return super(EMailListChoiceField,self).valid_value(value)
 
 
 class EMailListForm(forms.ModelForm):
@@ -126,4 +130,35 @@ def delete(request, el_id):
     el.delete()
     return redirect('../..')
 
+
+EA_CHOICES=(
+    ('email_nop','----- zvol operaci -----'),
+    ('email_add','do aktuální přidat obsah druhé'),
+    ('email_del','z aktuální odebrat obsah druhé'),
+    ('email_assign','aktuální přepsat obsahem druhé'),
+)
+
+ 
+class EMailActionForm(forms.Form):
+    action = forms.CharField(label='akce', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=EA_CHOICES))
+    list_key = EMailListChoiceField(label='druhá skupina', error_messages=ERROR_MESSAGES)
+    def __init__(self,data = None, **kwargs):
+        super(self.__class__,self).__init__(data, **kwargs)
+        self.fields['list_key']._set_choices(EMailList.get_EMAILLIST_CHOICES())
+
+
+ 
+
+def action(request, el_id):
+    el  = EMailList.get_by_id(int(el_id))
+    if el is None:
+        raise Http404
+    if request.method == 'POST':
+        form = EMailActionForm(request.POST)
+        if form.is_valid():
+            pass
+    else:
+        form = EMailActionForm()
+ 
+    return render_to_response('admin/email_action.html', RequestContext(request, { 'el':el, 'form': form }) ) 
 

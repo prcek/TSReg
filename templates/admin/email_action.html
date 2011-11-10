@@ -1,0 +1,27 @@
+
+{% extends "admin/base.html" %}
+
+{% block title %} Administrace zápisu {% endblock %}
+
+{% block content %}
+    <a class='button' href='../../'>zpět na přehled</a>
+
+{% if el %}
+    <br><br>aktuální skupina emailů: <b>{{ el.name }}</b>  - {{ el.desc }}<br>
+    <br> 
+
+<form method="post" name="form">
+<table>
+{{ form.as_table }}
+</table>
+<input class="button" type="submit" value="provést">
+<a class='button' href='../../'>zpět</a>
+</form>
+ 
+ {% else %}
+    žádný seznam<br>
+{% endif %}
+
+
+{% endblock %}
+
