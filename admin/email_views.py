@@ -12,12 +12,22 @@ import logging
 ERROR_MESSAGES={'required': 'Položka musí být vyplněna', 'invalid': 'Neplatná hodnota'}
 
 class EMailListField(forms.CharField):
-    pass
+    def clean(self, value):
+        logging.info('XXXXXXXXX CLEAN')
+        return value
+
+
+class EMailListWidget(forms.Textarea):
+    def render(self, name, value, attrs=None):
+        logging.info("XXXXXXXXXX RENDER")
+        return super(EMailListWidget,self).render(name,value,attrs)
+
+
 
 class EMailListForm(forms.ModelForm):
     name = forms.CharField()
     desc = forms.CharField(required=False)
-    emails = EMailListField(widget=forms.Textarea(attrs={'cols':160, 'rows':20}), required=False, label="emaily")
+    emails = EMailListField(widget=EMailListWidget(attrs={'cols':160, 'rows':20}), required=False, label="emaily")
     class Meta:
         model = EMailList 
         fields = ( 'name','desc', 'emails' )
