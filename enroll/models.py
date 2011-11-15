@@ -209,6 +209,15 @@ class Course(BaseModel):
 #        logging.info('get_COURSE_CHOICES: %s'%res)
         return res 
 
+    @staticmethod
+    def get_COURSE_FILTER_CHOICES(season_key,folder_key):
+        clist = Course.list_filter(season_key,folder_key)
+        res = []
+        for c in clist:
+            res.append((c.key().__str__(),c.code))
+#        logging.info('get_COURSE_CHOICES: %s'%res)
+        return res 
+
 
     def can_enroll(self):
         return (self.usage<self.capacity)

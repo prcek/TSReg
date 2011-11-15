@@ -32,6 +32,7 @@
 
 {% if selected %}
     kurz: {{ selected.code }} - {{ selected.folder}} - {{ selected.season }} ({{ selected.info }}), žáků: {{ selected.students }} <br>
+    cílová sezóna {{ season.name }} a cílová kategorie {{ folder.name }} <br>
     <form  method="post" name="form">
     <table>
     {{ form.as_table }}
@@ -42,7 +43,8 @@
 
 {% if course %}
     vybrany kurz: {{ course.code }}<br> 
-    <a class='button' href='../lines/{{selected.start_line}}/{{selected.end_line}}/to/{{course.key.id}}/'>pridat do kurzu</a>
+    cílová sezóna {{ season.name }} a cílová kategorie {{ folder.name }} <br>
+   <a class='button' href='../lines/{{selected.start_line}}/{{selected.end_line}}/to/{{course.key.id}}/'>pridat do kurzu</a>
 {% endif %}
 
 {% endblock %}

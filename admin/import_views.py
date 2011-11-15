@@ -7,7 +7,7 @@ from django.template import RequestContext,Context, loader
 import utils.config as cfg
 from utils.data import UnicodeReader
 from utils.mail import valid_email
-from enroll.models import Course,Student
+from enroll.models import Course,Student,Folder,Season
 from admin.models import FileBlob
 import logging
 import cStringIO
@@ -72,8 +72,29 @@ def import_students(request,file_id, seq_id=None):
    
     form = None
     course = None 
+    
+    season = None
+    cskey = request.session.get('course_season_key',None)
+    if not cskey is None:
+        season =  Season.get(str(cskey))
+    folder = None
+    cfkey = request.session.get('course_folder_key',None)
+    if not cfkey is None:
+        folder =  Folder.get(str(cfkey))    
+    
+    logging.info('cfkey %s cskey %s'%(cskey,cfkey))
+    logging.info('folder: %s'%folder)
+    logging.info('season: %s'%season)
+    if folder and season:
+        cc = Course.get_COURSE_FILTER_CHOICES(str(season.key()),str(folder.key()))
+    else:
+        cc = Course.get_COURSE_CHOICES()
+    
+    
+    logging.info('cc:%s'%cc)
+    
     if request.method == 'POST':
-        form = TargetPickForm(request.POST,courses = Course.get_COURSE_CHOICES())
+        form = TargetPickForm(request.POST,courses = cc)
     
     info = []
     seq = 0
@@ -113,7 +134,7 @@ def import_students(request,file_id, seq_id=None):
             raise Http404
 
         if form is None: 
-            form = TargetPickForm(courses = Course.get_COURSE_CHOICES(), initial={'start_line':selected['start_line'], 'end_line':selected['end_line']})
+            form = TargetPickForm(courses = cc, initial={'start_line':selected['start_line'], 'end_line':selected['end_line']})
         else:
             if form.is_valid():
                 course = Course.get(form.cleaned_data['course_key'])
@@ -121,7 +142,7 @@ def import_students(request,file_id, seq_id=None):
                     raise Http404
                 
 
-    return render_to_response('admin/import_students.html', RequestContext(request, {  'info': info, 'form':form, 'selected':selected, 'course':course}))
+    return render_to_response('admin/import_students.html', RequestContext(request, {  'info': info, 'form':form, 'selected':selected, 'course':course, 'season':season, 'folder':folder}))
 
 
 def import_students_do(request,file_id, start_line, end_line, course_id):
