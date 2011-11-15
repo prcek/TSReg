@@ -10,6 +10,7 @@
 
     <br><br>import žáků<br><br>
 
+
 {% if info and not selected %}
     <table>
     <tr><th>blok</th><th>kurz</th><th>kategorie</th><th>sezona</th><th>info</th><th>žáků</th><th>operace</th></tr>
@@ -33,6 +34,7 @@
 {% if selected %}
     kurz: {{ selected.code }} - {{ selected.folder}} - {{ selected.season }} ({{ selected.info }}), žáků: {{ selected.students }} <br>
     cílová sezóna {{ season.name }} a cílová kategorie {{ folder.name }} <br>
+    (filtr používá poslední zobrazení z přehledu kurzů - je-li prázdný, zvol si v přehledu kurzů něco a vrať se)<br>
     <form  method="post" name="form">
     <table>
     {{ form.as_table }}
