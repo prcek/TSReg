@@ -3,21 +3,47 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <link href="/static/ts.css" type="text/css" rel="stylesheet" media="all"></link>
     <title>{% block title %}{% endblock %}</title>
 </head>
-<body>
-    <div id="head">
+<body id="bd" class="wide fs3">
+<div id="ja-wrapper2">
+    <div id="ja-wrapper1">
+        <div id="ja-wrapper">
+            <div id="ja-headerwrap">
+                <div id="ja-header">
+                <h1>
+                    <a href="/" title="Taneční škola Starlet Brno">Taneční škola Starlet Brno</a>
+                </h1>
+                </div>
+    <div>                
 {% block head %}
 {% endblock %}
     </div>
-    <div id="content">
+                
+            </div>
+            <div id="ja-containerwrap">
+                <div id="ja-container" class="clearfix">
+                    <div id="ja-mainbody-fl">
+                        <div id="ja-content">
 {% block content %}
-    no block content
 {% endblock %}
-    </div>
-    <div id="footer">
+                        </div> 
+                   </div>
+                </div>
+            </div>
+            <div id="ja-footerwrap">
+                <div id="ja-footer">
+                    <small>
 {% block footer %}
 {% endblock %}
+                            <br>
+                    </small>
+                </div>     
+            </div>
+        </div>
     </div>
+</div>
 </body>
+
 </html>
