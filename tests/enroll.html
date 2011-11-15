@@ -110,6 +110,18 @@
         border-bottom: 1px solid #CCC;
     }
 
+    #ja-footer {
+        height:50px;
+    }
+    #ja-footer small {
+        float: left;
+        padding: 0 15px;
+        font-size: 100%;
+        color: #999;
+    }
+
+    
+
     h1.contentheading {
         color: #9C0629;
         font-size: 170%;
@@ -136,6 +148,7 @@
         text-indent: 0;
         border-spacing: 2px;
         border-color: gray;
+        width:100%;
     }
 
     .table1 tr, .table1 td, .table1 th {
@@ -143,6 +156,7 @@
         border-bottom: 1px solid lightGrey;
         padding-left: 5px;
         padding-right: 5px;
+        text-align: left;
     }
     .table1 th {
         background: #EEE;
@@ -172,7 +186,7 @@
                             table test
                             <table class="table1">
                                 <tbody>
-                                <tr><th>aa</th><th>bb</th></tr>
+                                <tr><th width="30%">aa</th><th width="70%">bb</th></tr>
                                 <tr><td>bbb</td><td>xxx</td></tr>
                                 <tr><td>bbb</td><td>xxx</td></tr>
                                 <tr><td>bbb</td><td>xxx</td></tr>
@@ -186,6 +200,10 @@
             </div>
             <div id="ja-footerwrap">
                 <div id="ja-footer">
+                    <small>
+                           bla bla bla
+                            <br>
+                    </small>
                 </div>     
             </div>
         </div>
