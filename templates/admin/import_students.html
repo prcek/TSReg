@@ -45,7 +45,7 @@
 
 {% if course %}
     vybrany kurz: {{ course.code }}<br> 
-    cílová sezóna {{ season.name }} a cílová kategorie {{ folder.name }} <br>
+  {% include "admin/course_info_box.html" %}   
    <a class='button' href='../lines/{{selected.start_line}}/{{selected.end_line}}/to/{{course.key.id}}/'>pridat do kurzu</a>
 {% endif %}
 

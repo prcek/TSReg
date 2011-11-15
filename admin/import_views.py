@@ -9,6 +9,7 @@ from utils.data import UnicodeReader
 from utils.mail import valid_email
 from enroll.models import Course,Student,Folder,Season
 from admin.models import FileBlob
+from google.appengine.api import taskqueue
 import logging
 import cStringIO
 import datetime
@@ -183,7 +184,8 @@ def import_students_do(request,file_id, start_line, end_line, course_id):
                     s.save()
                     p.save()
 
-    
+    ###
+    taskqueue.add(url='/task/recount_capacity/', params={'course_id':course.key().id()})
 
     return HttpResponseRedirect('../../../../../')
 
