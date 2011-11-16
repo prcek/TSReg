@@ -257,3 +257,11 @@ td.nowrap {
     background-color: #ffdddd;    
 }
 
+.course_active {
+    background-color: #ddffdd;    
+}
+
+.course_suspend {
+    background-color: #ffdddd;    
+}
+
