@@ -92,6 +92,22 @@ def get_offer_list(folder_id = None):
             pass
     return result
 
+def get_offer_list2():
+    courses_query=Course.list_for_enroll()  
+    folder_courses= dict()
+    result = []
+    for course in courses_query:
+        folder_courses.setdefault(course.folder_key,[]).append(course)         
+
+    result=[]
+    folders_query=Folder.list()
+    for folder in folders_query:
+        if str(folder.key()) in folder_courses:
+            result.append({'folder':folder, 'courses':folder_courses[str(folder.key())]})
+            
+    logging.info(result)
+   
+    return result
 
 
 def index(request):

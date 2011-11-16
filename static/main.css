@@ -47,8 +47,8 @@ ul                                                          { list-style-type: n
 
 /* content */
 #cont                                                       { padding: 0px 20px 10px 20px; }
-h2                                                          { margin: 0 0 10px 0; border-bottom: 1px solid black; position:absolute; left:-1000px; top:-1000px; }
-h3                                                          { font-size: 120%; margin: 10px 0 5px 0; }
+/*h2                                                          { margin: 0 0 10px 0; border-bottom: 1px solid black; position:absolute; left:-1000px; top:-1000px; } */
+/*h3                                                          { font-size: 120%; margin: 10px 0 5px 0; } */
 /*th                                                          { padding: 5px; border: 1px solid #C0C0C0; background-image: url(/img/thTop.gif); background-repeat: repeat-x; }  */
 th                                                          { padding: 5px; border: 1px solid #C0C0C0; }    
 td                                                          { padding: 5px; border: 1px solid #C0C0C0; }
