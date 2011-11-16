@@ -25,7 +25,6 @@ class ConfigForm(forms.ModelForm):
 def getConfigString(name, dv=None):
     c = Config.objects.all().filter('name =',name).filter('active = ',True).get()
     if c:
-        logging.info('Config: %s=%s'%(name,c.value))
         return unicode(c.value)
     return dv 
 
