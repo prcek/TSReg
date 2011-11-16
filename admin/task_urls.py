@@ -1,6 +1,8 @@
 from django.conf.urls.defaults import *
 urlpatterns = patterns('admin',
     (r'^send_student_email/$', 'tasks.send_student_email'),
+    (r'^send_enroll_form_to_admin/$', 'tasks.send_enroll_form_to_admin'),
+    (r'^send_enroll_form_to_admin/(?P<test_id>\d+)/$', 'tasks.send_enroll_form_to_admin'),
     (r'^recount_capacity/$', 'tasks.recount_capacity'),
     (r'^course_backup/$', 'tasks.course_backup'),
     (r'^send_backup/$', 'tasks.send_backup'),
