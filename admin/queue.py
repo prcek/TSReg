@@ -32,6 +32,14 @@ def plan_send_student_email(template_key, student, course=None):
 
     taskqueue.add(url='/task/send_student_email/', params={'template_key':template_key,'student_id':student.key().id()})
 
+def plan_send_enroll_form(student):
+
+    if student is None:
+        logging.info('plan_send_enroll_form - student is None!')
+        raise Http404
+
+    taskqueue.add(url='/task/send_enroll_form_to_admin/', params={'student_id':student.key().id()})
+
 
 def plan_update_course(course):
     if not course is None:

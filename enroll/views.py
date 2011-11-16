@@ -10,7 +10,7 @@ from enroll.models import Folder,Course,Student
 from utils import captcha
 from utils import config
 
-from admin.queue import plan_send_student_email, plan_update_course
+from admin.queue import plan_send_student_email, plan_update_course, plan_send_enroll_form
 
 
 import logging
@@ -330,7 +330,8 @@ def confirm(request,confirm_code):
                 student.status = 's'
                 student.save()
                 plan_send_student_email('CONFIRM_SPARE_EMAIL',student)
-                
+               
+            plan_send_enroll_form(student) 
             plan_update_course(course)
 
         elif not student.status in ['e','s']:
