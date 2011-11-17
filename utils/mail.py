@@ -65,7 +65,12 @@ def prepare_email_text(mail_key, student,course):
 MAIL_TEMPLATE_KEYS = [
     'TEST', 
     'ENROLL_CHECK',
-]
+    'ENROLL_OK_PAY_REQUEST',
+    'ENROLL_OK_SPARE',
+    'ENROLL_TRANSFER',
+    'ENROLL_KICK',
+    'ENROLL_KICK_TO_SPARE'
+    ]
 
 
 MAIL_TEMPLATE_KEYS_x = [

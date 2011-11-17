@@ -1,0 +1,14 @@
+Dobrý den,
+
+  kapacita Vámi požadovaného kurzu:
+
+{% include "email/course_info.txt" %}
+
+ je aktuálně naplněna.
+  
+  Z tohoto důvodu byla Vaše přihláška zařazena mezi náhradníky. V případě uvolnění místa
+v kruzu budete zapsán a vyzván k platbě.
+
+  Chcete-li přeřadit do jiného kurzu, prosíme kontaktujte nás.
+  
+{% include "email/signature.txt" %}

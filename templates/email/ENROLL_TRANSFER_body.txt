@@ -1,0 +1,9 @@
+Dobrý den,
+
+Vaše přihláška byla přeřazena do následujícího kurzu: 
+
+{% include "email/course_info.txt" %}
+
+V případě nesrovnalostí nás prosím kontaktujte.
+
+{% include "email/signature.txt" %}

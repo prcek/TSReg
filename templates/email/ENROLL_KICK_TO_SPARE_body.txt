@@ -1,0 +1,7 @@
+Dobrý den,
+ Vaše přihláška do kurzu:
+{% include "email/course_info.txt" %}
+byla přeřazena mezi náhradníky.
+
+V případě nesrovnalostí nás prosím kontaktujte.
+{% include "email/signature.txt" %}
