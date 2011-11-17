@@ -1,1 +1,11 @@
-zadost o proklik
+purpose: zadost o proklik = overeni majlu
+subject: Přihláška do kurzu
+
+Dobrý den, 
+
+  děkujeme za Vás zájem o taneční kurzy v TŠ Starlet. 
+Vaše přihlášení prosím potvrďte kliknutím na následující odkaz.
+
+{{ url }}
+
+
