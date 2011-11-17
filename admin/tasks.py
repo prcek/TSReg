@@ -25,22 +25,24 @@ def send_student_email(request):
     if student is None:
         logging.info('student is None')
         raise Http404
-#    logging.info('student=%s'%(student))
+    logging.info('student=%s'%(student))
 
     course = student.get_course()
 
- #   logging.info('course=%s'%(course))
+    logging.info('course=%s'%(course))
 
     template_key = request.POST['template_key']
     if template_key is None:
         logging.info('template_key is None')
         raise Http404 
 
-  #  logging.info('template_key=%s'%(template_key))
+    logging.info('template_key=%s'%(template_key))
 
-    if not template_key in mail.MAIL_TEMPLATES:
+    if not template_key in mail.MAIL_TEMPLATE_KEYS:
         logging.info('template_key is not valid')
         raise Http404
+
+    logging.info('key ok')
 
     sender = cfg.getConfigString('ENROLL_EMAIL',None)
 
@@ -53,8 +55,16 @@ def send_student_email(request):
         return HttpResponse('ok')
 
     recipient = student.email.__str__()
- 
+
+    logging.info('prepare text') 
     (subject,body) = mail.prepare_email_text(template_key, student,course)
+    logging.info('prepare text done') 
+
+
+#    sss=unicode(body,'utf-8')
+#    logging.info(type(subject))
+#    logging.info(sss)
+#    logging.info(body.encode('utf8'))
 
 #    gmail.send_mail(sender, recipient, subject,body) 
     

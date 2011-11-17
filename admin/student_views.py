@@ -878,7 +878,7 @@ def enroll(request,student_id,course_id=None):
         student.mark_as_modify()
         student.init_enroll()
         student.save()
-        plan_send_student_email('CONFIRM_ENROLL_EMAIL', student)
+        plan_send_student_email('ENROLL_OK_PAY_REQUEST', student)
         plan_update_course(course_id)
 
     return HttpResponseRedirect('../..')
@@ -893,7 +893,7 @@ def kick(request,student_id,course_id=None):
         student.status = 'k'
         student.mark_as_modify()
         student.save()
-        plan_send_student_email('NOTIFY_KICK_EMAIL', student)
+        plan_send_student_email('ENROLL_KICK', student)
         plan_update_course(course_id)
  
     return HttpResponseRedirect('../..')
@@ -908,6 +908,7 @@ def spare(request,student_id,course_id=None):
         student.status = 's'
         student.mark_as_modify()
         student.save()
+        plan_send_student_email('ENROLL_KICK_TO_SPARE', student)
         plan_update_course(course_id)
  
     return HttpResponseRedirect('../..')
