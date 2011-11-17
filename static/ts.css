@@ -168,3 +168,34 @@ h2.contentheading {
     font-weight: bold;
 }
 
+.field_error {
+    color: #ff1010;
+}
+.small_info {
+    color: #202020;
+    font-size:75%;
+}
+
+#id_name, #id_surname {
+    width:150px;
+}
+
+#id_email {
+    width:220px;
+}
+
+#id_street  {
+    width:100px;
+}
+
+#id_street_no, #id_post_code {
+    width:50px;
+}
+
+#id_city  {
+    width:100px;
+}
+
+#id_phone  {
+    width:130px;
+}
