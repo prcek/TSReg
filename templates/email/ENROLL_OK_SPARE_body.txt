@@ -7,8 +7,8 @@ Dobrý den,
  je aktuálně naplněna.
   
   Z tohoto důvodu byla Vaše přihláška zařazena mezi náhradníky. V případě uvolnění místa
-v kruzu budete zapsán a vyzván k platbě.
+v kurzu budete zapsán a vyzván k platbě.
 
-  Chcete-li přeřadit do jiného kurzu, prosíme kontaktujte nás.
+  Chcete-li přeřadit do jiného kurzu, prosíme kontaktujte nás. Ref. kód přihlášky: {{ student.ref_key }}.
   
 {% include "email/signature.txt" %}

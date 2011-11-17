@@ -1,7 +1,10 @@
 Dobrý den,
- Vaše přihláška do kurzu:
+
+Vaše přihláška do kurzu:
+
 {% include "email/course_info.txt" %}
 byla přeřazena mezi náhradníky.
 
-V případě nesrovnalostí nás prosím kontaktujte.
+V případě nesrovnalostí nás prosím kontaktujte. Ref. kód přihlášky: {{ student.ref_key }}.
+
 {% include "email/signature.txt" %}

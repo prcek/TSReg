@@ -1,6 +1,6 @@
 Dobrý den,
 
- potvrzujeme Vaše zařazení do kurzu.
+ potvrzujeme Vaše zařazení do kurzu. Ref. kód přihlášky: {{ student.ref_key }}.
 
 Jméno: {{ student.name }} {{student.surname}}
 {% include "email/course_info.txt" %}
