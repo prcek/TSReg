@@ -1,1 +1,35 @@
 zapsan radne, at zaplati
+subject: Platba kurzovného
+
+Dobrý den,
+
+ potvrzujeme Vaše zařazení do kurzu.
+
+Jméno: {{ student.name }} {{student.surname}}
+Kurz: {{ course.code }} - {{ course.name }}
+Termín: pondělí 18:00-20.00
+Místo: Stadion, Kounicova
+Datum zahájení: 1.10.2011
+Cena: {{s -
+ 
+Vaše místo v kurzu je rezervováno následujích 7 dní. Pokud k přihlášce
+nebude po této době přižazena platba, bude místo nabídnuto dalším zájemcům.
+
+V případě podání přihlášky týden před zahájením kurzu rozhoduje o zařazení
+do kurzu datum platby.
+ 
+Pokyny k platbě:
+
+Platbu lze provést bezhotovostně - na účet číslo 413345621/0100, do zprávy
+pro příjemce je nutno uvést Vaše jméno a číslo kurzu.
+
+Případně lze kurz uhradit v hotovosti na adrese:
+    Kino Scala, 
+    Moravské náměstí 127/3
+    602 00 Brno-město
+    
+Otevírací doba: 
+    pondělí, pátek 14:00-16:00, 
+    středa 14:00-17:00.
+
+

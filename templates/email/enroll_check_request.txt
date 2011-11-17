@@ -3,9 +3,15 @@ subject: Přihláška do kurzu
 
 Dobrý den, 
 
-  děkujeme za Vás zájem o taneční kurzy v TŠ Starlet. 
-Vaše přihlášení prosím potvrďte kliknutím na následující odkaz.
+  děkujeme za Vás zájem o taneční kurzy v TŠ Starlet.   
+Vaše přihlášení do kurzu {{course.code}} prosím potvrďte kliknutím na následující odkaz.
 
-{{ url }}
+{{ confirm_url }}
+
+
+
+
+
+
 
 
