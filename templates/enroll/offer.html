@@ -1,0 +1,31 @@
+
+{% if offer %}
+        <h1 class='contentheading'>Náhled zápisu</h1>
+    {% for f in offer %} 
+        <h2 class='contentheading'>{{f.folder.public_name}}</h2>
+            <table class="table1">
+            <tbody>
+            <tr><th width="15%">Termín</th><th width="25%">Kurz</th><th width="15%">Místo</th><th width="15%">Lektor</th><th width="15%">Zahájení</th><th width="15%"></th></tr>
+            {% for c in f.courses %}
+            <tr><td>{{c.period}}</td><td>{{c.code}} - {{c.name}}</td><td>{{c.place}}</td><td>{{c.teacher}}</td><td>{{c.first_period}}</td>
+                <td>
+                    {% if c.suspend %}
+                        zápis pozastaven
+                    {% else %}
+                        {% if preview %}
+                        přihlásit
+                        {% else %}
+                        <a href='kurz/{{c.key.id}}/'>přihlásit</a>
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+            </table>
+    {% endfor %}
+{% else %}
+ <h1 class='contentheading'>Žádný kurz není otevřen pro zápis</h1>
+{% endif %}
+
+

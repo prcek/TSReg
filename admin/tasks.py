@@ -742,3 +742,48 @@ def send_backup(request):
 
 
     return HttpResponse('ok')
+
+
+def send_enroll_form_to_admin(request,test_id=None):
+    logging.info(request.POST)
+
+    if not cfg.getConfigBool('ENROLL_FORM_EMAIL_ON',False):
+        logging.info('ENROLL_FORM_EMAIL_ON is OFF!')
+        return HttpResponse('ok - disabled')
+
+
+    if test_id is None:
+        student_id = request.POST['student_id']
+    else:
+        student_id = test_id
+    student = Student.get_by_id(int(student_id))
+    if student is None:
+        raise Http404 
+
+    logging.info('student=%s'%student)
+
+    sender = cfg.getConfigString('ENROLL_FORM_EMAIL_SENDER',None)
+    to = cfg.getConfigString('ENROLL_FORM_EMAIL_TO',None)
+
+    if sender is None:
+        logging.info('no sender')
+        return HttpResponse('ok - no sender, ignore')
+
+    if to is None:
+        logging.info('no to')
+        return HttpResponse('ok - no to, ignore')
+
+    subject =  "online prihlaska" #cfg.getConfigString('ENROLL_FORM_EMAIL_SUBJECT',None)
+    body = "online prihlaska je v priloze" #cfg.getConfigString('ENROLL_FORM_EMAIL_SUBJECT',None)
+
+    filename = "prihlaska.pdf"
+    out = cStringIO.StringIO()
+    from utils.pdf import students_enroll
+    students_enroll(out,[student])
+    data=out.getvalue()
+
+    gmail.send_mail(sender=sender, to=to,subject=subject,body=body,attachments=[(filename,data)])
+    logging.info('send ok')
+
+
+    return HttpResponse('ok')

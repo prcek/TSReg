@@ -25,7 +25,6 @@ class ConfigForm(forms.ModelForm):
 def getConfigString(name, dv=None):
     c = Config.objects.all().filter('name =',name).filter('active = ',True).get()
     if c:
-        logging.info('Config: %s=%s'%(name,c.value))
         return unicode(c.value)
     return dv 
 
@@ -128,3 +127,9 @@ def setupConfig():
     createConfig('BACKUP_EMAIL_ON','0')
     createConfig('BACKUP_ON','0')
 
+
+    createConfig('ENROLL_FORM_EMAIL_ON','0')
+    createConfig('ENROLL_FORM_EMAIL_SENDER','info@appid.appspotmail.com')
+    createConfig('ENROLL_FORM_EMAIL_TO','backup@tsstarlet.net')
+    createConfig('ENROLL_FORM_EMAIL_SUBJECT',u'Online přihláška')
+ 

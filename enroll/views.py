@@ -10,7 +10,7 @@ from enroll.models import Folder,Course,Student
 from utils import captcha
 from utils import config
 
-from admin.queue import plan_send_student_email, plan_update_course
+from admin.queue import plan_send_student_email, plan_update_course, plan_send_enroll_form
 
 
 import logging
@@ -92,6 +92,22 @@ def get_offer_list(folder_id = None):
             pass
     return result
 
+def get_offer_list2():
+    courses_query=Course.list_for_enroll()  
+    folder_courses= dict()
+    result = []
+    for course in courses_query:
+        folder_courses.setdefault(course.folder_key,[]).append(course)         
+
+    result=[]
+    folders_query=Folder.list()
+    for folder in folders_query:
+        if str(folder.key()) in folder_courses:
+            result.append({'folder':folder, 'courses':folder_courses[str(folder.key())]})
+            
+    logging.info(result)
+   
+    return result
 
 
 def index(request):
@@ -314,7 +330,8 @@ def confirm(request,confirm_code):
                 student.status = 's'
                 student.save()
                 plan_send_student_email('CONFIRM_SPARE_EMAIL',student)
-                
+               
+            plan_send_enroll_form(student) 
             plan_update_course(course)
 
         elif not student.status in ['e','s']:

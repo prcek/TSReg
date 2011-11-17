@@ -55,8 +55,8 @@
     </tr>
     {% for c in course_list %}
         <tr class='autohover'>
-            <td>{{c.active|anone }}</td>
-            <td>{{c.suspend|anone }}</td>
+            <td {% if c.active %} class='course_active' {% endif %}>{{c.active|anone }}</td>
+            <td {% if c.active and c.suspend %} class='course_suspend' {% endif %} >{{c.suspend|anone }}</td>
             <td>{{c.order_value}}</td>
             <td>{{c.code}}</td>
             <td>{{c.name}}</td>
