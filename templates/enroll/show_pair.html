@@ -4,9 +4,14 @@
 
 {% block content %}
 
-<div> Párová přihláska do kurzu {{ course.code }} - {{ ref_code1 }} a {{ ref_code2 }} </div>
+<h1 class='contentheading'> Párová přihláška do kurzu {{ course.code }} - {{ course.name }} </h1>
 
-<div> Zádost o potrzení přihlášek byla odeslána na uvedené e-maily. Bez potrzení není přihláška platná. </div>
+
+
+Vaše přihlášky s referenčním kódem {{ ref_code1 }} a {{ ref_code2 }} byly úspěšně zaevidovány. Na uvedené e-mail Vám byly odeslány
+instrukce k potvrzení přihlášek a další informace. Bez tohoto potrzení je přihláška neplataná a bude smazána.
+
+
 
 <a  href='/zapis/'>zpět na přehled kurzů</a>
 
