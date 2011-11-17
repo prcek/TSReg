@@ -1,0 +1,4 @@
+Kurz: {{ course.code }} - {{ course.name }}
+Termín: {{ course.period }}
+Místo: {{ course.place }}
+Datum zahájení: {{ course.first_period }}

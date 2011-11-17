@@ -1,0 +1,13 @@
+Dobrý den, 
+
+děkujeme za Vás zájem o taneční kurzy v TŠ Starlet.   
+Vaše přihlášení do kurzu:
+
+{% include "email/course_info.txt" %}
+
+prosím potvrďte kliknutím na následující odkaz.
+
+{% include "email/confirm_link.txt" %}
+
+{% include "email/signature.txt" %}
+

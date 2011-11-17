@@ -1,0 +1,1 @@
+http://zapis.tsstarlet.net/zapis/potrdit/{{ student.confirm_key }}/

@@ -50,7 +50,7 @@ def prepare_email_text(mail_key, student,course):
     
     c = Context({"course": course, "student": student})
 
-    subject = subject_t.render(c)    
+    subject = subject_t.render(c)    #jen prvni radek!
     body = body_t.render(c)    
     
     
@@ -64,7 +64,8 @@ def prepare_email_text(mail_key, student,course):
 
 MAIL_TEMPLATE_KEYS = [
     'TEST', 
- ]
+    'ENROLL_CHECK',
+]
 
 
 MAIL_TEMPLATE_KEYS_x = [
