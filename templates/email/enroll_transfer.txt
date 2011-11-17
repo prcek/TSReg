@@ -1,1 +1,13 @@
 byl jste prerazen
+subject: Informace o přeřazení
+
+Dobrý den,
+
+Vaše přihláška byla přeřazena do následujícího kurzu: 
+
+Kurz: {{ course.code }}
+Termín: 
+Místo:
+Datum zahájení:
+
+V případě nesrovnalostí nás prosím kontaktujte.

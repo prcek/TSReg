@@ -9,6 +9,9 @@ Vaše přihlášení do kurzu {{course.code}} prosím potvrďte kliknutím na n�
 {{ confirm_url }}
 
 
+Informace o kurzu:
+
+
 
 
 

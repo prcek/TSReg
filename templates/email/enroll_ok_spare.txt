@@ -1,2 +1,14 @@
 zapsan ale jako nahradnik
-subject: 
+subject: Informace k zařazení do kurzu
+
+Dobrý den,
+
+  kapacita Vámi požadovaného kurzu {{ course.code }} je aktuálně naplněna.
+  
+  Z tohoto důvodu byla Vaše přihláška zařazena mezi náhradníky. V případě uvolnění místa
+v kruzu budete zapsán a vyzván k platbě.
+
+  Chcete-li přeřadit do jiného kurzu, prosíme kontaktujte nás.
+  
+  
+

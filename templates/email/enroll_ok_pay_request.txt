@@ -10,7 +10,7 @@ Kurz: {{ course.code }} - {{ course.name }}
 Termín: pondělí 18:00-20.00
 Místo: Stadion, Kounicova
 Datum zahájení: 1.10.2011
-Cena: {{s -
+Cena: {{ student.to_pay }}
  
 Vaše místo v kurzu je rezervováno následujích 7 dní. Pokud k přihlášce
 nebude po této době přižazena platba, bude místo nabídnuto dalším zájemcům.
