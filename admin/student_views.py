@@ -859,7 +859,7 @@ def email(request,student_id,course_id=None):
 
 
     emails = []
-    for k in mail.MAIL_TEMPLATES:
+    for k in mail.MAIL_TEMPLATE_KEYS:
         (subject,body) = mail.prepare_email_text(k, student,course)
         emails.append({'key':k, 'subject':subject, 'body':body}) 
 
