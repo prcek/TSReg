@@ -7,8 +7,10 @@
 
 {% if status %} 
 
-<div> Přihláska do kurzu {{ course.code }} - {{ student.ref_key }} </div>
-<div> Přihláška byla potvzena a čeká na zápis </div>
+<h1 class='contentheading'> Potvrzení přihlásky do kurzu {{ course.code }} - {{ course.name }} </h1> 
+<div> Vaše přihláška {{ student.ref_key }} byla potvzena a čeká na zápis. </div>
+
+
 
 {% else %}
 

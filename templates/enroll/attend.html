@@ -13,41 +13,34 @@
  </script>
 {% endif %}
 
-<div> Přihláska do kurzu {{ course.code }}  </div>
+<h1 class='contentheading'> Přihláška do kurzu {{ course.code }} - {{ course.name }} </h1>
+<a  href='/zapis/'>zpět na výběr kurzu</a><br>
 <hr>
+
 <form method="post" name="form">
 
 
-<table>
-<tr> <td {% if form.addressing.errors %} class='field_error' {%endif%} >Oslovení (*):</td> <td colspan=3> {{ form.addressing }} </td> </tr>
-<tr> <td {% if form.name.errors %} class='field_error' {%endif%} >Jméno (*):</td> <td colspan=3> {{ form.name }} </td> </tr>
-<tr> <td {% if form.surname.errors %} class='field_error' {%endif%} >Příjmení (*):</td> <td colspan=3> {{ form.surname }} </td> </tr>
-<tr> <td>Student:</td> <td colspan=3> {{ form.student }}</td> </tr>
-{% if course.cost_mode == 2 %}
-<tr> <td>Celoroční:</td> <td colspan=3> {{ form.long_period }}</td> </tr>
-{% endif %}
-<tr> <td {% if form.email.errors %} class='field_error' {%endif%}>E-mail (*):</td> <td colspan=3> {{ form.email }}</td> </tr>
-<tr> <td>Nezasílat reklamu:</td> <td colspan=3> {{ form.no_email_ad }}</td> </tr>
-<tr> <td>Rok narození:</td> <td colspan=3> {{ form.year }} </td> </tr>
-<tr> <td>Ulice:</td> <td> {{ form.street }} </td> <td> č.p.: </td> <td> {{ form.street_no }}</td> </tr>
-<tr> <td>Město:</td> <td colspan=3> {{ form.city }} </td> </tr>
-<tr> <td>PSČ:</td> <td colspan=3> {{ form.post_code }}</td> </tr>
-<tr> <td>Telefon:</td> <td colspan=3> {{ form.phone }}</td> </tr>
-</table>
+
+{% include "enroll/attend_form.html" %}
 
 {% if form.errors %}
-   <div class='field_error'>Prosím vyplňte chybějící údaje</div> 
+   <div class='field_error'>Prosím, vyplňte chybějící údaje</div> 
 {% endif %}
 
 
 
-<div class='small_info'>(*) povinný údaj</div>
+<div class='small_info'>
+(*) povinný údaj<br>
+Na uvedný e-mail budou odeslány instrukce k ověření přihlášky, bez kterého je přihláška neplatná.
+</div><br>
+
 <hr>
 {% if captcha_error %}  neplatný kód {% endif %}
 {% if html_captcha %} {{ html_captcha|safe }} {% endif %}
-    
-<input type="submit" value="Odeslat">
-<a  href='/zapis/'>zpět</a>
+<input type="submit" value="Odeslat"><br>
+
+<div class='small_info'>Odesláním přihlášky souhlasím s používáním mých osobních údajů Taneční školou Starlet pro vnitřní administrativní účely a beru na vědomí, že budu Taneční školou Starlet pomocí mé e-mailové adresy informován o případných změnách v průběhu kurzu a o akcích, které se tanečního kurzu týkají.</div>
+
 </form>
 
 

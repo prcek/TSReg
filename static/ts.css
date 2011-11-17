@@ -176,26 +176,28 @@ h2.contentheading {
     font-size:75%;
 }
 
-#id_name, #id_surname {
+#id_name, #id_surname, #id_p1-name, #id_p1-surname, #id_p2-name, #id_p2-surname {
     width:150px;
 }
 
-#id_email {
+#id_email, #id_p1-email, #id_p2-email {
     width:220px;
 }
 
-#id_street  {
+#id_street, #id_p1-street, #id_p2-street {
     width:100px;
 }
 
-#id_street_no, #id_post_code {
+#id_street_no, #id_post_code, #id_p1-street_no, #id_p1-post_code, #id_p2-street_no, #id_p2-post_code {
     width:50px;
 }
 
-#id_city  {
+#id_city , #id_p1-city, #id_p2-city {
     width:100px;
 }
 
-#id_phone  {
+#id_phone, #id_p1-phone, #id_p2-phone  {
     width:130px;
 }
+
+

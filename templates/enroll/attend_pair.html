@@ -13,20 +13,42 @@
  </script>
 {% endif %}
 
-<div> Přihláska do kurzu {{ course.code }}  </div>
+
+<h1 class='contentheading'> Párová přihláška do kurzu {{ course.code }} - {{ course.name }} </h1>
+<a  href='/zapis/'>zpět na výběr kurzu</a><br>
+<hr>
+
+
 <form method="post" name="form">
 
-<table><tr>
-<td>{{ form1.as_p }}</td>
-<td>{{ form2.as_p }}</td>
-</tr></table>
+<table width='100%'>
+<tr><th>partner</th><th>partnerka</th></tr>
+<tr>
+<td>{% with form1 as form %} {% include "enroll/attend_form.html" %}{% endwith %}</td>
+<td>{% with form2 as form %} {% include "enroll/attend_form.html" %}{% endwith %}</td>
+</tr>
+</table>
+{% if form1.errors or form2.errors %}
+   <div class='field_error'>Prosím, vyplňte chybějící údaje</div> 
+{% endif %}
+
+
+<div class='small_info'>
+(*) povinný údaj<br>
+Na uvedný e-mail budou odeslány instrukce k ověření přihlášky, bez kterého je přihláška neplatná.
+</div><br>
+
 
 {% if captcha_error %}  neplatný kód {% endif %}
 {% if html_captcha %} {{ html_captcha|safe }} {% endif %}
     
 <input type="submit" value="Odeslat">
-<a  href='/zapis/'>zpět</a>
+
+
+<div class='small_info'>Odesláním přihlášky souhlasím s používáním mých osobních údajů Taneční školou Starlet pro vnitřní administrativní účely a beru na vědomí, že budu Taneční školou Starlet pomocí mé e-mailové adresy informován o případných změnách v průběhu kurzu a o akcích, které se tanečního kurzu týkají.</div>
+
 </form>
+
 
 
 
