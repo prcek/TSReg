@@ -79,7 +79,7 @@ urlpatterns = patterns('admin',
     (r'^zaci/(?P<student_id>\d+)/email/$', 'student_views.email'),
 
     
-    (r'^nahled/zapis/$', 'preview_views.enroll'), 
+    (r'^zapis/$', 'enroll_views.index'), 
 
     (r'^email/$', 'email_views.index'),
     (r'^email/add/$', 'email_views.create'),
