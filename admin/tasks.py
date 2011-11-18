@@ -74,7 +74,7 @@ def send_student_email(request):
 
     gmail.send_mail(sender=sender, reply_to=reply_to, to=recipient, subject=subject,body=body) 
     
-    logging.info('send comment out !')
+    logging.info('sent out !')
 
     return HttpResponse('ok')
 
