@@ -4,6 +4,7 @@
 from utils import config
 from django.template.loader import get_template
 from django.template import Context
+
 #from string import Template
 import logging
 import re
@@ -53,6 +54,20 @@ def prepare_email_text(mail_key, student,course):
     subject = subject_t.render(c)    #jen prvni radek!
     body = body_t.render(c)    
     
+#    from django.utils.safestring import mark_safe, SafeUnicode
+#    logging.info(type(subject))
+#    logging.info(type(unicode(subject)))
+
+#    x = u'%s'%(unicode(subject))
+#    x = u'xxš'.encode('utf8')
+
+ #   logging.info(type(x))
+#    logging.info(u'šěčxxx')
+
+
+#    subject = mark_safe(subject)
+#    subject = unicode(subject)
+#    logging.info(unicode(SafeUnicode(subject).decode('utf8')))
     
     return (subject,body)
 #    s = config.getConfigString('ENROLL_%s_SUBJECT'%mail_key,'')
