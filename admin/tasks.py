@@ -72,7 +72,7 @@ def send_student_email(request):
 #    logging.info(sss)
 #    logging.info(body.encode('utf8'))
 
-#    gmail.send_mail(sender=sender, reply_to=reply_to, to=recipient, subject=subject,body=body) 
+    gmail.send_mail(sender=sender, reply_to=reply_to, to=recipient, subject=subject,body=body) 
     
     logging.info('send comment out !')
 

@@ -1,1 +1,1 @@
-http://zapis.tsstarlet.net/zapis/potrdit/{{ student.confirm_key }}/
+http://zapis.tsstarlet.net/zapis/potvrdit/{{ student.confirm_key }}/

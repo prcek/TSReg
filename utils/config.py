@@ -112,10 +112,10 @@ def setupConfig():
     createConfig('ENROLL_CHECK_TIMEOUT_MINUTES','60')
     
 
-    from utils.mail import MAIL_TEMPLATES
-    for k in MAIL_TEMPLATES:
-        createConfig('ENROLL_%s_SUBJECT'%k,u'Předmět - %s'%k)
-        createConfig('ENROLL_%s_BODY'%k,u'Text - %s'%k)
+#    from utils.mail import MAIL_TEMPLATES
+#    for k in MAIL_TEMPLATES:
+#        createConfig('ENROLL_%s_SUBJECT'%k,u'Předmět - %s'%k)
+#        createConfig('ENROLL_%s_BODY'%k,u'Text - %s'%k)
    
     
 
