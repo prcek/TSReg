@@ -45,9 +45,15 @@ def send_student_email(request):
     logging.info('key ok')
 
     sender = cfg.getConfigString('ENROLL_EMAIL',None)
+    reply_to = cfg.getConfigString('ENROLL_REPLY_TO',None)
+
 
     if sender is None:
         logging.info('no sender, skip')
+        return HttpResponse('ok')
+        
+    if reply_to is None:
+        logging.info('no reply to !, skip')
         return HttpResponse('ok')
 
     if not mail.valid_email(student.email):
@@ -66,7 +72,7 @@ def send_student_email(request):
 #    logging.info(sss)
 #    logging.info(body.encode('utf8'))
 
-#    gmail.send_mail(sender, recipient, subject,body) 
+#    gmail.send_mail(sender=sender, reply_to=reply_to, to=recipient, subject=subject,body=body) 
     
     logging.info('send comment out !')
 

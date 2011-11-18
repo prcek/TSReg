@@ -106,6 +106,8 @@ def setupConfig():
     createConfig('ENROLL_ENROLL_ON', '0')
     createConfig('ENROLL_CHECK_URL_BASE', 'http://localhost:8080/zapis/potvrdit/')
     createConfig('ENROLL_EMAIL','info@appid.appspotmail.com')
+    createConfig('ENROLL_REPLY_TO','info@tsstarlet.net')
+
     createConfig('ENROLL_EMAIL_SIGNATURE','mail signature')
     createConfig('ENROLL_CHECK_TIMEOUT_MINUTES','60')
     
