@@ -35,7 +35,7 @@ Na uvedný e-mail budou odeslány instrukce k ověření přihlášky, bez kter�
 </div><br>
 
 <hr>
-{% if captcha_error %}  neplatný kód {% endif %}
+{% if captcha_error %} <div class='field_error'>slova byla opsána chybně, opiště je prosím znovu.</div> {% endif %}
 {% if html_captcha %} {{ html_captcha|safe }} {% endif %}
 <input type="submit" value="Odeslat"><br>
 
