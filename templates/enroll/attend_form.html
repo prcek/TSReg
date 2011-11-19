@@ -5,7 +5,7 @@
 <tr> <td {% if form.surname.errors %} class='field_error' {%endif%} >Příjmení (*):</td> <td colspan=3> {{ form.surname }} </td> </tr>
 <tr> <td>Student:</td> <td colspan=3> {{ form.student }}</td> </tr>
 {% if course.cost_mode == 'Period' %}
-<tr> <td>Celoroční:</td> <td colspan=3> {{ form.long_period }}</td> </tr>
+<tr> <td>Roční:</td> <td colspan=3> {{ form.long_period }}</td> </tr>
 {% endif %}
 <tr> <td {% if form.email.errors %} class='field_error' {%endif%}>E-mail (*):</td> <td colspan=3> {{ form.email }}</td> </tr>
 <tr> <td>Nezasílat reklamu:</td> <td colspan=3> {{ form.no_email_ad }}</td> </tr>

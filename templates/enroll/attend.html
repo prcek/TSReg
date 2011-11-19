@@ -16,6 +16,8 @@
 <h1 class='contentheading'> Přihláška do kurzu {{ course.code }} - {{ course.name }} </h1>
 <a  href='/zapis/'>zpět na výběr kurzu</a><br>
 <hr>
+{% include "enroll/cost_info.html" %}
+<hr>
 
 <form method="post" name="form">
 
