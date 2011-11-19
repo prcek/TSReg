@@ -777,6 +777,10 @@ def send_enroll_form_to_admin(request,test_id=None):
         raise Http404 
 
     logging.info('student=%s'%student)
+    
+    course = student.get_course()
+
+    logging.info('course=%s'%(course))
 
     sender = cfg.getConfigString('ENROLL_FORM_EMAIL_SENDER',None)
     to = cfg.getConfigString('ENROLL_FORM_EMAIL_TO',None)
@@ -788,9 +792,14 @@ def send_enroll_form_to_admin(request,test_id=None):
     if to is None:
         logging.info('no to')
         return HttpResponse('ok - no to, ignore')
+        
+        
+    logging.info('prepare text') 
+    (subject,body) = mail.prepare_email_text('ENROLL_FORM_REPORT', student,course)
+    logging.info('prepare text done')     
 
-    subject =  "online prihlaska" #cfg.getConfigString('ENROLL_FORM_EMAIL_SUBJECT',None)
-    body = "online prihlaska je v priloze" #cfg.getConfigString('ENROLL_FORM_EMAIL_SUBJECT',None)
+#    subject =  "online prihlaska" #cfg.getConfigString('ENROLL_FORM_EMAIL_SUBJECT',None)
+#    body = "online prihlaska je v priloze" #cfg.getConfigString('ENROLL_FORM_EMAIL_SUBJECT',None)
 
     filename = "prihlaska.pdf"
     out = cStringIO.StringIO()

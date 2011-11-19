@@ -1,0 +1,7 @@
+online přihláška, ref. kód {{student.ref_key}}
+do kurzu {{course.code}} - {{course.name}}
+jméno a přijmení: {{ student.name }} {{ student.surname }}
+email: {{ student.email }}
+{% if student.partner_ref_code %}
+ref. kód partnera: {{ student.partner_ref_code }}
+{% endif %}
