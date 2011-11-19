@@ -266,9 +266,6 @@ def attend_pair(request,course):
 
 
 
-    pass
-
-
 def attend(request,course_id):
 
 
@@ -285,6 +282,21 @@ def attend(request,course_id):
         return attend_pair(request,course)
     else:
         return attend_single(request,course)
+
+
+def attend_force_single(request,course_id):
+
+
+    if not config.getConfigBool('ENROLL_ENROLL_ON',False):
+        raise Http404
+
+    course = Course.get_by_id(int(course_id))
+    if course is None:
+        raise Http404
+    if not course.is_open():
+        raise Http404
+
+    return attend_single(request,course)
 
 
 def show(request,ref_code):
