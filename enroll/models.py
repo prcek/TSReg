@@ -428,6 +428,8 @@ class Student(BaseModel):
 
     @staticmethod
     def get_by_ref_key(rk):
+        if rk is None:
+            return None
         logging.info('ref_key: %s'%rk)
         id = Student.decode_ref_key(rk)
         logging.info('id: %s'%id)
@@ -457,6 +459,7 @@ class Student(BaseModel):
         if s.hidden:
             return None
         return s
+
 
 
 
@@ -495,7 +498,8 @@ class Student(BaseModel):
         return Student.all().filter('hidden',False).filter('course_key',str(course_key)).filter('status','e').order('reg_datetime')
 
 
-
+    def get_partner(self):
+        return Student.get_by_ref_key(self.partner_ref_code)    
     
     def course_code(self):
         return Course.get_code_by_key(self.course_key)

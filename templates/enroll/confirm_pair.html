@@ -1,0 +1,24 @@
+{% extends "enroll/base.html" %}
+
+{% block title %} TŠ Starlet - Zápis - Přihláška {% endblock %}
+
+{% block content %}
+
+
+{% if status %} 
+
+<h1 class='contentheading'> Potvrzení párové přihlásky do kurzu {{ course.code }} - {{ course.name }} </h1> 
+<div> Vaše párová přihláška {{ student1.ref_key }} a {{ student2.ref_key }} byla potvzena a čeká na zápis. </div>
+
+
+
+{% else %}
+
+<div> Potrzení s kódy {{ confirm_code1}} a {{ confirm_code2}} je neplatné </div>
+
+{% endif %}
+
+<a  href='/zapis/'>zpět na přehled kurzů</a>
+
+{% endblock %}
+

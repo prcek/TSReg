@@ -42,14 +42,14 @@ def process_template(templ, student, course, signature):
 #    text = s.safe_substitute(link=link,ref=ref,kurz=kurz,paticka=signature)
 #    return text   
 
-def prepare_email_text(mail_key, student,course):
+def prepare_email_text(mail_key, student,course,partner=None):
     subject_n = "email/%s_subject.txt"%mail_key
     body_n= "email/%s_body.txt"%mail_key
     
     subject_t = get_template(subject_n)
     body_t = get_template(body_n)
     
-    c = Context({"course": course, "student": student})
+    c = Context({"course": course, "student": student, "partner": partner})
 
     subject = subject_t.render(c)    #jen prvni radek!
     body = body_t.render(c)    

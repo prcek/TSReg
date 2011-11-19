@@ -351,4 +351,61 @@ def confirm(request,confirm_code):
 
     return render_to_response('enroll/confirm.html', RequestContext(request, { 'course': course, 'student':student, 'confirm_code':confirm_code, 'status':status }))
     
+
+def confirm_pair(request,confirm_code1,confirm_code2):
+    student1 = Student.get_by_confirm_key(confirm_code1)
+    if student1:
+        course = Course.get(student1.course_key) 
+    else:
+        course = None
+
+    student2 = Student.get_by_confirm_key(confirm_code2)
+
+    if (student1 is None) or (student2 is None) or (course is None):
+        status = False
+    else:
+        status = True
+
+    if status:
+        if student1.status == 'n':
+            if course.can_enroll():
+                student1.status = 'e'
+                student1.init_enroll()
+                student1.save()
+                plan_send_student_email('ENROLL_OK_PAY_REQUEST',student1)
+            else:
+                student1.status = 's'
+                student1.save()
+                plan_send_student_email('ENROLL_OK_SPARE',student1)
+               
+            plan_send_enroll_form(student1) 
+            status1 = True
+        
+        elif not student1.status in ['e','s']:
+            status1 = False
+            
+        if student2.status == 'n':
+            if course.can_enroll():
+                student2.status = 'e'
+                student2.init_enroll()
+                student2.save()
+                plan_send_student_email('ENROLL_OK_PAY_REQUEST',student2)
+            else:
+                student2.status = 's'
+                student2.save()
+                plan_send_student_email('ENROLL_OK_SPARE',student2)
+               
+            plan_send_enroll_form(student2) 
+
+            status2 = True
+        elif not student2.status in ['e','s']:
+            status2 = False
+
+
+            
+        status = status1 or status2            
+        if status:
+            plan_update_course(course)
+
+    return render_to_response('enroll/confirm_pair.html', RequestContext(request, { 'course': course, 'student1':student1, 'student2':student2, 'confirm_code1':confirm_code1, 'confirm_code2':confirm_code2 , 'status':status }))
         

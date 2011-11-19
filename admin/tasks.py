@@ -28,6 +28,7 @@ def send_student_email(request):
     logging.info('student=%s'%(student))
 
     course = student.get_course()
+    partner = student.get_partner()
 
     logging.info('course=%s'%(course))
 
@@ -63,7 +64,7 @@ def send_student_email(request):
     recipient = student.email.__str__()
 
     logging.info('prepare text') 
-    (subject,body) = mail.prepare_email_text(template_key, student,course)
+    (subject,body) = mail.prepare_email_text(template_key, student,course,partner)
     logging.info('prepare text done') 
 
 
@@ -779,6 +780,7 @@ def send_enroll_form_to_admin(request,test_id=None):
     logging.info('student=%s'%student)
     
     course = student.get_course()
+    partner = student.get_partner()
 
     logging.info('course=%s'%(course))
 
@@ -795,7 +797,7 @@ def send_enroll_form_to_admin(request,test_id=None):
         
         
     logging.info('prepare text') 
-    (subject,body) = mail.prepare_email_text('ENROLL_FORM_REPORT', student,course)
+    (subject,body) = mail.prepare_email_text('ENROLL_FORM_REPORT', student,course,partner)
     logging.info('prepare text done')     
 
 #    subject =  "online prihlaska" #cfg.getConfigString('ENROLL_FORM_EMAIL_SUBJECT',None)
