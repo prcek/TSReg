@@ -40,8 +40,8 @@ Pokud nemáte partnera či partnerku můžete podat jednoduchou přihlášku <a 
 Na uvedný e-mail budou odeslány instrukce k ověření přihlášky, bez kterého je přihláška neplatná.
 </div><br>
 
-
-{% if captcha_error %}  neplatný kód {% endif %}
+<hr>
+{% if captcha_error %} <div class='field_error'>slova byla opsána chybně, opiště je prosím znovu.</div> {% endif %}
 {% if html_captcha %} {{ html_captcha|safe }} {% endif %}
     
 <input type="submit" value="Odeslat">
