@@ -12,6 +12,8 @@ from enroll.views import get_offer_list2
 from utils import captcha
 from utils import config
 
+from admin.queue import plan_send_student_email, plan_update_course, plan_send_enroll_form
+
 import logging
 import os
 
@@ -42,12 +44,46 @@ class ConfirmForm(forms.Form):
     confirm_code = forms.CharField(label='potvrzovací kód', error_messages=ERROR_MESSAGES,required=False)
     
 def manual_confirm(request):
-
+    info=''
+    student=None
+    course=None
+    status=False
     if request.method == 'POST':
         form = ConfirmForm(request.POST)
         if form.is_valid():
-            pass
+            ref_code = form.cleaned_data['ref_code']
+            confirm_code = form.cleaned_data['confirm_code']
+            student = Student.get_by_ref_key(ref_code)
+            if student is None:
+                student = Student.get_by_confirm_key(confirm_code)
+            if student is None:
+                info = "Přihláška nenalezena"
+            else:
+                course = Course.get(student.course_key) 
+                if course is None:
+                    info = "Přihláška obsahuje neplatný kurz"
+                else:
+                    if student.status == 'n':
+                        if course.can_enroll():
+                            student.status = 'e'
+                            student.init_enroll()
+                            student.save()
+                            plan_send_student_email('ENROLL_OK_PAY_REQUEST',student)
+                            info = "Přihláška byla potvrzena a zařazena do kurzu"
+                        else:
+                            student.status = 's'
+                            student.save()
+                            plan_send_student_email('ENROLL_OK_SPARE',student)
+                            info = "Přihláška byla potvrzena a zařazena do kurzu mezi náhradníky"
+               
+                        plan_send_enroll_form(student) 
+                        plan_update_course(course)
+                        status=True
+                    elif student.status in ['e','s']:
+                        info = "Přihláška již byla potrzena"
+                    else:
+                        info = "Přihlášku již nelze potvrdit"
     else:
         form = ConfirmForm()
-    return render_to_response('admin/enroll_manual_confirm.html', RequestContext(request, { 'form':form }))
+    return render_to_response('admin/enroll_manual_confirm.html', RequestContext(request, { 'form':form, 'student':student, 'course':course, 'status':status, 'info':info }))
     

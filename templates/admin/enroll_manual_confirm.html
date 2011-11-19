@@ -8,6 +8,9 @@ Manuální potvrzení online přihlášky<br>
 Zadej referenční kód přihlášky, nebo potvrzovací kód.<br>
 U párové přihlášky je třeba potvrdit obě přihlásky.<br>
 
+
+
+
 <form method="post" name="form">
 <table>
 {{ form.as_table }}
@@ -15,5 +18,17 @@ U párové přihlášky je třeba potvrdit obě přihlásky.<br>
 <input class="button" type="submit" value="potrdit">
 <a class='button' href='../'>zpět</a>
 </form>
+
+
+{% if student %}
+ Jméno a přijmení:   {{ student.name }} {{ student.surname }} <br>
+{% endif %}
+
+{% if course %}
+ Kurz:   {{ course.code }} {{ course.name }} <br>
+{% endif %}
+
+{{ info }}
+
 {% endblock %}
 
