@@ -9,7 +9,11 @@
         <h2 class='contentheading'>{{f.folder.public_name}}</h2>
             <table class="table1">
             <tbody>
-            <tr><th width="15%">Termín</th><th width="25%">Kurz</th><th width="15%">Místo</th><th width="15%">Lektor</th><th width="15%">Zahájení</th><th width="15%"></th></tr>
+              {% if preview %}
+              <tr><th width="10%">Termín</th><th width="20%">Kurz</th><th width="10%">Místo</th><th width="10%">Lektor</th><th width="10%">Zahájení</th><th width="10%"></th><th width="30%">info</th></tr>
+                {% else %}
+              <tr><th width="15%">Termín</th><th width="25%">Kurz</th><th width="15%">Místo</th><th width="15%">Lektor</th><th width="15%">Zahájení</th><th width="15%"></th></tr>
+                {% endif %}
             {% for c in f.courses %}
             <tr><td>{{c.period}}</td><td>{{c.code}} - {{c.name}}</td><td>{{c.place}}</td><td>{{c.teacher}}</td><td>{{c.first_period}}</td>
                 <td>
@@ -17,12 +21,17 @@
                         zápis pozastaven
                     {% else %}
                         {% if preview %}
-                        přihlásit
+                        zápis povolen
                         {% else %}
                         <a href='kurz/{{c.key.id}}/'>přihlásit</a>
                         {% endif %}
                     {% endif %}
                 </td>
+                {% if preview %}
+                <td>
+                    typ zapisu:{{c.group_mode_loc}}, kapacita: {{c.usage}} (p: {{c.stat_e_m}}, d: {{c.stat_e_f}}), náhr: {{c.pending}}
+                </td>
+                {% endif %}
             </tr>
             {% endfor %}
             </tbody>
