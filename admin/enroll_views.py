@@ -30,9 +30,9 @@ def index(request):
 
 
     if 'enable' in request.GET:
-    	config.setConfigBool('ENROLL_ENROLL_ON',True)
+        config.setConfigBool('ENROLL_ENROLL_ON',True)
     if 'disable' in request.GET:
-    	config.setConfigBool('ENROLL_ENROLL_ON',False)
+        config.setConfigBool('ENROLL_ENROLL_ON',False)
 
 
     enroll_on =  config.getConfigBool('ENROLL_ENROLL_ON',False)

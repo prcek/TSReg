@@ -856,11 +856,11 @@ def email(request,student_id,course_id=None):
     if student is None:
         raise Http404
     course = student.get_course()
-
+    partner = student.get_partner()
 
     emails = []
     for k in mail.MAIL_TEMPLATE_KEYS:
-        (subject,body) = mail.prepare_email_text(k, student,course)
+        (subject,body) = mail.prepare_email_text(k, student,course,partner)
         emails.append({'key':k, 'subject':subject, 'body':body}) 
 
     return render_to_response('admin/students_email.html', RequestContext(request, {

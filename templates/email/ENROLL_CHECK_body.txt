@@ -1,7 +1,11 @@
 Dobrý den, 
 
 děkujeme za Vás zájem o taneční kurzy v TŠ Starlet.   
+{% if partner %}
+Vaše párová přihláška (ref. kódy {{ student.ref_key }} a {{ partner.ref_key }}) do kurzu:
+{% else %}
 Vaše přihláška (ref. kód {{ student.ref_key }}) do kurzu:
+{% endif %}
 
 {% include "email/course_info.txt" %}
 
