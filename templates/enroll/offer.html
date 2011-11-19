@@ -28,8 +28,9 @@
                     {% endif %}
                 </td>
                 {% if preview %}
-                <td>
+                <td class='nowrap'>
                     typ zapisu:{{c.group_mode_loc}}, kapacita: {{c.usage}} (p: {{c.stat_e_m}}, d: {{c.stat_e_f}}), náhr: {{c.pending}}
+                    cena: {% if c.cost_sale %} {{ c.cost_sa }} / {{ c.cost_sb }} SLEVA {% else %} {{ c.cost_a }} / {{ c.cost_b }} {% endif %}
                 </td>
                 {% endif %}
             </tr>
