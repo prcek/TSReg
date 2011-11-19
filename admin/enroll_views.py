@@ -16,6 +16,7 @@ import logging
 import os
 
 
+ERROR_MESSAGES={'required': 'Položka musí být vyplněna', 'invalid': 'Neplatná hodnota'}
 
 
 def index(request):
@@ -36,5 +37,17 @@ def index(request):
 
     return render_to_response('admin/enroll_index.html', RequestContext(request, { 'offer':offer , 'preview':True, 'enroll_on':enroll_on}))
 
+class ConfirmForm(forms.Form):
+    ref_code = forms.CharField(label='referenční kód', error_messages=ERROR_MESSAGES,required=False)
+    confirm_code = forms.CharField(label='potvrzovací kód', error_messages=ERROR_MESSAGES,required=False)
     
-        
+def manual_confirm(request):
+
+    if request.method == 'POST':
+        form = ConfirmForm(request.POST)
+        if form.is_valid():
+            pass
+    else:
+        form = ConfirmForm()
+    return render_to_response('admin/enroll_manual_confirm.html', RequestContext(request, { 'form':form }))
+    

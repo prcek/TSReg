@@ -80,6 +80,7 @@ urlpatterns = patterns('admin',
 
     
     (r'^zapis/$', 'enroll_views.index'), 
+    (r'^zapis/manual_confirm/$', 'enroll_views.manual_confirm'), 
 
     (r'^email/$', 'email_views.index'),
     (r'^email/add/$', 'email_views.create'),
