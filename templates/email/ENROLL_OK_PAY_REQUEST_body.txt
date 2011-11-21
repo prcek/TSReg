@@ -7,7 +7,7 @@ Jméno: {{ student.name }} {{student.surname}}
 Cena: {{ student.course_cost }}kč
  
 Vaše místo v kurzu je rezervováno následujích 7 dní. Pokud k přihlášce
-nebude po této době přižazena platba, bude místo nabídnuto dalším zájemcům.
+nebude po této době přiřazena platba, bude místo nabídnuto dalším zájemcům.
 
 V případě podání přihlášky týden před zahájením kurzu rozhoduje o zařazení
 do kurzu datum platby.
