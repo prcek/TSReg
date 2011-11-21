@@ -383,6 +383,8 @@ def confirm_pair(request,confirm_code1,confirm_code2):
         
         elif not student1.status in ['e','s']:
             status1 = False
+        else:
+            status1 = True
             
         if student2.status == 'n':
             if course.can_enroll():
@@ -400,7 +402,9 @@ def confirm_pair(request,confirm_code1,confirm_code2):
             status2 = True
         elif not student2.status in ['e','s']:
             status2 = False
-
+        else:
+            status2 = True
+ 
 
             
         status = status1 or status2            

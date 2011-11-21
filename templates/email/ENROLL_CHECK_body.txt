@@ -1,6 +1,6 @@
 Dobrý den, 
 
-děkujeme za Vás zájem o taneční kurzy v TŠ Starlet.   
+děkujeme za Váš zájem o taneční kurzy v TŠ Starlet.   
 {% if partner %}
 Vaše párová přihláška (ref. kódy {{ student.ref_key }} a {{ partner.ref_key }}) do kurzu:
 {% else %}
