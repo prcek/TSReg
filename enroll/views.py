@@ -31,7 +31,7 @@ YEAR_CHOICES = [
 ERROR_MESSAGES={'required': 'Položka musí být vyplněna', 'invalid': 'Neplatná hodnota'}
 
 
-for x in range(1900,2011):
+for x in reversed(range(1900,2011)):
     YEAR_CHOICES.append((x,x))
 
 class EnrollForm(forms.Form):
@@ -49,6 +49,7 @@ class EnrollForm(forms.Form):
     city = forms.CharField(label='město', error_messages=ERROR_MESSAGES, required=False)
     post_code = forms.CharField(label='psč', error_messages=ERROR_MESSAGES, required=False)
 #    partner = forms.CharField(label='ref. kód partnera', error_messages=ERROR_MESSAGES, required=False)
+#    comment = forms.CharField(label='poznámka', error_messages=ERROR_MESSAGES, required=False, widget=forms.Textarea(attrs={'cols':30, 'rows':3}))
     comment = forms.CharField(label='poznámka', error_messages=ERROR_MESSAGES, required=False)
 
     def clean_addressing(self):

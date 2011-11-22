@@ -200,4 +200,7 @@ h2.contentheading {
     width:130px;
 }
 
+#id_comment, #id_p1-comment, #id_p2-comment {
+    width:220px;
+}
 
