@@ -36,21 +36,21 @@ for x in reversed(range(1900,2011)):
 
 class EnrollForm(forms.Form):
     addressing = forms.CharField(label='oslovení', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=ADDRESSING_CHOICES))
-    name = forms.CharField(label='jméno', error_messages=ERROR_MESSAGES)
-    surname = forms.CharField(label='příjmení', error_messages=ERROR_MESSAGES)
-    email = forms.EmailField(label='email', error_messages=ERROR_MESSAGES)
+    name = forms.CharField(label='jméno', error_messages=ERROR_MESSAGES, max_length=30)
+    surname = forms.CharField(label='příjmení', error_messages=ERROR_MESSAGES, max_length=30)
+    email = forms.EmailField(label='email', error_messages=ERROR_MESSAGES, max_length=100)
     no_email_ad = forms.BooleanField(label='nezasílat reklamu', error_messages=ERROR_MESSAGES, required=False)
-    phone = forms.CharField(label='telefon', error_messages=ERROR_MESSAGES, required=False)
+    phone = forms.CharField(label='telefon', error_messages=ERROR_MESSAGES, required=False, max_length=30)
     student = forms.BooleanField(label='student', error_messages=ERROR_MESSAGES, required=False)
     long_period = forms.BooleanField(label='celoroční', error_messages=ERROR_MESSAGES, required=False)
     year = forms.IntegerField(label='rok', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=YEAR_CHOICES))
-    street = forms.CharField(label='ulice', error_messages=ERROR_MESSAGES, required=False)
-    street_no = forms.CharField(label='číslo', error_messages=ERROR_MESSAGES, required=False)
-    city = forms.CharField(label='město', error_messages=ERROR_MESSAGES, required=False)
-    post_code = forms.CharField(label='psč', error_messages=ERROR_MESSAGES, required=False)
+    street = forms.CharField(label='ulice', error_messages=ERROR_MESSAGES, required=False, max_length=50)
+    street_no = forms.CharField(label='číslo', error_messages=ERROR_MESSAGES, required=False, max_length=20)
+    city = forms.CharField(label='město', error_messages=ERROR_MESSAGES, required=False, max_length=30)
+    post_code = forms.CharField(label='psč', error_messages=ERROR_MESSAGES, required=False, max_length=10)
 #    partner = forms.CharField(label='ref. kód partnera', error_messages=ERROR_MESSAGES, required=False)
 #    comment = forms.CharField(label='poznámka', error_messages=ERROR_MESSAGES, required=False, widget=forms.Textarea(attrs={'cols':30, 'rows':3}))
-    comment = forms.CharField(label='poznámka', error_messages=ERROR_MESSAGES, required=False)
+    comment = forms.CharField(label='poznámka', error_messages=ERROR_MESSAGES, required=False, max_length=100)
 
     def clean_addressing(self):
         data = self.cleaned_data['addressing']
