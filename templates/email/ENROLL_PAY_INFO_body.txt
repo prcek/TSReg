@@ -1,0 +1,16 @@
+Dobrý den,
+
+ve Vaší přihlášce (ref. kód {{ student.ref_key }}) do kurzu:
+
+{% include "email/course_info.txt" %}
+
+došlo ke změně platebních informací.
+
+Kurzovné:  {{ student.course_cost }}kč
+Přijaté platby:  {{ student.paid }}kč
+Doplatek:  {{ student.balance_due }}kč
+
+V případě nesrovnalostí nás prosím kontaktujte.
+
+{% include "email/signature.txt" %}
+

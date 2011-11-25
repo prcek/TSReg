@@ -83,7 +83,8 @@
             <td class='nowrap'>
                 {% if not s.x_pair_empty_slot %}
 {% if request.auth_info.edit %}
-                <a class='button' href='{{s.key.id}}/edit/'>editovat</a>
+                <a class='button' href='{{s.key.id}}/edit/'>edit</a>
+                <a class='button' href='{{s.key.id}}/pay/'>platba</a>
 {% endif %}
                 <a class='button' href='{{s.key.id}}/view/'>zobrazit</a>
 
@@ -192,7 +193,8 @@
             <td class='nowrap'>
               {% if not s.x_pair_empty_slot %}
 {% if request.auth_info.edit %}
-                <a class='button' href='{{s.key.id}}/edit/'>editovat</a>
+                <a class='button' href='{{s.key.id}}/edit/'>edit</a>
+                <a class='button' href='{{s.key.id}}/pay/'>platba</a>
 {% endif %}
                 <a class='button' href='{{s.key.id}}/view/'>zobrazit</a>
 

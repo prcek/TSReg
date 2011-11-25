@@ -927,6 +927,56 @@ def view(request,student_id,course_id=None):
     }))
 
 
+class PayInfoForm(forms.Form):
+    course_cost = forms.IntegerField(label='kurzovné', error_messages=ERROR_MESSAGES)
+    paid = forms.IntegerField(label='platba', error_messages=ERROR_MESSAGES)
+    discount = forms.CharField(label='sleva', error_messages=ERROR_MESSAGES, required=False)
+    pay_info = forms.CharField(label='platební info', error_messages=ERROR_MESSAGES, required=False)
+    send_info = forms.BooleanField(label='odeslat info o platbě', error_messages=ERROR_MESSAGES, required=False)
+
+@ar_edit
+def pay(request, student_id, course_id=None):
+    student = Student.get_by_id(int(student_id))
+    if student is None:
+        raise Http404
+    course = student.get_course()
+
+    
+    if request.method == 'POST':
+        form = PayInfoForm(request.POST)
+        if form.is_valid():
+            logging.info('pay student before %s'% student)
+            student.course_cost = form.cleaned_data['course_cost']
+            student.paid = form.cleaned_data['paid']
+            student.discount = form.cleaned_data['discount']
+            student.pay_info = form.cleaned_data['pay_info']
+            student.mark_as_modify()
+            student.save()
+            logging.info('pay student after %s'% student)
+
+            if form.cleaned_data['send_info']:
+                logging.info('plan send info email')
+                plan_send_student_email('ENROLL_PAY_INFO', student)
+
+
+            course_id = student.get_course_id()
+            logging.info('student course_id = %s'%(course_id))
+            plan_update_course(course_id)
+
+
+            return redirect('../..')
+            
+    else:
+        data = {'course_cost':student.course_cost, 'paid':student.paid, 'discount':student.discount, 'pay_info':student.pay_info,'send_info': (not student.no_email_notification)}
+        form = PayInfoForm(data)
+
+    return render_to_response('admin/students_pay.html', RequestContext(request, {
+        'student':student,'course':course, 'form':form
+    }))
+
+
+
+
 class EmailSelectForm(forms.Form):
     include_enroll = forms.BooleanField(label='zapsané', error_messages=ERROR_MESSAGES, required=False)
     include_spare = forms.BooleanField(label='náhradníky', error_messages=ERROR_MESSAGES, required=False)
