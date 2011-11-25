@@ -11,6 +11,7 @@ from google.appengine.api import taskqueue
 import admin.inflector as inflector
 
 from admin.student_sort import sort_students_single, sort_students_school, sort_students_pair, sort_students_spare_single, sort_students_spare_school, sort_students_spare_pair
+from admin.queue import plan_send_student_email
 
 from utils.data import dump_to_csv
 import cStringIO
@@ -335,6 +336,12 @@ def transfer_student(student_id, course):
 
     student.set_course_key(str(course.key()))
     student.save()
+
+    try:
+        plan_send_student_email('ENROLL_TRANSFER', student)
+    except:
+        logging.info('email problem...')
+
     
 
 def transfer_students(request):
