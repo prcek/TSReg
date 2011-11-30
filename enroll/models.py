@@ -510,6 +510,10 @@ class Student(BaseModel):
     def list_for_course_enrolled(course_key):
         return Student.all().filter('hidden',False).filter('course_key',str(course_key)).filter('status','e').order('reg_datetime')
 
+    @staticmethod
+    def list_for_course_kicked(course_key):
+        return Student.all().filter('hidden',False).filter('course_key',str(course_key)).filter('status','k').order('reg_datetime')
+
 
     def get_partner(self):
         return Student.get_by_ref_key(self.partner_ref_code)    

@@ -8,7 +8,7 @@ from django.template import RequestContext,Context, loader
 
 from enroll.models import Student,Course,Season
 from admin.queue import plan_send_student_email, plan_update_course, plan_job_transfer_students, plan_job_card_for_students, plan_job_invitation_for_students, plan_job_makecopy_students, plan_job_cardout_for_students, plan_job_hide_students
-from admin.student_sort import sort_students_single, sort_students_school, sort_students_pair, sort_students_spare_single, sort_students_spare_school, sort_students_spare_pair
+from admin.student_sort import sort_students_single, sort_students_school, sort_students_pair, sort_students_spare_single, sort_students_spare_school, sort_students_spare_pair, sort_students_kicked
 import utils.config as cfg
 import utils.mail as mail
 import utils.pdf as pdf
@@ -231,6 +231,24 @@ def index_course(request, course_id):
         'course': course,
         'student_list_to_enroll': student_list_to_enroll,  
         'student_list_enrolled': student_list_enrolled,  
+    }))
+
+def index_course_kicked(request, course_id):
+    course = Course.get_by_id(int(course_id))  
+    if course is None:
+        raise Http404
+
+
+
+
+    student_list=Student.list_for_course_kicked(course.key())
+
+    student_list = sort_students_kicked(student_list)
+    
+
+    return render_to_response('admin/course_students_kicked.html', RequestContext(request, { 
+        'course': course,
+        'student_list': student_list,  
     }))
 
 
@@ -873,7 +891,7 @@ def enroll(request,student_id,course_id=None):
     if student is None:
         raise Http404
 
-    if student.status == 's':
+    if (student.status == 's') or (student.status == 'k'):
         student.status = 'e'
         student.mark_as_modify()
         student.init_enroll()

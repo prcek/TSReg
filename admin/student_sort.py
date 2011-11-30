@@ -47,7 +47,8 @@ def diffclass(s1,s2):
  
     return False
 
-
+def sort_students_kicked(students):
+    return sort_students_single(students)
 
 def sort_students_spare_single(students):
     return sort_students_single(students)

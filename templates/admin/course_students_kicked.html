@@ -1,0 +1,82 @@
+
+{% extends "admin/base.html" %}
+
+{% block title %} Administrace zápisu {% endblock %}
+
+{% block content %}
+
+
+{% if course %}
+
+    {% include "admin/course_info_box.html" %}
+
+{% endif %}
+
+<br><br>
+
+    <a class='button' href='../'>zpět</a>
+
+{% if student_list %}
+    <br><br>vyřazené přihlášky<br>
+    <table>
+    <tr>
+        <th>stav</th>
+        <th>čas přihlášky</th>
+        <th>kurz</th>
+        <th>sezóna</th>
+        <th>referenční číslo</th>
+        <th>oslovení</th>
+        <th>jméno</th>
+        <th>příjmení</th>
+        <th>email</th>
+        <th>telefon</th>
+        <th>rok</th>
+        <th>ulice</th>
+        <th>číslo</th> 
+        <th>město</th>
+        <th>psč</th> 
+        <th>partner</th>
+        <th>poznámka</th> 
+        <th>operace</th>
+    </tr>
+    {% for s in student_list %}
+        <tr class='autohover'>
+            <td>{{s.status_loc}}</td>
+            <td>{{s.reg_datetime|shortdatetime}}</td>
+            <td>{{s.course_code}}</td>
+            <td>{{s.course_season}}</td>
+            <td>{{s.ref_key}}</td>
+            <td>{{s.addressing_loc}}</td>
+            <td>{{s.name}}</td>
+            <td>{{s.surname}}</td>
+            <td>{{s.email|nonone}}</td>
+            <td>{{s.phone|nonone}}</td>
+            <td>{% if s.year %}{{s.year}}{% else %}&nbsp;{%endif%}</td>
+            <td>{{s.street|nonone}}</td>
+            <td>{{s.street_no|nonone}}</td>
+            <td>{{s.city|nonone}}</td>
+            <td>{{s.post_code|nonone}}</td>
+            <td>{{s.partner_ref_code|nonone}}</td>
+            <td>{{s.comment|nonone}}</td>
+            <td>
+{% if request.auth_info.edit %}
+                <a class='button' href='../{{s.key.id}}/enroll/'>zapsat</a>
+                <a class='button' href='../{{s.key.id}}/spare/'>nahradnik</a>
+{% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+{% else %}
+    <br><br><div> žádné vyřazené přihlášky</div>
+{% endif %}
+
+<script type="text/javascript">
+
+        new TOOLS.autoHover('autohover','highlight');
+
+</script>
+
+
+{% endblock %}
+
