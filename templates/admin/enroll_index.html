@@ -1,11 +1,12 @@
 
 {% extends "admin/base.html" %}
 
-{% block title %} Náhled zápisu {% endblock %}
+{% block title %} přehled nepotrzených přihlášek {% endblock %}
 
 {% block content %}
     <a class='button' href='.'>přenačíst</a>
     <a class='button' href='manual_confirm/'>ruční potvrzení přihlášky</a>
+    <a class='button' href='confirm_list/'>nepotrzené přihlášky</a>
     {% if enroll_on %}
         <h1> Online zápis je POVOLEN </h1>
     	<a class='button' href='?disable'>zakázat</a>

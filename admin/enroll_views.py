@@ -39,11 +39,16 @@ def index(request):
 
     return render_to_response('admin/enroll_index.html', RequestContext(request, { 'offer':offer , 'preview':True, 'enroll_on':enroll_on}))
 
+def confirm_list(request):
+    cl = Student.list_for_confirm(); 
+    return render_to_response('admin/enroll_confirm_list.html', RequestContext(request, { 'list':cl }))
+
+
 class ConfirmForm(forms.Form):
     ref_code = forms.CharField(label='referenční kód', error_messages=ERROR_MESSAGES,required=False)
     confirm_code = forms.CharField(label='potvrzovací kód', error_messages=ERROR_MESSAGES,required=False)
     
-def manual_confirm(request):
+def manual_confirm(request,ref_code=None):
     info=''
     student=None
     course=None
@@ -84,6 +89,9 @@ def manual_confirm(request):
                     else:
                         info = "Přihlášku již nelze potvrdit"
     else:
-        form = ConfirmForm()
+        if ref_code is None:
+            form = ConfirmForm()
+        else:
+            form = ConfirmForm({'ref_code':ref_code})
     return render_to_response('admin/enroll_manual_confirm.html', RequestContext(request, { 'form':form, 'student':student, 'course':course, 'status':status, 'info':info }))
     
