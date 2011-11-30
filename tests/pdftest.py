@@ -65,6 +65,9 @@ class FakeStudent():
         return "season"
     def course_code(self):
         return "code"
+    def course_name(self):
+        return "name"
+
 
     def addressing_loc(self):
         return "osl."

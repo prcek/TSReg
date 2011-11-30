@@ -71,10 +71,10 @@ def getStyleSheet():
     stylesheet.add(ParagraphStyle(name='Title',
                                   parent=stylesheet['Normal'],
                                   fontName = 'DejaVuSansBold',
-                                  fontSize=18,
-                                  leading=22,
+                                  fontSize=10,
+                                  leading=10,
                                   alignment=TA_CENTER,
-                                  spaceAfter=6),
+                                  spaceAfter=2),
                    )
     stylesheet.add(ParagraphStyle(name='Post',
                                   fontName='DejaVuSansMono',
@@ -242,10 +242,10 @@ def students_enroll(output,students):
         if rd is None:
             rd = '?'
         else:
-            rd = rd.strftime("%Y-%m-%d")
+            rd = rd.strftime("%d.%m.%Y %H:%M")
 
         elements.append(Paragraph(u"Přihláška %s"%(escape(s.ref_key)),styleT))
-        elements.append(Paragraph(u"dne %s, kurz %s %s"%(escape(rd),escape(s.course_code()),escape(s.course_season())),styleT))
+        elements.append(Paragraph(u"čas %s, kurz %s %s %s"%(escape(rd),escape(s.course_code()),escape(s.course_name()),escape(s.course_season())),styleT))
         if s.student:
             stu = 'Ano'
         else:
