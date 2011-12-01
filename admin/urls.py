@@ -80,6 +80,7 @@ urlpatterns = patterns('admin',
     (r'^zaci/$', 'student_views.index'),
     (r'^zaci/add/$', 'student_views.create'),
     (r'^zaci/(?P<student_id>\d+)/edit/$', 'student_views.edit'),
+    (r'^zaci/(?P<student_id>\d+)/pay/$', 'student_views.pay'),
     (r'^zaci/(?P<student_id>\d+)/email/$', 'student_views.email'),
 
     

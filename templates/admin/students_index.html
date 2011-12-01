@@ -57,7 +57,8 @@
             <td>{{s.comment|nonone}}</td>
             <td>
 {% if request.auth_info.edit %}
-                <a class='button' href='{{s.key.id}}/edit/'>editovat</a>
+                <a class='button' href='{{s.key.id}}/edit/'>edit</a>
+                <a class='button' href='{{s.key.id}}/pay/'>platba</a>
 {% endif %}
                 <a class='button' href='../kurzy/{{s.get_course_id}}/zaci/'>kurz</a>
             </td>
