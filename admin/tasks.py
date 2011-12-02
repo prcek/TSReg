@@ -80,6 +80,8 @@ def send_student_email(request):
     logging.info('sender [%s]'%(sender))
     logging.info('reply_to [%s]'%(sender))
     logging.info('recipient [%s]'%(recipient))
+    if not (bcc is None):
+        logging.info('bcc [%s]'%(bcc))
 
     if bcc is None:
         logging.info('no bcc !, ignore bcc header')
