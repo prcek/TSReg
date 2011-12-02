@@ -48,6 +48,7 @@ def send_student_email(request):
 
     sender = cfg.getConfigString('ENROLL_EMAIL',None)
     reply_to = cfg.getConfigString('ENROLL_REPLY_TO',None)
+    bcc = cfg.getConfigString('ENROLL_BCC',None)
 
 
     if sender is None:
@@ -57,6 +58,7 @@ def send_student_email(request):
     if reply_to is None:
         logging.info('no reply to !, skip')
         return HttpResponse('ok')
+
 
     if not mail.valid_email(student.email):
         logging.info('no valid student email')
@@ -74,7 +76,16 @@ def send_student_email(request):
 #    logging.info(sss)
 #    logging.info(body.encode('utf8'))
 
-    gmail.send_mail(sender=sender, reply_to=reply_to, to=recipient, subject=subject,body=body) 
+
+    logging.info('sender [%s]'%(sender))
+    logging.info('reply_to [%s]'%(sender))
+    logging.info('recipient [%s]'%(recipient))
+
+    if bcc is None:
+        logging.info('no bcc !, ignore bcc header')
+        gmail.send_mail(sender=sender, reply_to=reply_to, to=recipient, subject=subject,body=body) 
+    else:
+        gmail.send_mail(sender=sender, reply_to=reply_to, bcc=bcc, to=recipient, subject=subject,body=body) 
     
     logging.info('sent out !')
 
