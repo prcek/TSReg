@@ -826,7 +826,7 @@ def send_enroll_form_to_admin(request,test_id=None):
     filename = "prihlaska.pdf"
     out = cStringIO.StringIO()
     from utils.pdf import students_enroll
-    students_enroll(out,[student])
+    students_enroll(out,[student],with_partner=True)
     data=out.getvalue()
 
     gmail.send_mail(sender=sender, to=to,subject=subject,body=body,attachments=[(filename,data)])

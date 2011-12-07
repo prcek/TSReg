@@ -1149,6 +1149,6 @@ def enroll_as_pdf(request, course_id):
     students.extend(student_list_enrolled)
     students.extend(student_list_to_enroll)
 
-    students_enroll(r,students)
+    students_enroll(r,students,with_partner=False)
     return r
 

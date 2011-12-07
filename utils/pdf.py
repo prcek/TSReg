@@ -228,7 +228,7 @@ def students_table(output,course,students):
     doc.build(elements)
 
 
-def students_enroll(output,students):
+def students_enroll(output,students,with_partner=False):
     doc = SimpleDocTemplate(output, pagesize=landscape(A6) ,leftMargin=1*cm, rightMargin=1*cm, topMargin=1*cm, bottomMargin=1*cm, showBoundary=0)
     styles = getStyleSheet()
     styleN = styles['Normal']
@@ -266,7 +266,15 @@ def students_enroll(output,students):
             data.append(['škola',"%s, %s"%(s.school,s.school_class)])
 
         if (not s.partner_ref_code is None) and s.partner_ref_code != '':
-            data.append(['partner',s.partner_ref_code])
+            if with_partner:
+                par = s.get_partner()
+                if not (par is None):
+                    parn = "%s %s"%(nonone(par.name),nonone(par.surname))
+                else:
+                    parn = " ?"          
+                data.append(['partner',"%s %s"%(s.partner_ref_code, parn)])
+            else:    
+                data.append(['partner',s.partner_ref_code])
     
         if (not s.comment is None) and (s.comment != ''):
             data.append(['poznámka',s.comment])
