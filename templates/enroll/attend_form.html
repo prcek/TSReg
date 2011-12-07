@@ -14,6 +14,10 @@
 <tr> <td>Město:</td> <td colspan=3> {{ form.city }} </td> </tr>
 <tr> <td>PSČ:</td> <td colspan=3> {{ form.post_code }}</td> </tr>
 <tr> <td>Telefon:</td> <td colspan=3> {{ form.phone }}</td> </tr>
+{% if course.group_mode == 'School' %}
+<tr> <td>Škola:</td> <td colspan=3> {{ form.school }} </td> </tr>
+<tr> <td>Třída:</td> <td colspan=3> {{ form.school_class}}</td> </tr>
+{% endif %}
 <tr> <td>Poznámka:</td> <td colspan=3> {{ form.comment }}</td> </tr>
 </table>
 

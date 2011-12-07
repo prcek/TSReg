@@ -204,3 +204,11 @@ h2.contentheading {
     width:220px;
 }
 
+#id_school, #id_p1-school, #id_p2-school {
+    width:220px;
+}
+
+#id_school_class, #id_p1-school_class, #id_p2-school_class {
+    width:100px;
+}
+

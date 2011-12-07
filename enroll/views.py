@@ -48,6 +48,8 @@ class EnrollForm(forms.Form):
     street_no = forms.CharField(label='číslo', error_messages=ERROR_MESSAGES, required=False, max_length=20)
     city = forms.CharField(label='město', error_messages=ERROR_MESSAGES, required=False, max_length=30)
     post_code = forms.CharField(label='psč', error_messages=ERROR_MESSAGES, required=False, max_length=10)
+    school = forms.CharField(label='škola', error_messages=ERROR_MESSAGES, required=False, max_length=50)
+    school_class = forms.CharField(label='třída', error_messages=ERROR_MESSAGES, required=False, max_length=15)
 #    partner = forms.CharField(label='ref. kód partnera', error_messages=ERROR_MESSAGES, required=False)
 #    comment = forms.CharField(label='poznámka', error_messages=ERROR_MESSAGES, required=False, widget=forms.Textarea(attrs={'cols':30, 'rows':3}))
     comment = forms.CharField(label='poznámka', error_messages=ERROR_MESSAGES, required=False, max_length=100)
@@ -154,6 +156,8 @@ def form2student(form,course):
     st.street_no = form.cleaned_data['street_no']
     st.city = form.cleaned_data['city']
     st.post_code = form.cleaned_data['post_code']
+    st.school = form.cleaned_data['school']
+    st.school_class = form.cleaned_data['school_class']
     st.comment = form.cleaned_data['comment']
     #st.partner_ref_code = form.cleaned_data['partner']
 
