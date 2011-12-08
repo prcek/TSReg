@@ -7,6 +7,7 @@ from django.template import RequestContext,Context, loader
 import utils.config as cfg
 import utils.mail as mail
 from admin.models import EMailList
+from admin.queue import plan_send_multimail
 import re
 import logging
 
@@ -132,6 +133,16 @@ def delete(request, el_id):
     el.delete()
     return redirect('../..')
 
+def test_send(request, el_id):
+    el  = EMailList.get_by_id(int(el_id))
+    if el is None:
+        raise Http404
+
+    l = list(el.emails)
+    
+    plan_send_multimail(l,'doc_key')
+
+    return redirect('../..')
 
 EA_CHOICES=(
     ('email_nop','----- zvol operaci -----'),
@@ -149,7 +160,6 @@ class EMailActionForm(forms.Form):
         self.fields['list_key']._set_choices(EMailList.get_EMAILLIST_CHOICES())
 
 
- 
 
 def action(request, el_id):
     el  = EMailList.get_by_id(int(el_id))
@@ -200,4 +210,6 @@ def action(request, el_id):
      'result':result,
      'result_detail':result_detail,
     }) ) 
+
+
 

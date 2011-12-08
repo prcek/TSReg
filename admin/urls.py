@@ -95,6 +95,7 @@ urlpatterns = patterns('admin',
     (r'^email/(?P<el_id>\d+)/action/$', 'email_views.action'),
     (r'^email/(?P<el_id>\d+)/edit/$', 'email_views.edit'),
     (r'^email/(?P<el_id>\d+)/del/$', 'email_views.delete'),
+    (r'^email/(?P<el_id>\d+)/test_send/$', 'email_views.test_send'),
 
 
 

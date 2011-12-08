@@ -40,6 +40,14 @@ def plan_send_enroll_form(student):
 
     taskqueue.add(url='/task/send_enroll_form_to_admin/', params={'student_id':student.key().id()})
 
+def plan_send_multimail(recipients,doc_key):
+    logging.info('multimail job')
+    taskqueue.add(queue_name='email',url='/task/plan_multimail/', params={'recipients':recipients,'doc_key':doc_key})
+
+def plan_send_mail(recipient,doc_key):
+    logging.info('single mail job %s %s'%(recipient,doc_key))
+    taskqueue.add(queue_name='email', url='/task/send_mail/', params={'recipient':recipient,'doc_key':doc_key})
+
 
 def plan_update_course(course):
     if not course is None:
@@ -136,4 +144,5 @@ def plan_job_hide_students(owner,student_ids,course):
     logging.info('job_id %d'%(job.key().id())) 
 
     return job.key().id()
+
 

@@ -1,0 +1,6 @@
+queue:
+- name: default
+  rate: 2/s
+
+- name: email
+  rate: 10/m

@@ -11,7 +11,7 @@ from google.appengine.api import taskqueue
 import admin.inflector as inflector
 
 from admin.student_sort import sort_students_single, sort_students_school, sort_students_pair, sort_students_spare_single, sort_students_spare_school, sort_students_spare_pair
-from admin.queue import plan_send_student_email
+from admin.queue import plan_send_student_email, plan_send_multimail, plan_send_mail
 
 from utils.data import dump_to_csv
 import cStringIO
@@ -93,6 +93,30 @@ def send_student_email(request):
 
     return HttpResponse('ok')
 
+
+def plan_multimail(request):
+    logging.info(request.POST)
+    recipients = request.POST.getlist('recipients')
+    doc_key = request.POST['doc_key']
+  
+    if (recipients is None) or (len(recipients)==0):
+        return HttpResponse('error')
+    if len(recipients)==1:
+        plan_send_mail(recipients[0],doc_key)     
+    else:
+        sp = len(recipients)/2
+        plan_send_multimail(recipients[:sp],doc_key)
+        plan_send_multimail(recipients[sp:],doc_key)
+        
+ 
+    return HttpResponse('ok')
+
+def send_mail(request):
+    logging.info(request.POST)
+    recipient = request.POST['recipient']
+    doc_key = request.POST['doc_key']
+    logging.info('fake email to %s'%(recipient)) 
+    return HttpResponse('ok')
 
 def _obs_send_check_email(request):
     logging.info(request.POST)
