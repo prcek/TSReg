@@ -591,7 +591,7 @@ class Student(BaseModel):
         if self.paid is None:
             return False
 
-        if self.course_cost == self.paid:
+        if self.course_cost <= self.paid:
             return True
         return False
         
