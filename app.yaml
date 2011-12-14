@@ -1,5 +1,5 @@
 application: ts-zapis
-version: 7c-test
+version: 7d-test
 runtime: python
 api_version: 1
 
@@ -14,8 +14,8 @@ builtins:
 - remote_api: on
 - deferred: on     
 
-#inbound_services:
-#- mail
+inbound_services:
+- mail
 
 handlers:
 - url: /static
@@ -46,10 +46,9 @@ handlers:
 #  script: files.py
 #  login: admin
 
-#- url: /_ah/mail/.+
-#  script: inmail.py
-#  login: admin
-
+- url: /_ah/mail/.+
+  script: inmail.py
+  login: admin
 
 - url: /cron/.*
   script: main.py
