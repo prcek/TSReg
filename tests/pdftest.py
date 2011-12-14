@@ -7,6 +7,7 @@ os.chdir('../')
 sys.path.insert(0,'.')
 
 import utils.pdf
+import datetime
 
 os.chdir('tests/')
 
@@ -41,32 +42,32 @@ class FakeStudent():
     x_no = 1
     x_class_no = 1
     x_pair_no = 1
-    reg_datetime = None
-    ref_key='ref_key'
-    surname='surename'
-    name='name'
-    email = 'mail'
-    phone = 'telf'
-    course_cost = '1234'
-    paid = '9999'
+    reg_datetime = datetime.datetime.utcnow()
+    ref_key='B4U7F2K9L2'
+    surname=u'Vomáčka'
+    name=u'Jaroslav'
+    email = 'jarda@vomackovi.cz'
+    phone = '794145457'
+    course_cost = '1199'
+    paid = '1199'
     pay_info ="XX/1234"
     discount = 'dův'
-    school = 'skola'
-    school_class = 'trida'
-    city='mesto'
-    post_code = 'psc'
-    street = 'ulice'
+    school = u'Střední škola VOM'
+    school_class = '4.C'
+    city='Brblov'
+    post_code = '45687'
+    street = 'Mastná'
     street_no = '37a'
-    comment = 'poznamka'
+    comment = u'já se moc těším'
     student = False
     student_check = False
-    partner_ref_code = 'pref'
+    partner_ref_code = 'Partner XYZ'
     def course_season(self):
         return "season"
     def course_code(self):
-        return "code"
+        return "S51"
     def course_name(self):
-        return "name"
+        return u"Základní"
 
 
     def addressing_loc(self):
@@ -118,7 +119,11 @@ def test_students_card():
 
 def test_students_enroll():
     student = FakeStudent()
-    utils.pdf.students_enroll('students_enroll.pdf',3*[student])
+    student2 = FakeStudent()
+    student2.reg_datetime = datetime.datetime.utcnow()
+
+    student2.comment = "0123456778890123 sadjklfh kjashkashdjkfh kasdhfawehlkrh we  we iwheih ask jk a klskdj kwkjakejrfh wka ek akjh "
+    utils.pdf.students_enroll_new('students_enroll.pdf',[student])
     
 
 if __name__ == "__main__":
