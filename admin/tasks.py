@@ -858,3 +858,8 @@ def send_enroll_form_to_admin(request,test_id=None):
 
 
     return HttpResponse('ok')
+
+
+def incoming_email(request):
+    logging.info(request.POST)
+    return HttpResponse('ok')

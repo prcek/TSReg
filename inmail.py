@@ -21,6 +21,15 @@ class LogSenderHandler(InboundMailHandler):
         data = mail_message.original.as_string(unixfrom=True)
         logging.info(data)
 
+        file_name = files.blobstore.create(mime_type='text/plain')
+        with files.open(file_name, 'a') as out:
+            out.write(data)
+        files.finalize(file_name)
+        blob_key = files.blobstore.get_blob_key(file_name)
+        logging.info('blob key %s'%blob_key)
+
+        taskqueue.add(url='/task/incoming_email/', params={'blob_key':blob_key})
+
 def main():
     application = webapp.WSGIApplication([LogSenderHandler.mapping()], debug=True)
     run_wsgi_app(application)
