@@ -595,6 +595,18 @@ class Student(BaseModel):
             return True
         return False
         
+    def is_cp(self):
+        if self.course_cost is None:
+            return True 
+        if self.course_cost == 0:
+            return True
+        if self.paid is None:
+            return False
+
+        if self.course_cost == self.paid:
+            return True
+        return False
+
     def is_pp(self):
         if self.course_cost is None:
             return False

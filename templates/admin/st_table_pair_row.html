@@ -11,9 +11,9 @@
             <td>{{s.email|nonone}}</td>
             <td>{{s.phone|nonone}}</td>
             <td>{{s.student|anone}}</td>
-            <td {% if not s.is_fp %} class='not_paid' {% endif %}>{{s.course_cost|nonone}}</td>
-            <td {% if not s.is_fp %} class='not_paid' {% endif %}>{{s.paid|nonone}}</td>
-            <td {% if not s.is_fp %} class='not_paid' {% endif %}>{{s.balance_due|nonone}}</td>
+            <td {% if not s.is_cp %} class='not_paid' {% endif %}>{{s.course_cost|nonone}}</td>
+            <td {% if not s.is_cp %} class='not_paid' {% endif %}>{{s.paid|nonone}}</td>
+            <td {% if not s.is_cp %} class='not_paid' {% endif %}>{{s.balance_due|nonone}}</td>
             <td>{{s.discount|nonone}}</td>
             <td>{{s.pay_info|nonone}}</td>
             <td>{{s.card_out|anone}}</td>
