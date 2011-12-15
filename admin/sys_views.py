@@ -5,6 +5,7 @@ from django.template import RequestContext,Context, loader
 import utils.config as cfg
 from utils import cache
 
+from enroll.models import Course,Folder,Season
 import logging
 
 def index(request):
@@ -48,4 +49,16 @@ def config_setup(request):
 def flush_cache(request):
     r = cache.flush_all()
     return HttpResponse('ok %s'%(r))
-    
+
+def all_courses(request):
+
+########## hromadne vypnuti slevy
+    course_list=Course.list()
+    for c in course_list: 
+        if c.cost_sale:
+            logging.info('course %s sale off'%(c.code))
+            c.cost_sale = False
+            c.save()
+#############
+
+    return HttpResponse('ok')    
