@@ -268,7 +268,7 @@ def students_table(output,course,students):
     doc.build(elements)
 
 
-def students_enroll(output,students,with_partner=False):
+def students_enroll_old(output,students,with_partner=False):
     doc = SimpleDocTemplate(output, pagesize=landscape(A6) ,leftMargin=1*cm, rightMargin=1*cm, topMargin=1*cm, bottomMargin=1*cm, showBoundary=0)
     styles = getStyleSheet()
     styleN = styles['Normal']
@@ -342,7 +342,7 @@ def students_enroll(output,students,with_partner=False):
     doc.build(elements)
 
 
-def students_enroll_new(output,students,with_partner=False):
+def students_enroll(output,students,with_partner=False):
     doc = SimpleDocTemplate(output, pagesize=landscape(A6) ,leftMargin=1*cm, rightMargin=1*cm, topMargin=1*cm, bottomMargin=0.5*cm, showBoundary=0)
     styles = getStyleSheet()
 
