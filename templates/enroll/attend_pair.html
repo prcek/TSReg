@@ -15,13 +15,13 @@
 
 
 <h1 class='contentheading'> Párová přihláška do kurzu {{ course.code }} - {{ course.name }} </h1>
-<a  href='/zapis/'>zpět na výběr kurzu</a><br>
-Pokud nemáte partnera či partnerku můžete podat jednoduchou přihlášku <a href='s/'>zde</a><br>
-<hr>
+<a  href='/zapis/'>zpět na výběr kurzu</a><br/>
+Pokud nemáte partnera či partnerku můžete podat jednoduchou přihlášku <a href='s/'>zde</a><br/>
+<hr/>
 {% include "enroll/cost_info.html" %}
-<hr>
+<hr/>
 
-<form method="post" name="form">
+<form method="post" name="form" action=".">
 
 <table width='100%'>
 <tr><th>partner</th><th>partnerka</th></tr>
@@ -36,15 +36,15 @@ Pokud nemáte partnera či partnerku můžete podat jednoduchou přihlášku <a 
 
 
 <div class='small_info'>
-(*) povinný údaj<br>
+(*) povinný údaj<br/>
 Na uvedný e-mail budou odeslány instrukce k ověření přihlášky, bez kterého je přihláška neplatná.
-</div><br>
+</div><br/>
 
-<hr>
+<hr/>
 {% if captcha_error %} <div class='field_error'>slova byla opsána chybně, opiště je prosím znovu.</div> {% endif %}
 {% if html_captcha %} {{ html_captcha|safe }} {% endif %}
     
-<input type="submit" value="Odeslat">
+<input type="submit" value="Odeslat"/>
 
 
 <div class='small_info'>Odesláním přihlášky souhlasím s používáním mých osobních údajů Taneční školou Starlet pro vnitřní administrativní účely a beru na vědomí, že budu Taneční školou Starlet pomocí mé e-mailové adresy informován o případných změnách v průběhu kurzu a o akcích, které se tanečního kurzu týkají.</div>
