@@ -3,9 +3,9 @@
 {% block title %} edit config {% endblock %}
 
 {% block content %}
-<form method="post" name="form">
+<form method="post" name="form" action=".">
 {{ form.as_p }}
-<input class="button" type="submit" value="update">
+<input class="button" type="submit" value="update"/>
 </form>
 {% endblock %}
 
