@@ -3,11 +3,11 @@
 {% block title %} Založení kategorie {% endblock %}
 
 {% block content %}
-<form method="post" name="form">
+<form method="post" name="form" action=".">
 <table>
 {{ form.as_table }}
 </table>
-<input class="button" type="submit" value="založit kategorii">
+<input class="button" type="submit" value="založit kategorii"/>
 <a class='button' href='..'>zpět</a>
 </form>
 {% endblock %}

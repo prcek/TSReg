@@ -12,7 +12,7 @@
  
 {% endif %}
 
-    <br><br>
+    <br/><br/>
 
 
 {% with course.group_mode as mode %}
@@ -28,12 +28,12 @@
     <a class='button' href='pdf_enroll'>tisknout přihlášky</a>
     <a class='button' href='.'>přenačíst</a>
 
-    <br><br>
-    <form action="op/" method="POST">
+    <br/><br/>
+    <form action="op/" method="post">
     <table>
 {% if student_list_to_enroll %}
     <tr>
-        <td colspan=2></td>
+        <td colspan="2"></td>
         {% with 'Náhradníci' as text %}
         {% if mode == 'Single' %}
         {% include "admin/st_table_single_sep_line.html" %}
@@ -98,7 +98,7 @@
         </tr>
     {% endfor %}
     <tr>
-        <td colspan=2>
+        <td colspan="2">
             <div class="check-area">
                 <input id="select-s" type="checkbox" />
                 <label for="select-s">vše</label>
@@ -120,7 +120,7 @@
 
 {% else %}
     <tr>
-        <td colspan=2></td>
+        <td colspan="2"></td>
         {% with 'Žádný náhradník' as text %}
         {% if mode == 'Single' %}
         {% include "admin/st_table_single_sep_line.html" %}
@@ -140,7 +140,7 @@
 
 {% if student_list_enrolled %}
     <tr>
-        <td colspan=2></td>
+        <td colspan="2"></td>
         {% with 'Žáci zapsaní do kurzu' as text %}
         {% if mode == 'Single' %}
         {% include "admin/st_table_single_sep_line.html" %}
@@ -208,7 +208,7 @@
         </tr>
     {% endfor %}
     <tr>
-        <td colspan=2>
+        <td colspan="2">
             <div class="check-area">
                 <input id="select-e" type="checkbox" />
                 <label for="select-e">vše</label>
@@ -230,7 +230,7 @@
     </tr>
 {% else %}
     <tr>
-        <td colspan=2></td>
+        <td colspan="2"></td>
         {% with 'Kurz je prázdný' as text %}
         {% if mode == 'Single' %}
         {% include "admin/st_table_single_sep_line.html" %}
@@ -270,7 +270,7 @@
 {% endif %}
 
         </select>
-        <input class="button" type="submit" value="provést">
+        <input class="button" type="submit" value="provést"/>
         (s označenýma)
     </div>
 

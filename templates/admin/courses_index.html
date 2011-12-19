@@ -5,21 +5,21 @@
 
 {% block content %}
 
-<form method="post" name="form">
+<form method="post" name="form" action=".">
 <table>
 {{ form.as_table }}
 </table>
-<input class="button" type="submit" value="zobrazit">
+<input class="button" type="submit" value="zobrazit"/>
 </form>
 
 {% if request.auth_info.admin %}
-    <br>
+    <br/>
     <a class='button' href='?all=1'>bez filtru</a>
 {% endif %}
 
 
 {% if course_list %}
-    <br><br>Přehled kurzů<br>
+    <br/><br/>Přehled kurzů<br/>
 
     <table>
     <tr>
@@ -98,7 +98,7 @@
     </table>
 {% else %}
 {% endif %}
-    <br><br>
+    <br/><br/>
 
 {% if request.auth_info.edit %}
     <a class='button' href='add'>přidat kurz</a>

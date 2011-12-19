@@ -1,9 +1,9 @@
 {% if s.x_pair_first %}
-            <td rowspan=2>{{s.x_pair_no}}</td>
+            <td rowspan="2">{{s.x_pair_no}}</td>
 {% endif %}
 
 {% if s.x_pair_empty_slot %}
-            <td colspan=14>&nbsp;</td>
+            <td colspan="14">&nbsp;</td>
 {% else %}
             <td>{{s.enroll_datetime|shortdatetime}}</td>
             <td>{{s.addressing_loc}}</td>

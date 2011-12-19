@@ -5,16 +5,16 @@
 
 {% block content %}
 
-<br>Vyhledání žáka<br>
-<form method="post" name="form">
+<br/>Vyhledání žáka<br/>
+<form method="post" name="form" action=".">
 <table>
 {{ form.as_table }}
 </table>
-<input class="button" type="submit" value="hledat">
+<input class="button" type="submit" value="hledat"/>
 </form>
 
 {% if student_list %}
-    <br><br>Nalezení žáci<br>
+    <br/><br/>Nalezení žáci<br/>
     <table>
     <tr>
         <th>stav</th>
@@ -68,7 +68,7 @@
 {% endif %}
 
 {% if not_found %}
-    <br><br><div> nenalezeno </div>
+    <br/><br/><div> nenalezeno </div>
 {% endif %}
 
 <script type="text/javascript">

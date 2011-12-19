@@ -6,12 +6,12 @@
 {% block content %}
     <a class='button' href='.'>přenačíst</a>
 
-    <br><br>Přehled úloh<br>
+    <br/><br/>Přehled úloh<br/>
 
     <table>
 
 {% if jobs %}
-    <tr> <td colspan=8> aktivní </td></tr>
+    <tr> <td colspan="8"> aktivní </td></tr>
     <tr>
         <th>aktivní</th>
         <th>vlastník</th>
@@ -38,11 +38,11 @@
         </tr>
     {% endfor %}
 {% else %}
-    <tr> <td colspan=8> žádné aktivní </td></tr>
+    <tr> <td colspan="8"> žádné aktivní </td></tr>
 {% endif %}
 
 {% if e_jobs %}
-    <tr> <td colspan=8> chybové </td></tr>
+    <tr> <td colspan="8"> chybové </td></tr>
     <tr>
         <th>aktivní</th>
         <th>vlastník</th>
@@ -69,7 +69,7 @@
         </tr>
     {% endfor %}
 {% else %}
-    <tr> <td colspan=8> žádné chybové</td></tr>
+    <tr> <td colspan="8"> žádné chybové</td></tr>
 {% endif %}
 
     </table>
