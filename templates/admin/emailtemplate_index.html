@@ -1,0 +1,40 @@
+
+{% extends "admin/base.html" %}
+
+{% block title %} Administrace zápisu {% endblock %}
+
+{% block content %}
+    <a class='button' href='add/'>přidat šablonu</a>
+    <a class='button' href='.'>přenačíst</a>
+
+    <br/><br/>Přehled šablon emailů<br/>
+
+{% if list %}
+    <table>
+    <tr>
+        <th>název</th>
+        <th>popis</th>
+        <th>operace</th>
+    </tr>
+    {% for i in list %}
+        <tr>
+            <td>{{i.name}}</td>
+            <td>{{i.desc}}</td>
+            <td>
+                <a class='button' href='{{i.key.id}}/'>zobrazit</a>
+                <a class='button' href='{{i.key.id}}/edit/'>editovat</a>
+{% if request.auth_info.admin %}
+                <a class='button' href='{{i.key.id}}/test_send/'>test_send</a>
+{% endif %}
+                <a class='cbutton' href='{{i.key.id}}/del/'>smazat</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+{% else %}
+    žádný seznam<br/>
+{% endif %}
+
+
+{% endblock %}
+

@@ -98,6 +98,12 @@ urlpatterns = patterns('admin',
     (r'^email/(?P<el_id>\d+)/del/$', 'email_views.delete'),
     (r'^email/(?P<el_id>\d+)/test_send/$', 'email_views.test_send'),
 
+    (r'^email_sablony/$', 'emailtemplate_views.index'),
+    (r'^email_sablony/add/$', 'emailtemplate_views.create'),
+    (r'^email_sablony/(?P<et_id>\d+)/$', 'emailtemplate_views.show'),
+    (r'^email_sablony/(?P<et_id>\d+)/edit/$', 'emailtemplate_views.edit'),
+    (r'^email_sablony/(?P<et_id>\d+)/del/$', 'emailtemplate_views.delete'),
+    (r'^email_sablony/(?P<et_id>\d+)/test_send/$', 'emailtemplate_views.test_send'),
 
 
     (r'^import/$', 'import_views.index'),

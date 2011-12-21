@@ -286,4 +286,19 @@ class EMailList(BaseModel):
         return res
 
 
+class EMailTemplate(BaseModel):
+    name = db.StringProperty()
+    desc = db.StringProperty()
+    valid = db.BooleanProperty(default=False)
+    locked = db.BooleanProperty(default=False)
+    locked_datetime = db.DateTimeProperty()
+    data = db.BlobProperty()
+    data_datetime = db.DateTimeProperty()
+    data_size = db.IntegerProperty(default=0)
+
+    @staticmethod
+    def list_all():
+        return EMailTemplate.all().order('name')
+
+    
 

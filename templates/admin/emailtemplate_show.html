@@ -1,0 +1,18 @@
+
+{% extends "admin/base.html" %}
+
+{% block title %} Administrace zápisu {% endblock %}
+
+{% block content %}
+    <a class='button' href='.'>přenačíst</a>
+    <a class='button' href='..'>zpět na přehled</a>
+
+{% if et %}
+    <br><br>šablona <b>{{ et.name }}</b>  - {{ et.desc }}<br>
+ {% else %}
+    žádný seznam<br>
+{% endif %}
+
+
+{% endblock %}
+
