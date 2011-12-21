@@ -2,6 +2,7 @@
 
 from appengine_django.models import BaseModel
 from google.appengine.ext import db
+from google.appengine.api.app_identity import get_application_id
 import datetime
 import logging
 import random
@@ -291,7 +292,6 @@ class EMailTemplate(BaseModel):
     desc = db.StringProperty()
     valid = db.BooleanProperty(default=False)
     locked = db.BooleanProperty(default=False)
-    locked_datetime = db.DateTimeProperty()
     data = db.BlobProperty()
     data_datetime = db.DateTimeProperty()
     data_size = db.IntegerProperty(default=0)
@@ -300,5 +300,11 @@ class EMailTemplate(BaseModel):
     def list_all():
         return EMailTemplate.all().order('name')
 
-    
+    def import_email(self):
+        return "import-email-%d@%s.%s"%(self.key().id(),get_application_id(),'appspotmail.com')
+ 
+
+    def setData(self,data):
+        self.data_datetime = datetime.datetime.utcnow()
+#TODO set data and data_size
 

@@ -16,11 +16,12 @@ ERROR_MESSAGES={'required': 'Položka musí být vyplněna', 'invalid': 'Neplatn
 
 
 class EMailTemplateForm(forms.ModelForm):
-    name = forms.CharField()
-    desc = forms.CharField(required=False)
+    name = forms.CharField(label='název')
+    desc = forms.CharField(label='popis',required=False)
+    locked = forms.BooleanField(label='zámek', required=False)
     class Meta:
         model = EMailTemplate
-        fields = ( 'name','desc' )
+        fields = ( 'name','desc','locked' )
 
 def index(request):
     ets = EMailTemplate.list_all()

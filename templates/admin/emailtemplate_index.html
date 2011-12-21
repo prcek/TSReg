@@ -12,14 +12,24 @@
 {% if list %}
     <table>
     <tr>
+        <th>platná</th>
+        <th>zamčena</th>
         <th>název</th>
         <th>popis</th>
+        <th>import adresa</th>
+        <th>datum importu</th>
+        <th>velikost</th>
         <th>operace</th>
     </tr>
     {% for i in list %}
         <tr>
+            <td>{{i.valid|anone}}</td>
+            <td>{{i.locked|anone}}</td>
             <td>{{i.name}}</td>
             <td>{{i.desc}}</td>
+            <td><a href='mailto:{{i.import_email}}'>{{i.import_email}}</a></td>
+            <td>{{i.data_datetime|shortdatetime}}</td>
+            <td>{{i.data_size}}</td>
             <td>
                 <a class='button' href='{{i.key.id}}/'>zobrazit</a>
                 <a class='button' href='{{i.key.id}}/edit/'>editovat</a>
