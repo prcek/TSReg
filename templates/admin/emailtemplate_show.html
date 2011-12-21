@@ -8,9 +8,13 @@
     <a class='button' href='..'>zpět na přehled</a>
 
 {% if et %}
-    <br><br>šablona <b>{{ et.name }}</b>  - {{ et.desc }}<br>
+    <br/><br/>šablona <b>{{ et.name }}</b>  - {{ et.desc }}</br>
+    <hr/>
+    <pre>
+    {{et.data}}
+    </pre>
  {% else %}
-    žádný seznam<br>
+    žádný seznam<br/>
 {% endif %}
 
 
