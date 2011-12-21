@@ -3,16 +3,20 @@
 from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from enroll.models import Student,Course
-from admin.models import Job,Card,Invitation,CourseBackup
+from admin.models import Job,Card,Invitation,CourseBackup,EMailTemplate
+from email.utils import parseaddr
 import utils.config as cfg
 import utils.mail as mail
+from google.appengine.ext import blobstore
 from google.appengine.api import mail as gmail
+from google.appengine.api.mail import EmailMessage
 from google.appengine.api import taskqueue
 import admin.inflector as inflector
 
 from admin.student_sort import sort_students_single, sort_students_school, sort_students_pair, sort_students_spare_single, sort_students_spare_school, sort_students_spare_pair
 from admin.queue import plan_send_student_email, plan_send_multimail, plan_send_mail
 
+import re
 from utils.data import dump_to_csv
 import cStringIO
 
@@ -859,7 +863,48 @@ def send_enroll_form_to_admin(request,test_id=None):
 
     return HttpResponse('ok')
 
+def process_incoming_email_template(template_id, data):
+    logging.info('processing incoming email template')
+    et = EMailTemplate.get_by_id(int(template_id))
+    if et is None:
+        logging.info('template not found')
+        return
+
+    if et.locked:
+        logging.info('template is locked')
+        return
+
+    et.setData(data)
+
+    et.save()
+
+    logging.info('template updated and closed')
+
+
+
 
 def incoming_email(request):
     logging.info(request.POST)
-    return HttpResponse('ok')
+    fk = request.POST['blob_key']
+    logging.info("fk = %s"%(fk))
+    blob_info = blobstore.BlobInfo.get(fk)
+    if not blob_info:
+        return HttpResponse('error - no blob')
+
+    blob_reader = blob_info.open()
+    data = blob_reader.read()
+
+    logging.info('email fetch ok')
+    email = EmailMessage(data)
+    a_to = parseaddr(email.to)[1]
+    a_from = parseaddr(email.sender)[1]
+    logging.info('email.to=%s'%a_to) 
+    logging.info('email.sender=%s'%a_from) 
+
+    r = re.match(r'^import-email-(\d+)@',a_to) 
+    if r:
+        logging.info('import email, id %s'%r.group(1))
+        process_incoming_email_template(r.group(1),data)
+        return HttpResponse("ok - import email")
+ 
+    return HttpResponse('ok - ign')

@@ -306,5 +306,8 @@ class EMailTemplate(BaseModel):
 
     def setData(self,data):
         self.data_datetime = datetime.datetime.utcnow()
+        self.data = data
+        self.data_size = len(data)
+        self.locked = True
 #TODO set data and data_size
 
