@@ -329,6 +329,9 @@ def action_course(request,course_id):
         if op == 'action_email':
             return action_do_email(request, source_course=course, student_ids = all_sel)
 
+        if op == 'action_enrollform':
+            return action_do_enrollform(request, source_course=course, student_ids = all_sel)
+
         if op == 'action_extra':
             return action_do_extra(request, source_course=course, student_ids = all_sel)
 
@@ -511,6 +514,30 @@ def action_do_email(request, source_course=None, student_ids=None):
     }))
  
 
+def action_do_enrollform(request, source_course=None, student_ids=None):
+    logging.info('student_ids = %s'%student_ids)
+
+    if source_course is None:
+        raise Http404
+
+
+
+    studs = []
+    studs.extend(Student.list_for_course_to_enroll(source_course.key()))
+    studs.extend(Student.list_for_course_enrolled(source_course.key()))
+
+    studs = filter(lambda x: str(x.key().id()) in student_ids,studs)
+        
+    r =  HttpResponse(mimetype='application/pdf')
+    file_name = urllib.quote((u"prihlasky_%s.pdf"%source_course.code).encode('utf8'))
+    logging.info(file_name)
+    r['Content-Disposition'] = "attachment; filename*=UTF-8''%s"%file_name
+    from utils.pdf import students_enroll,students_enroll_multi
+
+    students_enroll_multi(r,studs,with_partner=True)
+    return r
+
+ 
 
 @ar_edit
 def action_do_transfer(request, source_course=None, student_ids=None, target_course=None, target_season=None):
