@@ -1140,7 +1140,7 @@ def enroll_as_pdf(request, course_id):
     file_name = urllib.quote((u"prihlasky_%s.pdf"%course.code).encode('utf8'))
     logging.info(file_name)
     r['Content-Disposition'] = "attachment; filename*=UTF-8''%s"%file_name
-    from utils.pdf import students_enroll
+    from utils.pdf import students_enroll,students_enroll_multi
 
     student_list_to_enroll=Student.list_for_course_to_enroll(course.key())
     student_list_enrolled=Student.list_for_course_enrolled(course.key())
@@ -1149,6 +1149,6 @@ def enroll_as_pdf(request, course_id):
     students.extend(student_list_enrolled)
     students.extend(student_list_to_enroll)
 
-    students_enroll(r,students,with_partner=False)
+    students_enroll_multi(r,students,with_partner=False)
     return r
 

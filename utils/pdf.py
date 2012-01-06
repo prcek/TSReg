@@ -536,10 +536,23 @@ def students_enroll_element(s,with_partner=False):
     return t
 
 def students_enroll_multi(output,students,with_partner=False):
+    styles = getStyleSheet()
+
+    styleH = styles['EnrollHeading']
+ 
     doc = SimpleDocTemplate(output, pagesize=landscape(A4) ,leftMargin=1*cm, rightMargin=1*cm, topMargin=1*cm, bottomMargin=0.5*cm, showBoundary=0)
     elist = []
     for s in students:
         elist.append(students_enroll_element(s,with_partner))
+
+
+    elements = []
+    if len(elist)==0:
+        elements.append(Paragraph(u"žádná data",styleH))
+        doc.build(elements)
+        return
+
+
 
     line=[]
     data=[]
@@ -555,6 +568,8 @@ def students_enroll_multi(output,students,with_partner=False):
    
     rows = len(data) 
 
+
+
     cw = ((landscape(A4)[0])-2*cm)/2
     rh = ((landscape(A4)[1])-2*cm)/2
     
@@ -564,7 +579,6 @@ def students_enroll_multi(output,students,with_partner=False):
             ('VALIGN',(0,0),(-1,-1),'TOP'),
     ])
 
-    elements = []
     elements.append(t)
  
     doc.build(elements)
