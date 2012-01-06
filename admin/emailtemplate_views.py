@@ -6,7 +6,7 @@ from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext,Context, loader
 import utils.config as cfg
 import utils.mail as mail
-from admin.models import EMailTemplate
+from admin.models import EMailTemplate,EMailJob
 from admin.queue import plan_send_multimail
 from google.appengine.api.mail import EmailMessage
 from admin.email_views import EMailListField, EMailListWidget
@@ -136,7 +136,12 @@ def multi_send(request, et_id):
            
             logging.info('list size %d'%(els_c))
             if els_c > 0: 
-                plan_send_multimail(els,et_id)
+
+                ej = EMailJob()
+                ej.setData(els,et.data)
+                ej.save()
+
+                plan_send_multimail(els,ej.key().id())
                 return redirect('../..')
     else:
         form = EMailMultiForm()

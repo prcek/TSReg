@@ -40,13 +40,13 @@ def plan_send_enroll_form(student):
 
     taskqueue.add(url='/task/send_enroll_form_to_admin/', params={'student_id':student.key().id()})
 
-def plan_send_multimail(recipients,et_id):
+def plan_send_multimail(recipients,ej_id):
     logging.info('multimail job')
-    taskqueue.add(queue_name='email',url='/task/plan_multimail/', params={'recipients':recipients,'et_id':et_id})
+    taskqueue.add(queue_name='email',url='/task/plan_multimail/', params={'recipients':recipients,'ej_id':ej_id})
 
-def plan_send_mail(recipient,et_id):
+def plan_send_mail(recipient,ej_id):
     logging.info('single mail job %s '%(recipient))
-    taskqueue.add(queue_name='email', url='/task/send_mail/', params={'recipient':recipient,'et_id':et_id})
+    taskqueue.add(queue_name='email', url='/task/send_mail/', params={'recipient':recipient,'ej_id':ej_id})
 
 
 def plan_update_course(course):

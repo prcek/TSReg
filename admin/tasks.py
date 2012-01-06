@@ -3,7 +3,7 @@
 from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from enroll.models import Student,Course
-from admin.models import Job,Card,Invitation,CourseBackup,EMailTemplate
+from admin.models import Job,Card,Invitation,CourseBackup,EMailTemplate,EMailJob
 from email.utils import parseaddr
 import utils.config as cfg
 import utils.mail as mail
@@ -102,19 +102,19 @@ def send_student_email(request):
 def plan_multimail(request):
     logging.info(request.POST)
     recipients = request.POST.getlist('recipients')
-    et_id = request.POST['et_id']
+    ej_id = request.POST['ej_id']
 
-    if (et_id is None):
+    if (ej_id is None):
         return HttpResponse('error')
   
     if (recipients is None) or (len(recipients)==0):
         return HttpResponse('error')
     if len(recipients)==1:
-        plan_send_mail(recipients[0],et_id)     
+        plan_send_mail(recipients[0],ej_id)     
     else:
         sp = len(recipients)/2
-        plan_send_multimail(recipients[:sp],et_id)
-        plan_send_multimail(recipients[sp:],et_id)
+        plan_send_multimail(recipients[:sp],ej_id)
+        plan_send_multimail(recipients[sp:],ej_id)
         
  
     return HttpResponse('ok')
@@ -122,19 +122,19 @@ def plan_multimail(request):
 def send_mail(request):
     logging.info(request.POST)
     recipient = request.POST['recipient']
-    et_id = request.POST['et_id']
+    ej_id = request.POST['ej_id']
 
     logging.info('fake email to %s'%(recipient)) 
-    logging.info('et_id %s'%et_id)
+    logging.info('ej_id %s'%ej_id)
 
 
 
-    et  = EMailTemplate.get_by_id(int(et_id))
-    if et is None:
-        return HttpResponse('missing et')
+    ej  = EMailJob.get_by_id(int(ej_id))
+    if ej is None:
+        return HttpResponse('missing ej')
  
     try:
-        email = EmailMessage(et.data)
+        email = EmailMessage(ej.data)
 
         email.sender = cfg.getConfigString('ENROLL_EMAIL',None)
         email.reply_to = cfg.getConfigString('ENROLL_REPLY_TO',None)

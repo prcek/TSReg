@@ -286,6 +286,16 @@ class EMailList(BaseModel):
             res.append((l.key().__str__(),l.name))
         return res
 
+class EMailJob(BaseModel):
+    data = db.BlobProperty()
+    recipients = db.StringListProperty()
+    create_datetime = db.DateTimeProperty()
+    def setData(self,emails,data):
+        self.data=data
+        self.recipients = emails
+        self.create_datetime = datetime.datetime.utcnow()
+
+     
 
 class EMailTemplate(BaseModel):
     name = db.StringProperty()
