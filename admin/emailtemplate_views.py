@@ -10,6 +10,7 @@ from admin.models import EMailTemplate
 from admin.queue import plan_send_multimail
 from google.appengine.api.mail import EmailMessage
 from admin.email_views import EMailListField, EMailListWidget
+from admin.queue import plan_send_multimail
 import re
 import sys
 import logging
@@ -121,12 +122,22 @@ def multi_send(request, et_id):
     et  = EMailTemplate.get_by_id(int(et_id))
     if et is None:
         raise Http404
+    
+    if not et.valid:
+        raise Http404
+        
 
     if request.method == 'POST':
         form = EMailMultiForm(request.POST)
         if form.is_valid():
-
-            return redirect('../..')
+            el = form.cleaned_data['emails']
+            els = list(el.split())
+            els_c = len(els)
+           
+            logging.info('list size %d'%(els_c))
+            if els_c > 0: 
+                plan_send_multimail(els,et_id)
+                return redirect('../..')
     else:
         form = EMailMultiForm()
  

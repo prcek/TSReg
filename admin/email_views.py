@@ -140,7 +140,7 @@ def test_send(request, el_id):
 
     l = list(el.emails)
     
-    plan_send_multimail(l,'doc_key')
+#    plan_send_multimail(l,'doc_key')
 
     return redirect('../..')
 

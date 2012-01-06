@@ -21,6 +21,7 @@ from utils.data import dump_to_csv
 import cStringIO
 
 import logging
+import sys
 
 
 def send_student_email(request):
@@ -101,16 +102,19 @@ def send_student_email(request):
 def plan_multimail(request):
     logging.info(request.POST)
     recipients = request.POST.getlist('recipients')
-    doc_key = request.POST['doc_key']
+    et_id = request.POST['et_id']
+
+    if (et_id is None):
+        return HttpResponse('error')
   
     if (recipients is None) or (len(recipients)==0):
         return HttpResponse('error')
     if len(recipients)==1:
-        plan_send_mail(recipients[0],doc_key)     
+        plan_send_mail(recipients[0],et_id)     
     else:
         sp = len(recipients)/2
-        plan_send_multimail(recipients[:sp],doc_key)
-        plan_send_multimail(recipients[sp:],doc_key)
+        plan_send_multimail(recipients[:sp],et_id)
+        plan_send_multimail(recipients[sp:],et_id)
         
  
     return HttpResponse('ok')
@@ -118,8 +122,34 @@ def plan_multimail(request):
 def send_mail(request):
     logging.info(request.POST)
     recipient = request.POST['recipient']
-    doc_key = request.POST['doc_key']
+    et_id = request.POST['et_id']
+
     logging.info('fake email to %s'%(recipient)) 
+    logging.info('et_id %s'%et_id)
+
+
+
+    et  = EMailTemplate.get_by_id(int(et_id))
+    if et is None:
+        return HttpResponse('missing et')
+ 
+    try:
+        email = EmailMessage(et.data)
+
+        email.sender = cfg.getConfigString('ENROLL_EMAIL',None)
+        email.reply_to = cfg.getConfigString('ENROLL_REPLY_TO',None)
+        email.to = recipient
+        email.check_initialized()
+
+        logging.info('sending...')
+        email.send()
+        logging.info('send ok')
+    except Exception,e:
+        logging.info(e)
+        logging.info("can't init/send email! %s"%sys.exc_info()[1])
+        return HttpResponse("can't init/send email - %s"%sys.exc_info()[1])
+
+
     return HttpResponse('ok')
 
 def _obs_send_check_email(request):
