@@ -8,7 +8,9 @@ import utils.config as cfg
 import utils.mail as mail
 from admin.models import EMailTemplate
 from admin.queue import plan_send_multimail
+from google.appengine.api.mail import EmailMessage
 import re
+import sys
 import logging
 
 
@@ -74,10 +76,40 @@ def delete(request, et_id):
     et.delete()
     return redirect('../..')
 
+class EMailTestForm(forms.Form):
+    email = forms.EmailField(label='email', error_messages=ERROR_MESSAGES )
+ 
 def test_send(request, et_id):
     et  = EMailTemplate.get_by_id(int(et_id))
     if et is None:
         raise Http404
-#TODO
-    return redirect('../..')
+
+    if request.method == 'POST':
+        form = EMailTestForm(request.POST)
+        if form.is_valid():
+            try:
+                email = EmailMessage(et.data)
+
+                email.sender = cfg.getConfigString('ENROLL_EMAIL',None)
+                email.reply_to = cfg.getConfigString('ENROLL_REPLY_TO',None)
+                email.to = form.cleaned_data['email']
+                email.check_initialized()
+
+                logging.info('sending...')
+                email.send()
+                logging.info('send ok')
+
+                et.valid = True 
+                et.save()
+
+            except:
+                logging.info("can't init/send email! %s"%sys.exc_info()[1])
+                return HttpResponse("can't init/send email - %s"%sys.exc_info()[1])
+
+
+            return redirect('../..')
+    else:
+        form = EMailTestForm()
+ 
+    return render_to_response('admin/emailtemplate_testsend.html', RequestContext(request, { 'form': form, 'et':et }) ) 
 

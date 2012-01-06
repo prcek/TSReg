@@ -309,5 +309,4 @@ class EMailTemplate(BaseModel):
         self.data = data
         self.data_size = len(data)
         self.locked = True
-#TODO set data and data_size
 
