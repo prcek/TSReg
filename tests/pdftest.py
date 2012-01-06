@@ -123,7 +123,7 @@ def test_students_enroll():
     student2.reg_datetime = datetime.datetime.utcnow()
 
     student2.comment = "0123456778890123 sadjklfh kjashkashdjkfh kasdhfawehlkrh we  we iwheih ask jk a klskdj kwkjakejrfh wka ek akjh "
-    utils.pdf.students_enroll_new('students_enroll.pdf',[student])
+    utils.pdf.students_enroll_multi('students_enroll.pdf',8*[student,student2])
     
 
 if __name__ == "__main__":

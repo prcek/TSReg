@@ -37,6 +37,11 @@ from utils.locale import local_timezone
 
 from xml.sax.saxutils import escape
 
+def chunks(l, n):
+    for i in xrange(0, len(l), n):
+        yield l[i:i+n]
+
+
 def getNow():
 #    tz = pytz.timezone('Europe/Prague') 
     now = datetime.datetime.utcnow() 
@@ -441,8 +446,129 @@ def students_enroll(output,students,with_partner=False):
         elements.append(Paragraph(u"žádná data",styleH))
     doc.build(elements)
 
+def students_enroll_element(s,with_partner=False):
+    styles = getStyleSheet()
+
+    styleN = styles['EnrollName']
+    styleH = styles['EnrollHeading']
+    styleC = styles['EnrollCourse']
+    styleComment = styles['EnrollComment']
+
+    
+    rd = s.reg_datetime
+    if rd is None:
+        rd = '?'
+    else:
+        rd = rd.strftime("%d.%m.%Y %H:%M")
 
 
+    p1 = Paragraph(u"Přihláška <font size=8>%s</font>"%(escape(s.ref_key)),styleH) 
+    p2 = Paragraph(u"%s %s"%(escape(nonone(s.name)), escape(nonone(s.surname))),styleN)
+    p3 = Paragraph(u"KURZ %s"%(escape(s.course_code())),styleC)
+    p4 = Paragraph(u"<font size=12>%s</font>"%(escape(s.course_name())),styleC)
+    p5 = Paragraph(u"Poznámka: %s"%(escape(nonone(s.comment))),styleComment)
+
+    if s.student:
+        stu = 'Ano'
+    else:
+        stu = 'Ne'
+
+    if (not s.partner_ref_code is None) and s.partner_ref_code != '':
+        if with_partner:
+            par = s.get_partner()
+            if not (par is None):
+                parn = "%s %s"%(nonone(par.name),nonone(par.surname))
+            else:
+                parn = " ?"          
+            partner = u"%s (%s)"%(parn,s.partner_ref_code)
+        else:    
+            partner = s.partner_ref_code
+    else:
+        partner = ''
+
+    data = [
+            [p1,''],
+            [p2,''],
+            ["e-mail",nonone(s.email)],
+            ["telefon",nonone(s.phone)],
+            ["adresa","%s %s"%(nonone(s.street),nonone(s.street_no))],
+            ["","%s %s"%(nonone(s.post_code),nonone(s.city))],
+            ['škola',"%s, %s"%(nonone(s.school),nonone(s.school_class))],
+            ["student",stu],
+            ["partner",partner],
+            ["kurzovné",nonone(s.course_cost)],
+            ["čas",rd],
+            [p3,""],
+            [p4,""],
+            [p5,""],
+    ]
+
+
+   
+
+    ipad=0.5
+    t = Table(data, colWidths=[2*cm,10*cm],
+    style=[
+            ('SPAN',(0,0),(1,0)),
+            ('BOX',(0,0),(1,0),2,colors.black),
+
+            ('SPAN',(0,1),(1,1)),
+            ('TOPPADDING',(0,1),(1,1),10),
+
+            ('SPAN',(0,4),(0,5)),
+            ('VALIGN',(0,4),(0,5),'TOP'),
+
+            ('SPAN',(0,11),(1,11)),
+            ('SPAN',(0,12),(1,12)),
+            ('SPAN',(0,13),(1,13)),
+
+#            ('GRID',(0,0),(-1,-1),0.5, colors.gray),
+            ('FONT', (1,0), (1,-1), 'DejaVuSansBold'),
+            ('FONT', (0,0), (0,-1), 'DejaVuSansMono'),
+            ('FONTSIZE', (0,0), (-1,-1), 8),
+            ('LEFTPADDING',(0,0),(-1,-1),ipad),
+            ('RIGHTPADDING',(0,0),(-1,-1),ipad),
+            ('TOPPADDING',(0,2),(-1,-1),ipad),
+            ('BOTTOMPADDING',(0,0),(-1,-1),ipad),
+ 
+    ])
+
+    return t
+
+def students_enroll_multi(output,students,with_partner=False):
+    doc = SimpleDocTemplate(output, pagesize=landscape(A4) ,leftMargin=1*cm, rightMargin=1*cm, topMargin=1*cm, bottomMargin=0.5*cm, showBoundary=0)
+    elist = []
+    for s in students:
+        elist.append(students_enroll_element(s,with_partner))
+
+    line=[]
+    data=[]
+    for e in elist:
+        line.append(e) 
+        if len(line)==2:
+            data.append(line)
+            line=[]
+
+    if len(line)>0:
+        line.extend((2-len(line))*" ")
+        data.append(line)
+   
+    rows = len(data) 
+
+    cw = ((landscape(A4)[0])-2*cm)/2
+    rh = ((landscape(A4)[1])-2*cm)/2
+    
+    t = Table(data,  colWidths=[cw,cw], rowHeights= rows*[rh],
+        style=[
+            ('GRID',(0,0),(-1,-1),0.5, colors.gray),
+            ('VALIGN',(0,0),(-1,-1),'TOP'),
+    ])
+
+    elements = []
+    elements.append(t)
+ 
+    doc.build(elements)
+ 
 
 def students_card(output,cards):
     ipad = 1
