@@ -19,7 +19,7 @@ def plan_send_student_email(template_key, student, course=None):
         return
 
     if not mail.valid_email(student.email):
-        logging.info('no valid email')
+        logging.info('no valid email <%s>'%student.email)
         return
 
     if not template_key in mail.MAIL_TEMPLATE_KEYS:
