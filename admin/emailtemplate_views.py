@@ -9,6 +9,7 @@ import utils.mail as mail
 from admin.models import EMailTemplate
 from admin.queue import plan_send_multimail
 from google.appengine.api.mail import EmailMessage
+from admin.email_views import EMailListField, EMailListWidget
 import re
 import sys
 import logging
@@ -112,4 +113,22 @@ def test_send(request, et_id):
         form = EMailTestForm()
  
     return render_to_response('admin/emailtemplate_testsend.html', RequestContext(request, { 'form': form, 'et':et }) ) 
+
+class EMailMultiForm(forms.Form):
+    emails = EMailListField(widget=EMailListWidget(attrs={'cols':160, 'rows':20}), required=False, label="emaily")
+ 
+def multi_send(request, et_id):
+    et  = EMailTemplate.get_by_id(int(et_id))
+    if et is None:
+        raise Http404
+
+    if request.method == 'POST':
+        form = EMailMultiForm(request.POST)
+        if form.is_valid():
+
+            return redirect('../..')
+    else:
+        form = EMailMultiForm()
+ 
+    return render_to_response('admin/emailtemplate_multisend.html', RequestContext(request, { 'form': form, 'et':et }) ) 
 

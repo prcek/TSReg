@@ -34,7 +34,8 @@
                 <a class='button' href='{{i.key.id}}/'>zobrazit</a>
                 <a class='button' href='{{i.key.id}}/edit/'>editovat</a>
 {% if request.auth_info.admin %}
-                <a class='button' href='{{i.key.id}}/test_send/'>test_send</a>
+                <a class='button' href='{{i.key.id}}/test_send/'>testovací odeslání</a>
+                <a class='button' href='{{i.key.id}}/multi_send/'>hromadné odeslání</a>
 {% endif %}
                 <a class='cbutton' href='{{i.key.id}}/del/'>smazat</a>
             </td>

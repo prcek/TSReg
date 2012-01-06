@@ -104,6 +104,7 @@ urlpatterns = patterns('admin',
     (r'^email_sablony/(?P<et_id>\d+)/edit/$', 'emailtemplate_views.edit'),
     (r'^email_sablony/(?P<et_id>\d+)/del/$', 'emailtemplate_views.delete'),
     (r'^email_sablony/(?P<et_id>\d+)/test_send/$', 'emailtemplate_views.test_send'),
+    (r'^email_sablony/(?P<et_id>\d+)/multi_send/$', 'emailtemplate_views.multi_send'),
 
 
     (r'^import/$', 'import_views.index'),
