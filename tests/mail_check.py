@@ -9,9 +9,8 @@ email_re1 = re.compile(
 
 #current
 email_re2 = re.compile( "^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$" )
-jana.piglova@videon-​znojmo.cz
 
-test = ['aa@s-ss.cz', 'jana.piglova@videon-znojmo.cz-']
+test = ['aa@s-ss.cz', 'jp@en-zn.cz-']
 
 for e in test:
 
