@@ -2,6 +2,10 @@ Dobrý den,
 
 Vaše přihláška byla vyřazena.
 
+Jméno: {{ student.name }} {{student.surname}}
+{% include "email/course_info.txt" %}
+
 V případě nesrovnalostí nás prosím kontaktujte. Ref. kód přihlášky: {{ student.ref_key }}.
+
 
 {% include "email/signature.txt" %}

@@ -2,6 +2,7 @@ Dobrý den,
 
 ve Vaší přihlášce (ref. kód {{ student.ref_key }}) do kurzu:
 
+Jméno: {{ student.name }} {{student.surname}}
 {% include "email/course_info.txt" %}
 
 došlo ke změně platebních informací.

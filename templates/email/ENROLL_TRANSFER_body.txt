@@ -2,6 +2,7 @@ Dobrý den,
 
 Vaše přihláška (ref. kód {{ student.ref_key }}) byla přeřazena do následujícího kurzu: 
 
+Jméno: {{ student.name }} {{student.surname}}
 {% include "email/course_info.txt" %}
 
 V případě nesrovnalostí nás prosím kontaktujte.

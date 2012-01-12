@@ -271,6 +271,11 @@ def recount_course_capacity(course):
     enrolled_m = 0
     enrolled_f = 0
 
+    unconf = 0
+    unconf_m = 0
+    unconf_f = 0
+
+
     enrolled_paid = 0
 
     stat_fp_m = 0
@@ -297,7 +302,13 @@ def recount_course_capacity(course):
                 pending_m+=1
             if f:
                 pending_f+=1
-                
+        elif s.status == 'n':
+            unconf+=1
+            if m:
+                unconf_m+=1
+            if f:
+                unconf_f+=1
+             
         elif s.status == 'e':
             if not s.paid is None:
                 enrolled_paid+=s.paid
@@ -329,6 +340,7 @@ def recount_course_capacity(course):
 
     course.pending=pending
     course.usage=enrolled
+    course.unconf=unconf
 
     course.stat_e_m = enrolled_m
     course.stat_s_m = pending_m

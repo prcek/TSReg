@@ -210,6 +210,7 @@ def attend_single(request,course):
                 st = form2student(form,course)
                 ref_code = st.ref_key
                 plan_send_student_email('ENROLL_CHECK',st)
+                plan_update_course(course)
                 return HttpResponseRedirect('/zapis/prihlaska/%s/'%ref_code)
 
     else:
@@ -256,6 +257,7 @@ def attend_pair(request,course):
                 ref_code2 = st2.ref_key
                 plan_send_student_email('ENROLL_CHECK',st1)
                 plan_send_student_email('ENROLL_CHECK',st2)
+                plan_update_course(course)
                 return HttpResponseRedirect('/zapis/prihlasky/%s/%s/'%(ref_code1,ref_code2))
 
     else:

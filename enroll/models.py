@@ -113,6 +113,7 @@ class Course(BaseModel):
     pending_payment = db.IntegerProperty(default=0) #obs
     pending = db.IntegerProperty(default=0)
     pending_limit = db.IntegerProperty(default=0)
+    unconf = db.IntegerProperty(default=0)
     stat_e_m =  db.IntegerProperty(default=0)
     stat_s_m =  db.IntegerProperty(default=0)
     stat_e_f =  db.IntegerProperty(default=0)

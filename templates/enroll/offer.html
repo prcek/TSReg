@@ -4,6 +4,16 @@
 	<h2> tuto nabídku vidí žáci při podávaní přihlášky</h2>
         {% else %}
         <h1 class='contentheading'>Volba kurzu pro online přihlášku</h1>
+        <p> Milí naši přátelé,<br/>
+            vyberte si kurz, do kterého se chcete zapsat. Po výběru kurzu pokračujte kliknutím na "ZAPSAT". 
+            Po zapsání budete vyzváni emailem k potrzení Vaší objednávky.<br/>
+            Pokud je kurz již naplněn, ale jsou ještě volná nahradnická mista, je možné
+            se přihlásit jako náhradník tlačítkem "NÁHRADNÍCI". O zápisu do kurzu budete 
+            po uvolnění místa informováni mailem a vyzváni k platbě.<br/> 
+            Pokud je u kurzu zobrazeno "POZASTAVENO", je kapacita naplněna, včetně
+            mist náhradníků.
+        </p>
+
 	{% endif %}
     {% for f in offer %} 
         <h2 class='contentheading'>{{f.folder.public_name}}</h2>
@@ -18,19 +28,28 @@
             <tr><td>{{c.period}}</td><td>{{c.code}} - {{c.name}}</td><td>{{c.place}}</td><td>{{c.teacher}}</td><td>{{c.first_period}}</td>
                 <td>
                     {% if c.suspend %}
-                        zápis pozastaven
+                        POZASTAVENO
                     {% else %}
-                        {% if preview %}
-                        zápis povolen
+
+                        {% if c.can_enroll %}
+                            {% if preview %}
+                            zápis povolen
+                            {% else %}
+                            <a href='kurz/{{c.key.id}}/'>ZAPSAT</a>
+                            {% endif %}
                         {% else %}
-                        <a href='kurz/{{c.key.id}}/'>přihlásit</a>
+                            {% if preview %}
+                            jen náhradníci 
+                            {% else %}
+                            <a href='kurz/{{c.key.id}}/'>NÁHRADNÍK</a>
+                            {% endif %}
                         {% endif %}
                     {% endif %}
                 </td>
                 {% if preview %}
                 <td class='nowrap'>
-                    typ zapisu:{{c.group_mode_loc}}, kapacita: {{c.usage}} (p: {{c.stat_e_m}}, d: {{c.stat_e_f}}), náhr: {{c.pending}}
-                    cena: {% if c.cost_sale %} {{ c.cost_sa }} / {{ c.cost_sb }} SLEVA {% else %} {{ c.cost_a }} / {{ c.cost_b }} {% endif %}
+                    typ:{{c.group_mode_loc}}, obs: {{c.usage}} z {{c.capacity}}, náhr: {{c.pending}} z {{c.pending_limit}}, k potrvzeni: {{c.unconf}},
+                    cena: {{c.cost_mode_loc}} {% if c.cost_sale %} {{ c.cost_sa }} / {{ c.cost_sb }} SLEVA {% else %} {{ c.cost_a }} / {{ c.cost_b }} {% endif %}
                 </td>
                 {% endif %}
             </tr>

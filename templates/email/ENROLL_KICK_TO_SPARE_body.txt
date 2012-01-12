@@ -2,6 +2,7 @@ Dobrý den,
 
 Vaše přihláška do kurzu:
 
+Jméno: {{ student.name }} {{student.surname}}
 {% include "email/course_info.txt" %}
 byla přeřazena mezi náhradníky.
 
