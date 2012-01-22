@@ -28,6 +28,7 @@ urlpatterns = patterns('admin',
     (r'^kurzy/(?P<course_id>\d+)/zaci/(?P<student_id>\d+)/kick/$', 'student_views.kick'),
     (r'^kurzy/(?P<course_id>\d+)/zaci/(?P<student_id>\d+)/spare/$', 'student_views.spare'),
     (r'^kurzy/(?P<course_id>\d+)/zaci/(?P<student_id>\d+)/view/$', 'student_views.view'),
+    (r'^kurzy/(?P<course_id>\d+)/zaci/(?P<student_id>\d+)/enroll_form/$', 'student_views.student_as_enroll_form'),
     (r'^kurzy/(?P<course_id>\d+)/zaci/(?P<student_id>\d+)/pay/$', 'student_views.pay'),
     (r'^kurzy/(?P<course_id>\d+)/zaci/(?P<student_id>\d+)/email/$', 'student_views.email'),
 

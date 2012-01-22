@@ -352,7 +352,7 @@ def students_enroll_old(output,students,with_partner=False):
     doc.build(elements)
 
 
-def students_enroll(output,students,with_partner=False):
+def students_enroll_old2(output,students,with_partner=False):
     doc = SimpleDocTemplate(output, pagesize=landscape(A6) ,leftMargin=1*cm, rightMargin=1*cm, topMargin=1*cm, bottomMargin=0.5*cm, showBoundary=0)
     styles = getStyleSheet()
 
@@ -498,7 +498,8 @@ def students_enroll_element(s,with_partner=False):
             ["telefon",nonone(s.phone)],
             ["adresa","%s %s"%(nonone(s.street),nonone(s.street_no))],
             ["","%s %s"%(nonone(s.post_code),nonone(s.city))],
-            ['škola',"%s, %s"%(nonone(s.school),nonone(s.school_class))],
+            ['škola',nonone(s.school)],
+            ['třída',nonone(s.school_class)],
             ["student",stu],
             ["partner",partner],
             ["kurzovné",nonone(s.course_cost)],
@@ -523,9 +524,9 @@ def students_enroll_element(s,with_partner=False):
             ('SPAN',(0,4),(0,5)),
             ('VALIGN',(0,4),(0,5),'TOP'),
 
-            ('SPAN',(0,11),(1,11)),
             ('SPAN',(0,12),(1,12)),
             ('SPAN',(0,13),(1,13)),
+            ('SPAN',(0,14),(1,14)),
 
 #            ('GRID',(0,0),(-1,-1),0.5, colors.gray),
             ('FONT', (1,0), (1,-1), 'DejaVuSansBold'),
@@ -539,6 +540,23 @@ def students_enroll_element(s,with_partner=False):
     ])
 
     return t
+
+def students_enroll(output,students,with_partner=False):
+    doc = SimpleDocTemplate(output, pagesize=landscape(A6) ,leftMargin=1*cm, rightMargin=1*cm, topMargin=0.5*cm, bottomMargin=0.5*cm, showBoundary=0)
+    styles = getStyleSheet()
+    styleH = styles['EnrollHeading']
+
+
+    elements = []
+    for s in students:
+        elements.append(students_enroll_element(s,with_partner))
+        elements.append(PageBreak())
+                
+
+    if len(elements)==0:
+        elements.append(Paragraph(u"žádná data",styleH))
+    doc.build(elements)
+
 
 def students_enroll_multi(output,students,with_partner=False):
     styles = getStyleSheet()

@@ -1122,6 +1122,29 @@ def course_as_csv(request, course_id):
     dump_to_csv(data,r)
     return r
 
+def student_as_enroll_form(request, course_id, student_id):
+    course = Course.get_by_id(int(course_id))  
+
+    if course is None:
+        raise Http404
+
+
+    student = Student.get_by_id(int(student_id))  
+
+    if student is None:
+        raise Http404
+
+
+    r =  HttpResponse(mimetype='application/pdf')
+    file_name = urllib.quote((u"prihlaska.pdf").encode('utf8'))
+    logging.info(file_name)
+    r['Content-Disposition'] = "attachment; filename*=UTF-8''%s"%file_name
+    from utils.pdf import students_enroll_a6
+
+    students_enroll(r,[student])
+
+    return r 
+
 def course_as_pdf(request, course_id):
 
     course = Course.get_by_id(int(course_id))  
