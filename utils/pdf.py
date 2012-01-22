@@ -209,26 +209,31 @@ def students_table(output,course,students):
 
 
     if course.group_mode == 'School':
-        widths = [ 0.8*cm, 0.8*cm, 3*cm,  4*cm,       3*cm,    1.1*cm,   1.1*cm,  2.5*cm,    2.5*cm,   5*cm,    1.2*cm,  3.0*cm ]
-        data = [ ['č.',   't.č',   'kód', 'přijmení', 'jméno', 'platba', 'dopl.', 'sleva', 'pl. info', 'škola', 'třída', 'poznámka'] ]
+        widths = [ 0.8*cm, 0.8*cm, 3*cm,  4*cm,       3*cm,    1.1*cm,   1.1*cm,  2.5*cm,    2.5*cm,   5*cm,    1.2*cm, 0.5*cm,  3.0*cm ]
+        data = [ ['č.',   't.č',   'kód', 'přijmení', 'jméno', 'platba', 'dopl.', 'sleva', 'pl. info', 'škola', 'třída', 'k.', 'poznámka'] ]
     elif course.group_mode == 'Pair':
-        widths = [ 0.8*cm, 0.8*cm, 3*cm,  4*cm,       3*cm,    1.1*cm,   1.1*cm,  2.5*cm,   2.5*cm,    0.5*cm,  0.5*cm, 3.0*cm]
-        data = [ ['č.',    'p.č',  'kód', 'přijmení', 'jméno', 'platba', 'dopl.', 'sleva', 'pl. info', 'st.',   'ov.',  'poznámka'] ]
+        widths = [ 0.8*cm, 0.8*cm, 3*cm,  4*cm,       3*cm,    1.1*cm,   1.1*cm,  2.5*cm,   2.5*cm,    0.5*cm,  0.5*cm, 0.5*cm, 3.0*cm]
+        data = [ ['č.',    'p.č',  'kód', 'přijmení', 'jméno', 'platba', 'dopl.', 'sleva', 'pl. info', 'st.',   'ov.', 'k.', 'poznámka'] ]
     else:
-        widths = [ 0.8*cm, 3*cm,  4*cm,       3*cm,    1.1*cm,   1.1*cm,   2.5*cm, 2.5*cm,      0.5*cm, 0.5*cm, 3.0*cm]
-        data = [ ['č.',    'kód', 'přijmení', 'jméno', 'platba', 'dopl.', 'sleva', 'pl. info', 'st.',   'ov.',  'poznámka'] ]
+        widths = [ 0.8*cm, 3*cm,  4*cm,       3*cm,    1.1*cm,   1.1*cm,   2.5*cm, 2.5*cm,      0.5*cm, 0.5*cm, 0.5*cm, 3.0*cm]
+        data = [ ['č.',    'kód', 'přijmení', 'jméno', 'platba', 'dopl.', 'sleva', 'pl. info', 'st.',   'ov.',  'k.', 'poznámka'] ]
 
     i=1
     lc = 1
     paid_mark = []
     for s in students:
         if s.x_pair_empty_slot:
-            data.append([i,'---','---','','','','',''])    
+            data.append([i,'---','---','','','','','',''])    
         else:
+            if s.card_out:
+                sco = 'V'
+            else:
+                sco = ''
+            
             if not s.is_fp():
                 paid_mark.append(lc)
             if course.group_mode == 'School':
-                data.append([s.x_no,s.x_class_no,s.ref_key,s.surname,s.name,s.paid,s.balance_due(),s.discount,s.pay_info,s.school,s.school_class, s.comment])
+                data.append([s.x_no,s.x_class_no,s.ref_key,s.surname,s.name,s.paid,s.balance_due(),s.discount,s.pay_info,s.school,s.school_class, sco, s.comment])
             else:
                 if s.student:
                     st = 'A'
@@ -239,9 +244,9 @@ def students_table(output,course,students):
                 else:
                     stc = ''
                 if course.group_mode == 'Pair':
-                    data.append([s.x_no,s.x_pair_no,s.ref_key,s.surname,s.name,s.paid,s.balance_due(),s.discount,s.pay_info,st,stc,s.comment])
+                    data.append([s.x_no,s.x_pair_no,s.ref_key,s.surname,s.name,s.paid,s.balance_due(),s.discount,s.pay_info,st,stc,sco,s.comment])
                 else:
-                    data.append([i,s.ref_key,s.surname,s.name,s.paid,s.balance_due(),s.discount,s.pay_info,st,stc,s.comment])
+                    data.append([i,s.ref_key,s.surname,s.name,s.paid,s.balance_due(),s.discount,s.pay_info,st,stc,sco,s.comment])
         i+=1
         lc+=1
    # logging.info(data) 
