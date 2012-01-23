@@ -1139,7 +1139,7 @@ def student_as_enroll_form(request, course_id, student_id):
     file_name = urllib.quote((u"prihlaska.pdf").encode('utf8'))
     logging.info(file_name)
     r['Content-Disposition'] = "attachment; filename*=UTF-8''%s"%file_name
-    from utils.pdf import students_enroll_a6
+    from utils.pdf import students_enroll
 
     students_enroll(r,[student])
 
