@@ -205,7 +205,9 @@ def students_table(output,course,students):
     elements = []
 
     elements.append(Paragraph(u"Kurz %s - %s - %s (%s)"%(escape(course.code),escape(course.name), escape(course.folder_name()),escape(course.season_name())),styleH))
-    elements.append(Paragraph(u"ke dni %s"%getNow(),styleN))
+    elements.append(Paragraph(u"lektor: %s, místo: %s, zahájení: %s, termín: %s"%(escape(course.teacher),escape(course.place), escape(course.first_period), escape(course.period)),styleN))
+    elements.append(Paragraph(u"stav ke dni %s"%getNow(),styleN))
+    elements.append(Paragraph(u"<br/>",styleN))
 
 
     if course.group_mode == 'School':

@@ -29,11 +29,15 @@ def test_inivitations():
 
 class FakeCourse():
     code='X123'
-    name='name'
+    name=u'začátečníci'
+    teacher=u'vyučující'
+    place=u'sál'
+    first_period=u'1.1.2011'
+    period=u'streda 18:00' 
     def folder_name(self):
-        return 'folder'
+        return u'VŠ a DO základní'
     def season_name(self):
-        return 'season'
+        return '2099/99'
     group_mode = 'Single'
     
 
@@ -61,6 +65,7 @@ class FakeStudent():
     comment = u'já se moc těším'
     student = False
     student_check = False
+    card_out = False
     partner_ref_code = 'Partner XYZ'
     def course_season(self):
         return "season"
