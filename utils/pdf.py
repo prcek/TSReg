@@ -194,7 +194,7 @@ def students_table(output,course,students):
 #    else:
 #        ps = A4
     
-    doc = SimpleDocTemplate(output, pagesize=ps, leftMargin=1*cm, rightMargin=1*cm, topMargin=1*cm, bottomMargin=1*cm) 
+    doc = SimpleDocTemplate(output, pagesize=ps, leftMargin=1*cm, rightMargin=1*cm, topMargin=3*cm, bottomMargin=1*cm) 
 
     styles = getStyleSheet()
     styleN = styles['Normal']
