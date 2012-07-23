@@ -22,6 +22,7 @@ ERROR_MESSAGES={'required': 'Položka musí být vyplněna', 'invalid': 'Neplatn
 ACTION_CHOICES = (
     ('-','--- zvol akci ---'),
     ('import_students','import žáků'),
+    ('import_school','import skoly'),
 )
 
 
@@ -123,6 +124,15 @@ def import_students(request,file_id, seq_id=None):
     if not curr is None:
         curr["end_line"]=line
         info.append(curr)
+    else:
+    	### no header detected.
+    	curr = dict()
+    	curr["seq"]=0
+    	curr["start_line"]=0
+    	curr["end_line"]=line
+    	info.append(curr)
+    	
+    	
 
     selected = None
     if not seq_id is None:
