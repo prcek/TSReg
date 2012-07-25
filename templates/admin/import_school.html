@@ -1,0 +1,32 @@
+
+{% extends "admin/base.html" %}
+
+{% block title %} Import školy {% endblock %}
+
+{% block content %}
+    <a class='button' href='.'>přenačíst</a>
+
+
+
+    <br><br>import školy<br><br>
+
+
+
+
+    cílová sezóna {{ season.name }} a cílová kategorie {{ folder.name }} <br>
+    (filtr používá poslední zobrazení z přehledu kurzů - je-li prázdný, zvol si v přehledu kurzů něco a vrať se)<br>
+    <form  method="post" name="form">
+    <table>
+    {{ form.as_table }}
+    </table>
+    <input class="button" type="submit" value="zvol">
+    </form>
+
+{% if course %}
+    vybrany kurz: {{ course.code }}<br> 
+  {% include "admin/course_info_box.html" %}   
+   <a class='button' href='to/{{course.key.id}}/'>pridat do kurzu</a>
+{% endif %}
+
+{% endblock %}
+

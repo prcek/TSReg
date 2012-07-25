@@ -199,6 +199,91 @@ def import_students_do(request,file_id, start_line, end_line, course_id):
 
     return HttpResponseRedirect('../../../../../')
 
+
+class TargetPickForm2(forms.Form):
+    course_key = forms.ChoiceField(label='Do kurzu')
+    def __init__(self, data = None, courses = [], **kwds):
+        super(self.__class__,self).__init__(data, **kwds)
+        self.fields['course_key'].choices=courses
+
+
+
+def import_school(request,file_id):
+
+    f = FileBlob.get_by_id(int(file_id))
+
+    if f is None:
+        raise Http404
+
+    d = cStringIO.StringIO(f.data)
+    r = UnicodeReader(d)
+   
+    form = None
+    course = None 
+    
+    season = None
+    cskey = request.session.get('course_season_key',None)
+    if not cskey is None:
+        season =  Season.get(str(cskey))
+    folder = None
+    cfkey = request.session.get('course_folder_key',None)
+    if not cfkey is None:
+        folder =  Folder.get(str(cfkey))    
+    
+    logging.info('cfkey %s cskey %s'%(cskey,cfkey))
+    logging.info('folder: %s'%folder)
+    logging.info('season: %s'%season)
+    if folder and season:
+        cc = Course.get_COURSE_FILTER_CHOICES(str(season.key()),str(folder.key()))
+    else:
+        cc = Course.get_COURSE_CHOICES()
+    
+    
+    logging.info('cc:%s'%cc)
+    
+    if request.method == 'POST':
+        logging.info('meth post, filling form')
+        form = TargetPickForm2(request.POST,courses = cc)
+        if form.is_valid():
+            course = Course.get(form.cleaned_data['course_key'])
+            if course is None:
+                raise Http404
+          
+    else:
+        logging.info('meth get, blank form')
+        form = TargetPickForm2(courses = cc)
+
+    selected = None
+    info = []
+    
+    return render_to_response('admin/import_school.html', RequestContext(request, {  'info': info, 'form':form, 'course':course, 'season':season, 'folder':folder}))
+
+
+
+def import_school_do(request,file_id, course_id):
+
+    course = Course.get_by_id(int(course_id))
+
+    if course is None:
+        raise Http404
+
+    f = FileBlob.get_by_id(int(file_id))
+    if f is None:
+        raise Http404
+    d = cStringIO.StringIO(f.data)
+    r = UnicodeReader(d)
+
+    st_list=[]
+    for row in r:
+       st = import_student2(course,row)
+       st_list.append(st)
+
+
+    taskqueue.add(url='/task/recount_capacity/', params={'course_id':course.key().id()})
+
+    return HttpResponseRedirect('../../../../../kurzy/%d/zaci/'%(course.key().id()))
+
+
 def AnoNe2Bool(s):
     if s == 'Ano':
         return True
@@ -283,3 +368,70 @@ def import_student(course,row):
 
     return st
 
+def import_student2(course,row):
+    logging.info('import student2 data=%s'%(row))
+    
+    try:
+        int(row[0])
+    except:
+        logging.info('skip, no number at first col')
+        return None
+    
+    
+    st = Student()
+    
+    st.status = 'e'
+    st.course_key=str(course.key())
+    st.init_reg()
+    st.init_ref_base()
+    s = row[1].lower()
+    if s in ['p','s','d']:
+        st.addressing = s
+    
+    st.name = row[3]
+    st.surname = row[2]
+ 
+    try:
+        paid = int(row[4])
+    except:
+        paid = 0
+    try:
+        to_pay = int(row[5])
+    except:
+        to_pay = 0
+        
+    st.course_cost = paid+to_pay
+    st.paid = paid
+        
+    st.discount = row[6]
+    
+    st.pay_info = row[7]
+    
+    st.school = row[8]
+    st.school_class = row[9]
+
+    st.street = row[10]
+    st.street_no = row[11]
+    st.city = row[12]
+    st.post_code = row[13]
+    st.phone = row[14]
+
+    st.email = row[15]
+
+    st.comment = row[16]
+
+    st.no_email_notification = True
+    st.no_email_info = not valid_email(st.email)
+    st.no_email_ad = st.no_email_info
+   
+   
+    st.student = True
+    st.student_check = False
+
+   
+    st.save()
+    st.init_ref_codes()
+    st.save()
+
+ 
+    return st
