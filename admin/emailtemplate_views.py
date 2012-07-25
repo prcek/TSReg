@@ -11,6 +11,7 @@ from admin.queue import plan_send_multimail
 from google.appengine.api.mail import EmailMessage
 from admin.email_views import EMailListField, EMailListWidget
 from admin.queue import plan_send_multimail
+from utils.decorators import ar_power
 import re
 import sys
 import logging
@@ -117,7 +118,8 @@ def test_send(request, et_id):
 
 class EMailMultiForm(forms.Form):
     emails = EMailListField(widget=EMailListWidget(attrs={'cols':160, 'rows':20}), required=False, label="emaily")
- 
+
+@ar_power
 def multi_send(request, et_id):
     et  = EMailTemplate.get_by_id(int(et_id))
     if et is None:

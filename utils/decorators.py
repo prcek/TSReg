@@ -14,3 +14,11 @@ def ar_edit(function):
         return HttpResponseForbidden()
     return wrapper
 
+def ar_power(function):
+    def wrapper(request, *args, **kw):
+        logging.info('ar_power required')
+        if request.auth_info.power:
+            logging.info('ar_power ok')
+            return function(request, *args, **kw)
+        return HttpResponseForbidden()
+    return wrapper
