@@ -23,20 +23,20 @@
 
     <table>
     <tr>
-        <th>aktivní</th>
-        <th>pozastaveno</th>
-        <th>řazení</th>
-        <th>kód</th>
-        <th>název</th>
+        <th rowspan=3>aktivní</th>
+        <th rowspan=3>poz.</th>
+        <th rowspan=3>řazení</th>
+        <th rowspan=3>kód</th>
+        <th rowspan=3>název</th>
 {% if request.auth_info.admin %}
-        <th>sezóna</th>
-        <th>kategorie</th>
+        <th rowspan=3>sezóna</th>
+        <th rowspan=3>kategorie</th>
 {% endif %}
-        <th>režim</th>
-        <th>termín</th>
-        <th>zahájení</th>
-        <th>místo</th>
-        <th>lektor</th>
+        <th rowspan=3>režim</th>
+        <th rowspan=3>termín</th>
+        <th rowspan=3>zahájení</th>
+        <th rowspan=3>místo</th>
+        <th rowspan=3>lektor</th>
 <!--
         <th>cena A</th>
         <th>cena B</th>
@@ -45,13 +45,37 @@
         <th>mód ceny</th>
         <th>sleva</th>
 -->
-        <th>žáků</th>
-        <th>zap., zal., nic (p/d)</th>
-        <th>max ž.</th>
-        <th>náhr.</th>
-        <th>max n.</th>
-        <th>vyb. kurzovné</th>
-        <th>operace</th>
+        <th colspan=3 rowspan=2>přihlášených žáků</th>
+        <th colspan=9>placení</th>
+        <th rowspan=3>max ž.</th>
+        <th rowspan=3>náhr.</th>
+        <th rowspan=3>max n.</th>
+        <th rowspan=3>vyb. kurzovné</th>
+        <th rowspan=3>operace</th>
+    </tr>
+    <tr>
+      
+        <th colspan=3>zaplaceno</th>
+        <th colspan=3>záloha</th>
+        <th colspan=3>neplaceno</th>
+
+    </tr>
+        <th>p</th>
+        <th>d</th>
+        <th>c</th>
+
+        <th>p</th>
+        <th>d</th>
+        <th>c</th>
+
+        <th>p</th>
+        <th>d</th>
+        <th>c</th>
+
+        <th>p</th>
+        <th>d</th>
+        <th>c</th>
+    <tr>
     </tr>
     {% for c in course_list %}
         <tr class='autohover'>
@@ -77,8 +101,10 @@
             <td>{{c.cost_mode_loc}}</td>
             <td>{{c.cost_sale|anone}}</td>
 -->
-            <td>{{c.usage}} (p: {{c.stat_e_m}}, d: {{c.stat_e_f}})</td>
-            <td>{{c.stat_fp_m}}/{{c.stat_fp_f}}, {{c.stat_pp_m}}/{{c.stat_pp_f}}, {{c.stat_np_m}}/{{c.stat_np_f}}</td>
+            <td>{{c.stat_e_m}}</td><td>{{c.stat_e_f}}</td><td>{{c.usage}}</td>
+            <td>{{c.stat_fp_m}}</td><td>{{c.stat_fp_f}}</td><td>{{c.stat_fp_m|add:c.stat_fp_f}}</td>
+            <td>{{c.stat_pp_m}}</td><td>{{c.stat_pp_f}}</td><td>{{c.stat_pp_m|add:c.stat_pp_f}}</td>
+            <td>{{c.stat_np_m}}</td><td>{{c.stat_np_f}}</td><td>{{c.stat_np_m|add:c.stat_np_f}}</td>
             <td>{{c.capacity}}</td>
             <td>{{c.pending}}</td>
             <td>{{c.pending_limit}}</td>
