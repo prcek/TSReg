@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from appengine_django.models import BaseModel
-from google.appengine.ext import db
+
+from google.appengine.ext import ndb
 from django import forms
 import logging
 
 
-class Config(BaseModel):
-    active = db.BooleanProperty()
-    name = db.StringProperty()
-    value = db.TextProperty()
+class Config(ndb.Model):
+    active = ndb.BooleanProperty()
+    name = ndb.StringProperty()
+    value = ndb.TextProperty()
     def as_csv_row(self):
         return [self.key().kind(),self.key().id(),self.active,self.name,self.value]
     def from_csv_row(self,row=[]):

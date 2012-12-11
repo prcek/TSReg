@@ -1,6 +1,7 @@
 application: ts-zapis
-version: 9e-tabulka
-runtime: python
+version: 10-python27
+runtime: python27
+threadsafe: false
 api_version: 1
 
 admin_console:
@@ -8,11 +9,18 @@ admin_console:
   - name: Stats
     url: /_ah/stats/
 
-builtins:
-- datastore_admin: on
-- appstats: on
-- remote_api: on
-- deferred: on     
+#builtins:
+#- datastore_admin: on
+#- appstats: on
+#- remote_api: on
+#- deferred: on     
+
+env_variables:
+  DJANGO_SETTINGS_MODULE: "settings"
+
+libraries:
+- name: django
+  version: "1.2"
 
 inbound_services:
 - mail
@@ -30,47 +38,32 @@ handlers:
   upload: static/favicon\.ico
   mime_type: image/x-icon
 
-#- url: /cron_jobs/.*
+
+#- url: /_ah/mail/.+
+#  script: inmail.py
+#  login: admin
+
+#- url: /cron/.*
 #  script: main.py
 #  login: admin
 
-#- url: /tasks/.*
+#- url: /task/.*
 #  script: main.py
 #  login: admin
 
-#- url: /upload
-#  script: files.py
+#- url: /admin/sys/.*
+#  script: main.py
 #  login: admin
 
-#- url: /download/.*
-#  script: files.py
+#- url: /admin/test/.*
+#  script: main.py
 #  login: admin
 
-- url: /_ah/mail/.+
-  script: inmail.py
-  login: admin
-
-- url: /cron/.*
-  script: main.py
-  login: admin
-
-- url: /task/.*
-  script: main.py
-  login: admin
-
-- url: /admin/sys/.*
-  script: main.py
-  login: admin
-
-- url: /admin/test/.*
-  script: main.py
-  login: admin
-
-- url: /admin/.*
-  script: main.py
-  login: required
+#- url: /admin/.*
+#  script: main.py
+#  login: required
 
 - url: /.*
-  script: main.py
+  script: main.app
 
 
