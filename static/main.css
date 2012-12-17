@@ -248,6 +248,23 @@ td.nowrap {
     white-space:nowrap;
 }
 
+.b_l {
+    border-left: 2px solid black;
+}
+
+.b_r {
+    border-right: 2px solid black;
+}
+
+.b_t {
+    border-top: 2px solid black;
+}
+
+.b_b {
+    border-bottom: 2px solid black;
+}
+
+
 
 .highlight {
     background-color: #dddddd;    

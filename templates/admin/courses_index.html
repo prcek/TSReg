@@ -22,11 +22,11 @@
     <br/><br/>Přehled kurzů<br/>
 
     <table>
-    <tr>
-        <th rowspan=3>aktivní</th>
+    <tr class='b_t'>
+        <th class='b_l' rowspan=3>aktivní</th>
         <th rowspan=3>poz.</th>
         <th rowspan=3>řazení</th>
-        <th rowspan=3>kód</th>
+        <th class='b_l b_r' rowspan=3>kód</th>
         <th rowspan=3>název</th>
 {% if request.auth_info.admin %}
         <th rowspan=3>sezóna</th>
@@ -45,44 +45,45 @@
         <th>mód ceny</th>
         <th>sleva</th>
 -->
-        <th colspan=3 rowspan=2>přihlášených žáků</th>
-        <th colspan=9>placení</th>
+        <th class='b_l b_r' colspan=3 rowspan=2>přihlášených žáků</th>
+        <th class='b_l b_r' colspan=9>placení</th>
         <th rowspan=3>max ž.</th>
         <th rowspan=3>náhr.</th>
         <th rowspan=3>max n.</th>
         <th rowspan=3>vyb. kurzovné</th>
-        <th rowspan=3>operace</th>
+        <th class='b_l b_r' rowspan=3>operace</th>
     </tr>
     <tr>
       
         <th colspan=3>zaplaceno</th>
-        <th colspan=3>záloha</th>
-        <th colspan=3>neplaceno</th>
+        <th class='b_l b_r' colspan=3>záloha</th>
+        <th class='b_r' colspan=3>neplaceno</th>
 
     </tr>
-        <th>p</th>
-        <th>d</th>
-        <th>c</th>
-
-        <th>p</th>
-        <th>d</th>
-        <th>c</th>
-
-        <th>p</th>
-        <th>d</th>
-        <th>c</th>
-
-        <th>p</th>
-        <th>d</th>
-        <th>c</th>
     <tr>
+        <th class='b_l'>p</th>
+        <th>d</th>
+        <th class='b_r'>c</th>
+
+        <th class='b_l'>p</th>
+        <th>d</th>
+        <th class='b_r'>c</th>
+
+        <th class='b_l'>p</th>
+        <th>d</th>
+        <th class='b_r'>c</th>
+
+        <th class='b_l'>p</th>
+        <th>d</th>
+        <th class='b_r'>c</th>
     </tr>
+
     {% for c in course_list %}
-        <tr class='autohover'>
-            <td {% if c.active %} class='course_active' {% endif %}>{{c.active|anone }}</td>
+        <tr  class="{% if forloop.first %} b_t {% endif %} {% if forloop.last %} b_b {% endif %} autohover">
+            <td {% if c.active %} class='b_l course_active' {% else %} class='b_l' {% endif %}>{{c.active|anone }}</td>
             <td {% if c.active and c.suspend %} class='course_suspend' {% endif %} >{{c.suspend|anone }}</td>
             <td>{{c.order_value}}</td>
-            <td>{{c.code}}</td>
+            <td class='b_l b_r'>{{c.code}}</td>
             <td>{{c.name}}</td>
 {% if request.auth_info.admin %}
             <td>{{c.season_name|nonone}}</td>
@@ -101,15 +102,15 @@
             <td>{{c.cost_mode_loc}}</td>
             <td>{{c.cost_sale|anone}}</td>
 -->
-            <td>{{c.stat_e_m}}</td><td>{{c.stat_e_f}}</td><td>{{c.usage}}</td>
-            <td>{{c.stat_fp_m}}</td><td>{{c.stat_fp_f}}</td><td>{{c.stat_fp_m|add:c.stat_fp_f}}</td>
-            <td>{{c.stat_pp_m}}</td><td>{{c.stat_pp_f}}</td><td>{{c.stat_pp_m|add:c.stat_pp_f}}</td>
-            <td>{{c.stat_np_m}}</td><td>{{c.stat_np_f}}</td><td>{{c.stat_np_m|add:c.stat_np_f}}</td>
+            <td class='b_l'>{{c.stat_e_m}}</td><td>{{c.stat_e_f}}</td><td class='b_r'>{{c.usage}}</td>
+            <td class='b_l'>{{c.stat_fp_m}}</td><td>{{c.stat_fp_f}}</td><td class='b_r'>{{c.stat_fp_m|add:c.stat_fp_f}}</td>
+            <td class='b_l'>{{c.stat_pp_m}}</td><td>{{c.stat_pp_f}}</td><td class='b_r'>{{c.stat_pp_m|add:c.stat_pp_f}}</td>
+            <td class='b_l'>{{c.stat_np_m}}</td><td>{{c.stat_np_f}}</td><td class='b_r'>{{c.stat_np_m|add:c.stat_np_f}}</td>
             <td>{{c.capacity}}</td>
             <td>{{c.pending}}</td>
             <td>{{c.pending_limit}}</td>
             <td>{{c.stat_paid}}</td>
-            <td class='nowrap'>
+            <td class='b_r b_l  nowrap'>
                 <a class='button' href='{{c.key.id}}/zaci/'>žáci</a>
 {% if request.auth_info.admin %}
                 <a class='button' href='{{c.key.id}}/recount/'>přepočítat</a>
