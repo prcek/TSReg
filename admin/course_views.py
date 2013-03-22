@@ -135,7 +135,32 @@ def index(request):
         else:
             course_list=Course.list_filter(str(season.key()),str(folder.key()))
 
-    return render_to_response('admin/courses_index.html', RequestContext(request, { 'form':form, 'course_list': course_list }))
+    tc_em = 1
+    tc_ef = 2
+    tc_e = 3
+    tc_pm = 11
+    tc_pf = 22
+    tc_p = 33
+
+    tc_ppm = 111
+    tc_ppf = 222
+    tc_pp = 333
+
+    tc_npm = -111
+    tc_npf = -222
+    tc_np = -333
+
+    tc_sum = 9999
+
+    return render_to_response('admin/courses_index.html', RequestContext(request, { 
+        'form':form, 'course_list': course_list ,
+        'tc_em':tc_em, 'tc_ef':tc_ef, 'tc_e':tc_e,
+        'tc_pm':tc_pm, 'tc_pf':tc_pf, 'tc_p':tc_p,
+        'tc_ppm':tc_ppm, 'tc_ppf':tc_ppf, 'tc_pp':tc_pp,
+        'tc_npm':tc_npm, 'tc_npf':tc_npf, 'tc_np':tc_np,
+        'tc_sum':tc_sum
+    
+        }))
 
 
 @ar_edit
