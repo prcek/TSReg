@@ -135,23 +135,39 @@ def index(request):
         else:
             course_list=Course.list_filter(str(season.key()),str(folder.key()))
 
-    tc_em = 1
-    tc_ef = 2
-    tc_e = 3
-    tc_pm = 11
-    tc_pf = 22
-    tc_p = 33
+    tc_em = 0
+    tc_ef = 0
+    tc_e = 0
+    tc_pm = 0
+    tc_pf = 0
+    tc_p = 0
 
-    tc_ppm = 111
-    tc_ppf = 222
-    tc_pp = 333
+    tc_ppm = 0
+    tc_ppf = 0
+    tc_pp = 0
 
-    tc_npm = -111
-    tc_npf = -222
-    tc_np = -333
+    tc_npm = 0
+    tc_npf = 0
+    tc_np = 0
 
-    tc_sum = 9999
+    tc_sum = 0
+    if course_list is not None:
+        for c in course_list:
+            tc_em+=c.stat_e_m
+            tc_ef+=c.stat_e_f
+            tc_e+=c.usage
+            tc_pm+=c.stat_fp_m
+            tc_pf+=c.stat_fp_f
+            tc_p+=c.stat_fp_m+c.stat_fp_f
+            tc_ppm+=c.stat_pp_m
+            tc_ppf+=c.stat_pp_f
+            tc_pp=c.stat_pp_m+c.stat_pp_f
+            tc_npm+=c.stat_np_m
+            tc_npf+=c.stat_np_f
+            tc_np+=c.stat_np_m+c.stat_np_f
+            tc_sum+=c.stat_paid
 
+        
     return render_to_response('admin/courses_index.html', RequestContext(request, { 
         'form':form, 'course_list': course_list ,
         'tc_em':tc_em, 'tc_ef':tc_ef, 'tc_e':tc_e,

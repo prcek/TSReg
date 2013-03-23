@@ -264,7 +264,17 @@ td.nowrap {
     border-bottom: 2px solid black;
 }
 
+.n_b {
+    border-bottom: 2px solid #ffffff;
+}
 
+.n_l {
+    border-left: 2px solid #ffffff;
+}
+
+.n_r {
+    border-right: 2px solid #ffffff;
+}
 
 .highlight {
     background-color: #dddddd;    
