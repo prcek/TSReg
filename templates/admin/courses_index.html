@@ -123,8 +123,11 @@
         </tr>
     {% endfor %}
         <tr class='n_b'>
+{% if request.auth_info.admin %}
             <td class='n_l' colspan=12>&nbsp;</td>
-            
+{% else %}
+            <td class='n_l' colspan=10>&nbsp;</td>
+{% endif %}
             <td class='b_b b_l'>{{tc_em}}</td>
             <td class='b_b'>{{tc_ef}}</td>
             <td class='b_b b_r'>{{tc_e}}</td>
