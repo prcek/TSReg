@@ -19,8 +19,8 @@ sys.path.insert(0,'.')
 import utils.pdf
 
 
-from appengine_django import InstallAppengineHelperForDjango
-InstallAppengineHelperForDjango()
+#from appengine_django import InstallAppengineHelperForDjango
+#InstallAppengineHelperForDjango()
 
 from django.core.management import execute_manager
 try:

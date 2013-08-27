@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from appengine_django.models import BaseModel
+#from appengine_django.models import BaseModel
 from google.appengine.ext import db
 from google.appengine.api.app_identity import get_application_id
 import datetime
@@ -11,6 +11,11 @@ from utils import cache
 from utils import crypt
 
 from string import maketrans
+
+
+
+class BaseModel(db.Model):
+    pass
 
 
 def nonone(s):

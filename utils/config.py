@@ -3,6 +3,7 @@
 
 from google.appengine.ext import ndb
 from django import forms
+from wtforms.ext.appengine.ndb import model_form
 import logging
 
 
@@ -16,20 +17,17 @@ class Config(ndb.Model):
         self.name = row[2]
         return True
 
-class ConfigForm(forms.ModelForm):
-    class Meta:
-        model = Config
-        fields = ( 'active', 'name','value' )
+ConfigForm = model_form(Config, only=('active','name','value'))
 
  
 def getConfigString(name, dv=None):
-    c = Config.objects.all().filter('name =',name).filter('active = ',True).get()
+    c = Config.query(Config.name == name, Config.active == True).get()
     if c:
         return unicode(c.value)
     return dv 
 
 def setConfigString(name, value):
-    c = Config.objects.all().filter('name =',name).get()
+    c = Config.query(Config.name == name).get()
     if c is None:
         c = Config()
         c.name = name
@@ -44,7 +42,7 @@ def setConfigString(name, value):
 
 
 def getConfigBool(name, dv=None):
-    c = Config.objects.all().filter('name =',name).filter('active = ',True).get()
+    c = Config.query(Config.name == name, Config.active == True).get()
     if c:
         logging.info('Config: %s=%s'%(name,c.value))
         if c.value=='1':
@@ -63,7 +61,7 @@ def setConfigBool(name, value):
 
 
 def getConfigInt(name, dv=None):
-    c = Config.objects.all().filter('name =',name).filter('active = ',True).get()
+    c = Config.query(Config.name == name, Config.active == True).get()
     if c:
         logging.info('Config: %s=%s'%(name,c.value))
         try:
@@ -75,10 +73,11 @@ def getConfigInt(name, dv=None):
     return dv
 
 def getConfigList():
-    return Config.objects.all().order('name')
+    return Config.query().order(Config.name)
+
 
 def createConfig(name,value):
-    c = Config.objects.all().filter('name =',name).get()
+    c = Config.query(Config.name == name).get()
     if c is None:
         c = Config()
         c.name = name

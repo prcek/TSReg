@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from appengine_django.models import BaseModel
+#from appengine_django.models import BaseModel
 from google.appengine.ext import db
 import datetime
 import logging
@@ -22,6 +22,9 @@ def Bool2AnoNe(b):
         return "Ano"
     else:
         return "Ne"
+
+class BaseModel(db.Model):
+    pass
 
 
 class Season(BaseModel):

@@ -20,7 +20,7 @@ env_variables:
 
 libraries:
 - name: django
-  version: "1.2"
+  version: "1.4"
 
 inbound_services:
 - mail
@@ -59,9 +59,9 @@ handlers:
 #  script: main.py
 #  login: admin
 
-#- url: /admin/.*
-#  script: main.py
-#  login: required
+- url: /admin/.*
+  script: main.app
+  login: required
 
 - url: /.*
   script: main.app
