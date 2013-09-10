@@ -43,7 +43,7 @@ def config_edit(request, config_id):
 
 def config_setup(request):
     cfg.setupConfig()
-    return redirect('/admin/sys/')
+    return redirect('/admin/sys')
 
 
 def flush_cache(request):

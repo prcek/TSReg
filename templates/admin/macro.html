@@ -1,0 +1,19 @@
+{% kwacro form_as_table f %}
+ 
+	{% for field in f %}
+    <tr>
+        <th>{{ field.label|safe }}</th>
+        <td>
+	        {% if field.errors %}
+	    	<ul class="errorlist">
+	    		{% for error in field.errors %}
+	      		<li>{{ error }}</li>
+	    		{% endfor %}
+	    	</ul>
+	  		{% endif %}
+	  		{{ field|safe }}
+	  	</td>
+    </tr>
+	{% endfor %}
+
+ {% endkwacro %}

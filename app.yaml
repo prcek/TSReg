@@ -51,9 +51,9 @@ handlers:
 #  script: main.py
 #  login: admin
 
-#- url: /admin/sys/.*
-#  script: main.py
-#  login: admin
+- url: /admin/sys/.*
+  script: main.app
+  login: admin
 
 #- url: /admin/test/.*
 #  script: main.py

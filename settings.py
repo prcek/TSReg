@@ -15,8 +15,14 @@
 # Django settings for google-app-engine-django project.
 
 import os
+import logging
 
-DEBUG = False
+if os.environ.get('SERVER_SOFTWARE','').startswith('Development'):
+    DEBUG = True
+    logging.debug("[*] Debug info activated")
+else:
+    DEBUG = False
+
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (

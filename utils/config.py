@@ -79,11 +79,8 @@ def getConfigList():
 def createConfig(name,value):
     c = Config.query(Config.name == name).get()
     if c is None:
-        c = Config()
-        c.name = name
-        c.value = value
-        c.active = True
-        c.save()
+        c = Config(name=name,value=value,active=True)
+        c.put()
 
 def setupConfig():
 #    createConfig('REPORT_DAILY_SUMMARY','0')    
