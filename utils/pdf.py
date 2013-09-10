@@ -235,7 +235,7 @@ def students_table(output,course,students):
             if not s.is_fp():
                 paid_mark.append(lc)
             if course.group_mode == 'School':
-                data.append([s.x_no,s.x_class_no,s.ref_key,s.surname,s.name,s.paid,s.balance_due(),s.discount,s.pay_info,s.school,s.school_class, sco, s.comment])
+                data.append([s.x_no,s.x_class_no,'',s.surname,s.name,s.paid,s.balance_due(),s.discount,s.pay_info,s.school,s.school_class, sco, s.comment])
             else:
                 if s.student:
                     st = 'A'
@@ -246,9 +246,9 @@ def students_table(output,course,students):
                 else:
                     stc = ''
                 if course.group_mode == 'Pair':
-                    data.append([s.x_no,s.x_pair_no,s.ref_key,s.surname,s.name,s.paid,s.balance_due(),s.discount,s.pay_info,st,stc,sco,s.comment])
+                    data.append([s.x_no,s.x_pair_no,'',s.surname,s.name,s.paid,s.balance_due(),s.discount,s.pay_info,st,stc,sco,s.comment])
                 else:
-                    data.append([i,s.ref_key,s.surname,s.name,s.paid,s.balance_due(),s.discount,s.pay_info,st,stc,sco,s.comment])
+                    data.append([i,'',s.surname,s.name,s.paid,s.balance_due(),s.discount,s.pay_info,st,stc,sco,s.comment])
         i+=1
         lc+=1
    # logging.info(data) 
