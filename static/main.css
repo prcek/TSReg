@@ -265,3 +265,8 @@ td.nowrap {
     background-color: #ffdddd;    
 }
 
+.fieldhelp {
+    color: #999999;
+    font-size: 85%;
+}
+

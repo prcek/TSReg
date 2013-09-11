@@ -6,7 +6,6 @@ from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext,Context, loader
 from google.appengine.ext import db
 from wtforms.ext.appengine.db import model_form
-#from wtforms.validators import InputRequired
 from wtforms.form import Form
 from wtforms.fields import SelectField, TextField
 from utils.wtf  import DisabledTextField, InputRequired
@@ -21,7 +20,7 @@ import urllib
 
 
 
-ERROR_MESSAGES={'required': 'Prosím vyplň tuto položku', 'invalid': 'Neplatná hodnota'}
+#ERROR_MESSAGES={'required': 'Prosím vyplň tuto položku', 'invalid': 'Neplatná hodnota'}
 
 GENDER_CHOICES = (
     ('-',u'?'),

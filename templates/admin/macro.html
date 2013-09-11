@@ -12,6 +12,9 @@
 	    	</ul>
 	  		{% endif %}
 	  		{{ field|safe }}
+	  		{% if field.description %}
+	  		<br><p class='fieldhelp'>{{ field.description }}</p>
+	  		{% endif %}
 	  	</td>
     </tr>
 	{% endfor %}
