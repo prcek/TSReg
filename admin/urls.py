@@ -72,11 +72,14 @@ urlpatterns = patterns('admin',
     (r'^kategorie/add/$', 'folder_views.create'),
     (r'^kategorie/(?P<folder_id>\d+)/edit/$', 'folder_views.edit'),
     (r'^kategorie/(?P<folder_id>\d+)/del/$', 'folder_views.delete'),
+    (r'^kategorie/setup/$', 'folder_views.setup'),
+
 
     (r'^sezony/$', 'season_views.index'),
     (r'^sezony/add/$', 'season_views.create'),
     (r'^sezony/(?P<season_id>\d+)/edit/$', 'season_views.edit'),
     (r'^sezony/(?P<season_id>\d+)/del/$', 'season_views.delete'),
+    (r'^sezony/setup/$', 'season_views.setup'),
  
 
     (r'^zaci/$', 'student_views.index'),

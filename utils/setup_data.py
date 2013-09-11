@@ -1,5 +1,18 @@
 # -*- coding: utf-8 -*-
 
+FOLDERS = (
+ (1,'kat jedna','Kategorie Jedna'),
+ (2,'kat dva', 'Kategorie Dva'),
+ (3,'kat tri', 'Kategorie Tri')
+)
+
+
+SEASONS = (
+ (1,'jedna','Jedna'),
+ (2,'dva', 'Dva'),
+ (3,'tri', 'Tri')
+)
+
 
 INFLECT_PATTERNS =(('name','f',u'Adéla',u'Adély'),
 ('name','f',u'Alice',u'Alice'),

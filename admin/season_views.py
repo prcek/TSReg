@@ -80,4 +80,21 @@ def delete(request, season_id):
     return HttpResponseRedirect('../..')
 
 
+def setup(request):
+    if not request.auth_info.admin:
+        raise Http404
+    
+    from utils.setup_data import SEASONS
+
+    for p in SEASONS:
+        season = Season() 
+        season.order_value = p[0]
+        season.name = p[1]
+        season.public_name = p[2] 
+        season.put()
+
+    rebuild_seasons()
+
+    return HttpResponseRedirect('..')
+
 

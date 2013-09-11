@@ -124,7 +124,7 @@ def setup(request):
     if not request.auth_info.admin:
         raise Http404
     
-    from admin.inflect_data import INFLECT_PATTERNS
+    from utils.setup_data import INFLECT_PATTERNS
 
     for p in INFLECT_PATTERNS:
         inflect = Inflect() 

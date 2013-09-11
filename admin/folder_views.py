@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from django import forms
-from django.http import HttpResponse, Http404
-from django.shortcuts import render_to_response, redirect, get_object_or_404
+from django.http import HttpResponse, Http404, HttpResponseRedirect
+from django.shortcuts import render_to_response,  get_object_or_404
 from django.template import RequestContext,Context, loader
+
+from wtforms.ext.appengine.db import model_form
+from utils.wtf import InputRequired
 
 from google.appengine.api import taskqueue
 
@@ -13,21 +15,17 @@ import utils.config as cfg
 import logging
 
 
-ERROR_MESSAGES={'required': 'Prosím vyplň tuto položku', 'invalid': 'Neplatná hodnota'}
 
+FolderForm = model_form(Folder, only=['order_value','name', 'public_name'], field_args = {
+        'order_value' : { 'label':u'řazení', 'validators':[InputRequired()], 'description':u'kategorie budou tříděny podle tohodle čísla v zestupném pořadí'},
+        'name': { 'label':u'název', 'validators':[InputRequired()]},
+        'public_name': { 'label': u'veřejný název', 'validators':[InputRequired()]}
+    })
 
-class FolderForm(forms.ModelForm):
-    order_value = forms.IntegerField(label='řazení',error_messages=ERROR_MESSAGES, help_text='kategorie budou tříděny podle tohodle čísla v zestupném pořadí')
-    name = forms.CharField(label='název', error_messages=ERROR_MESSAGES)
-    public_name = forms.CharField(label='veřejný název', error_messages=ERROR_MESSAGES)
-
-
-    class Meta:
-        model = Folder
-        fields = ( 'order_value', 'name', 'public_name' )
 
 
 def index(request):
+    rebuild_folders() 
     folder_list=Folder.list()
 
     return render_to_response('admin/folders_index.html', RequestContext(request, { 'folder_list': folder_list }))
@@ -41,16 +39,16 @@ def edit(request, folder_id):
         raise Http404
 
     if request.method == 'POST':
-        form = FolderForm(request.POST, instance=folder)
-        if form.is_valid():
+        form = FolderForm(request.POST, obj=folder)
+        if form.validate():
             logging.info('edit folder before %s'% folder)
-            form.save(commit=False)
+            form.populate_obj(folder)
             logging.info('edit folder after %s'% folder)
-            folder.save()
+            folder.put()
             rebuild_folders()
-            return redirect('../..')
+            return HttpResponseRedirect('../..')
     else:
-        form = FolderForm(instance=folder)
+        form = FolderForm(obj=folder)
 
     return render_to_response('admin/folders_edit.html', RequestContext(request, {'form':form}))
 
@@ -58,16 +56,16 @@ def create(request):
 
     folder = Folder()
     if request.method == 'POST':
-        form = FolderForm(request.POST, instance=folder)
-        if form.is_valid():
+        form = FolderForm(request.POST, obj=folder)
+        if form.validate():
             logging.info('edit folder before %s'% folder)
-            form.save(commit=False)
+            form.populate_obj(folder)
             logging.info('edit folder after %s'% folder)
-            folder.save()
+            folder.put()
             rebuild_folders() 
-            return redirect('..')
+            return HttpResponseRedirect('..')
     else:
-        form = FolderForm(instance=folder)
+        form = FolderForm(obj=folder)
     return render_to_response('admin/folders_create.html', RequestContext(request, {'form':form}))
 
 
@@ -79,7 +77,27 @@ def delete(request, folder_id):
 
     folder.delete()
     rebuild_folders() 
-    return redirect('../..')
+    return HttpResponseRedirect('../..')
+
+
+
+def setup(request):
+    if not request.auth_info.admin:
+        raise Http404
+    
+    from utils.setup_data import FOLDERS
+
+    for p in FOLDERS:
+        folder = Folder() 
+        folder.order_value = p[0]
+        folder.name = p[1]
+        folder.public_name = p[2] 
+        folder.put()
+
+    rebuild_folders()
+
+    return HttpResponseRedirect('..')
+
 
 
 

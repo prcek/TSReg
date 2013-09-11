@@ -7,6 +7,10 @@
     <a class='button' href='add'>přidat sezónu</a>
     <a class='button' href='.'>přenačíst</a>
 
+{% if request.auth_info.admin %}
+    <a class='cbutton' href='setup/'>setup</a>
+{% endif %}
+
     <br/><br/>Přehled sezón<br/>
 
 {% if season_list %}

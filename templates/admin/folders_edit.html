@@ -3,9 +3,11 @@
 {% block title %} Editace kategorie {% endblock %}
 
 {% block content %}
+{% loadkwacros 'admin/macro.html' %}
+
 <form method="post" name="form" action=".">
 <table>
-{{ form.as_table }}
+ {% usekwacro form_as_table form %}
 </table>
 <input class="button" type="submit" value="uložit"/>
 <a class='button' href='../..'>zpět</a>
