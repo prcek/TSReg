@@ -91,8 +91,9 @@ MIDDLEWARE_CLASSES = (
 #    'utils.middleware.Cron',
     'utils.middleware.Auth',
     'utils.middleware.Gae',
+    'utils.middleware.SessionMiddleware',
 
-    'django.contrib.sessions.middleware.SessionMiddleware',
+#    'django.contrib.sessions.middleware.SessionMiddleware',
 #    'django.contrib.auth.middleware.AuthenticationMiddleware',
 #    'django.middleware.doc.XViewMiddleware',
 )
