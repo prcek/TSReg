@@ -1,11 +1,17 @@
 # -*- coding: utf-8 -*-
 
-from django import forms
+#from django import forms
 from django.http import HttpResponse, Http404, HttpResponseRedirect
-from django.shortcuts import render_to_response, redirect, get_object_or_404
+from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext,Context, loader
 
 from google.appengine.api import taskqueue
+
+from wtforms.ext.appengine.db import model_form
+from wtforms.form import Form
+from wtforms.fields import SelectField, TextField
+from utils.wtf  import DisabledTextField, InputRequired
+
 
 
 from enroll.models import Course,Folder,Season
@@ -15,83 +21,70 @@ import logging
 
 
 GROUP_MODE_CHOICES = (
-    ('Single','jednotlivci'),
-    ('Pair','po párech'),
-    ('School','po třídách'),
+    ('Single',u'jednotlivci'),
+    ('Pair',u'po párech'),
+    ('School',u'po třídách'),
 )
 
 COST_MODE_CHOICES = (
-    ('Normal','student/dospělý'),
-    ('Period','polo/celo-roční'),
-    ('Fix','pevná'),
+    ('Normal',u'dospělý/student'),
+    ('Period',u'celo/polo-roční'),
+    ('Fix',u'pevná'),
 )
 
 
-ERROR_MESSAGES={'required': 'Prosím vyplň tuto položku', 'invalid': 'Neplatná hodnota'}
 
-class FolderField(forms.ChoiceField):
-    def valid_value(self, value):
-        self._set_choices(Folder.get_FOLDER_CHOICES())
-        return super(FolderField,self).valid_value(value)
+class CourseFormBase(Form):
+    season_key = SelectField(label=u'sezóna',coerce=str)
+    folder_key = SelectField(label=u'kategorie',coerce=str)
 
-class SeasonField(forms.ChoiceField):
-    def valid_value(self, value):
-        self._set_choices(Season.get_SEASON_CHOICES())
-        return super(SeasonField,self).valid_value(value)
+    def __init__(self,  *args, **kwargs):
+        super(CourseFormBase,self).__init__(*args, **kwargs)
+        self.season_key.choices = Season.get_SEASON_CHOICES()
+        self.folder_key.choices = Folder.get_FOLDER_CHOICES()
 
 
 
 
-class CourseForm(forms.ModelForm):
-    active = forms.BooleanField(label='aktivní', required=False, help_text='je-li kurz aktivní, bude nabízen pro zápis')
-    order_value = forms.IntegerField(label='řazení',error_messages=ERROR_MESSAGES, help_text='kurzy budou tříděny podle tohodle čísla v zestupném pořadí')
-    code = forms.CharField(label='kód', error_messages=ERROR_MESSAGES)
-    name = forms.CharField(label='název', error_messages=ERROR_MESSAGES)
-    season_key = SeasonField(label='sezóna', error_messages=ERROR_MESSAGES)
-    folder_key = FolderField(label='kategorie', error_messages=ERROR_MESSAGES)
-    period = forms.CharField(label='termín', error_messages=ERROR_MESSAGES)
-    first_period = forms.CharField(label='zahájení', error_messages=ERROR_MESSAGES)
-    place = forms.CharField(label='místo', error_messages=ERROR_MESSAGES)
-    teacher = forms.CharField(label='lektor', error_messages=ERROR_MESSAGES)
-    cost_a = forms.IntegerField(label='cena A', error_messages=ERROR_MESSAGES)
-    cost_b = forms.IntegerField(label='cena B', error_messages=ERROR_MESSAGES)
-    cost_sa = forms.IntegerField(label='cena SA', error_messages=ERROR_MESSAGES)
-    cost_sb = forms.IntegerField(label='cena SB', error_messages=ERROR_MESSAGES)
-    cost_mode = forms.CharField(label='režim ceny', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=COST_MODE_CHOICES)) 
-    cost_sale = forms.BooleanField(label='aktivní sleva', required=False)
-    group_mode = forms.CharField(label='režim zápisu', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=GROUP_MODE_CHOICES)) 
-    capacity = forms.IntegerField(label='kapacita', error_messages=ERROR_MESSAGES)
-    pending_limit = forms.IntegerField(label='náhradníci', error_messages=ERROR_MESSAGES)
-    card_line_1 = forms.CharField(label='tisk 1.ř.', error_messages=ERROR_MESSAGES, required=False)
-    card_line_2 = forms.CharField(label='tisk 2.ř.', error_messages=ERROR_MESSAGES, required=False)
+CourseForm= model_form(Course, base_class=CourseFormBase, only=['active', 'order_value', 
+                'code','name', 'period', 'first_period', 'place', 'teacher', 
+                'cost_a', 'cost_b', 'cost_sa', 'cost_sb', 'cost_sale', 'cost_mode', 
+                'group_mode', 'capacity', 'pending_limit','card_line_1','card_line_2'], field_args = {
 
-
-    class Meta:
-        model = Course
-        fields = ( 'folder_key','season_key', 'active', 'order_value', 'code','name', 'period', 'first_period', 'place', 'teacher', 
-                'cost_a', 'cost_b', 'cost_sa', 'cost_sb', 'cost_sale', 'cost_mode', 'group_mode', 'capacity', 'pending_limit','card_line_1','card_line_2' )
-
-    def clean_code(self):
-        data = self.cleaned_data['code']
-        if len(data)==0:
-            raise forms.ValidationError('missing value')
-        return data
-
-    def __init__(self,data = None, **kwargs):
-        super(self.__class__,self).__init__(data, **kwargs)
-        self.fields['folder_key']._set_choices(Folder.get_FOLDER_CHOICES())
-        self.fields['season_key']._set_choices(Season.get_SEASON_CHOICES())
+        'active': { 'label':u'aktivní', 'description':u'je-li kurz aktivní, bude nabízen pro zápis'},
+        'order_value': { 'label':u'řazení', 'description':u'kurzy budou tříděny podle tohodle čísla v zestupném pořadí', 'validators':[InputRequired()] },
+        'code': { 'label': u'kód', 'validators':[InputRequired()] },
+        'name': { 'label': u'název', 'validators':[InputRequired()] },
+        'season_key': { 'label': u'sezóna', 'validators':[InputRequired()] },
+        'folder_key': { 'label': u'kategorie', 'validators':[InputRequired()] },
+        'period': { 'label': u'termín', 'validators':[InputRequired()] },
+        'first_period': { 'label': u'zahájení', 'validators':[InputRequired()] },
+        'place': { 'label': u'místo', 'validators':[InputRequired()] },
+        'teacher': { 'label': u'lektor', 'validators':[InputRequired()] },
+        'cost_a': { 'label': u'cena A', 'description': u'dospělý, celo-roční nebo pevná', 'validators':[InputRequired()] },
+        'cost_b': { 'label': u'cena B', 'description': u'student, pololetní', 'validators':[InputRequired()] },
+        'cost_sa': { 'label': u'cena SA', 'description': u'při aktivní slevě pro dospělý, celo-roční nebo pevná', 'validators':[InputRequired()] },
+        'cost_sb': { 'label': u'cena SB', 'description': u'při aktivní slevě pro student, pololetní', 'validators':[InputRequired()] },
+        'cost_mode': { 'label': u'režim ceny', 'validators':[InputRequired()], 'choices':COST_MODE_CHOICES },
+        'cost_sale': { 'label': u'aktivní sleva' },
+        'group_mode': { 'label': u'režim zápisu','validators':[InputRequired()], 'choices':GROUP_MODE_CHOICES },
+        'capacity': { 'label': u'kapacita', 'validators':[InputRequired()]},
+        'pending_limit': { 'label': u'náhradníci', 'validators':[InputRequired()]},
+        'card_line_1': { 'label': u'tisk 1.ř.' },
+        'card_line_2': { 'label': u'tisk 2.ř.' },
+})
 
 
 
-class SeasonCategoryFilterForm(forms.Form):
-    season_key = SeasonField(label='sezóna', error_messages=ERROR_MESSAGES)
-    folder_key = FolderField(label='kategorie', error_messages=ERROR_MESSAGES)
-    def __init__(self,data = None, **kwargs):
-        super(self.__class__,self).__init__(data, **kwargs)
-        self.fields['folder_key']._set_choices(Folder.get_FOLDER_CHOICES())
-        self.fields['season_key']._set_choices(Season.get_SEASON_CHOICES())
-    
+
+class SeasonCategoryFilterForm(Form):
+    season_key = SelectField(label=u'sezóna',coerce=str)
+    folder_key = SelectField(label=u'kategorie',coerce=str)
+
+    def __init__(self,  *args, **kwargs):
+        super(SeasonCategoryFilterForm,self).__init__(*args, **kwargs)
+        self.season_key.choices = Season.get_SEASON_CHOICES()
+        self.folder_key.choices = Folder.get_FOLDER_CHOICES()
 
 
 def index(request):
@@ -100,19 +93,23 @@ def index(request):
     season = None
     folder = None
     if request.method == 'POST':
+        logging.info('setting new season/folder')
         form = SeasonCategoryFilterForm(request.POST)
-        if form.is_valid():
-            season = Season.get(str(form.cleaned_data['season_key']))
-            folder = Folder.get(str(form.cleaned_data['folder_key']))
+        if form.validate():
+            logging.info(form.data)
+            season = Season.get(form.data['season_key'])
+            folder = Folder.get(form.data['folder_key'])
+            logging.info('season %s' % season)
+            logging.info('folder %s' % folder)
             if not season is None:
                 request.session['course_season_key']=str(season.key())
             if not folder is None:
                 request.session['course_folder_key']=str(folder.key())
     else:
-        cskey = request.session.get('course_season_key',None)
+        cskey = request.session['course_season_key']
         if not cskey is None:
             season =  Season.get(str(cskey))
-        cfkey = request.session.get('course_folder_key',None)
+        cfkey = request.session['course_folder_key']
         if not cfkey is None:
             folder =  Folder.get(str(cfkey))
 
@@ -120,7 +117,7 @@ def index(request):
         if (season is None) or (folder is None):
             form = SeasonCategoryFilterForm()
         else:
-            form = SeasonCategoryFilterForm({'season_key':str(season.key()), 'folder_key':str(folder.key())})
+            form = SeasonCategoryFilterForm(season_key=str(season.key()), folder_key=str(folder.key()))
 
     if (season is None) or (folder is None):
         course_list = None
@@ -147,17 +144,17 @@ def edit(request, course_id):
         raise Http404
 
     if request.method == 'POST':
-        form = CourseForm(request.POST, instance=course)
-        if form.is_valid():
+        form = CourseForm(request.POST, obj=course)
+        if form.validate():
             logging.info('edit course before %s'% course)
-            form.save(commit=False)
+            form.populate_obj(course)
             logging.info('edit course after %s'% course)
             course.mark_as_modify()
-            course.save()
+            course.put()
             taskqueue.add(url='/task/recount_capacity/', params={'course_id':course.key().id()})
             return HttpResponseRedirect('../..')
     else:
-        form = CourseForm(instance=course)
+        form = CourseForm(obj=course)
 
     return render_to_response('admin/courses_edit.html', RequestContext(request, {'form':form}))
 
@@ -167,10 +164,10 @@ def create(request):
     course = Course()
     season = None
     folder = None
-    cskey = request.session.get('course_season_key',None)
+    cskey = request.session['course_season_key']
     if not cskey is None:
         season =  Season.get(str(cskey))
-    cfkey = request.session.get('course_folder_key',None)
+    cfkey = request.session['course_folder_key']
     if not cfkey is None:
         folder =  Folder.get(str(cfkey))
 
@@ -181,16 +178,16 @@ def create(request):
 
 
     if request.method == 'POST':
-        form = CourseForm(request.POST, instance=course)
-        if form.is_valid():
+        form = CourseForm(request.POST, obj=course)
+        if form.validate():
             logging.info('edit course before %s'% course)
-            form.save(commit=False)
+            form.populate_obj(course)
             logging.info('edit course after %s'% course)
             course.mark_as_modify()
-            course.save()
+            course.put()
             return HttpResponseRedirect('..')
     else:
-        form = CourseForm(instance=course)
+        form = CourseForm(obj=course)
     return render_to_response('admin/courses_create.html', RequestContext(request, {'form':form}))
 
 def recount(request, course_id):
@@ -216,9 +213,9 @@ def delete(request, course_id):
 
     course.hidden = True
     course.mark_as_modify()
-    course.save()
+    course.put()
 
-    return redirect("../..")
+    return HttpResponseRedirect("../..")
 
 
     
