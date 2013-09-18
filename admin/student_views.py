@@ -223,10 +223,10 @@ def index(request):
     if request.method == 'POST':
         student_list = [] 
         form = FindForm(request.POST)
-        if form.is_valid():
-            ref_code=form.cleaned_data['ref_code'].upper()
-            surname = form.cleaned_data['surname']
-            email = form.cleaned_data['email']
+        if form.validate():
+            ref_code=form.data['ref_code'].upper()
+            surname = form.data['surname']
+            email = form.data['email']
             logging.info("find: '%s' '%s' '%s'"%(ref_code,surname,email)) 
             if ref_code != '':
                 rs = Student.get_by_ref_key(ref_code)
@@ -1039,17 +1039,17 @@ def pay(request, student_id, course_id=None):
     
     if request.method == 'POST':
         form = PayInfoForm(request.POST)
-        if form.is_valid():
+        if form.validate():
             logging.info('pay student before %s'% student)
-            student.course_cost = form.cleaned_data['course_cost']
-            student.paid = form.cleaned_data['paid']
-            student.discount = form.cleaned_data['discount']
-            student.pay_info = form.cleaned_data['pay_info']
+            student.course_cost = form.data['course_cost']
+            student.paid = form.data['paid']
+            student.discount = form.data['discount']
+            student.pay_info = form.data['pay_info']
             student.mark_as_modify()
             student.save()
             logging.info('pay student after %s'% student)
 
-            if form.cleaned_data['send_info']:
+            if form.data['send_info']:
                 logging.info('plan send info email')
                 plan_send_student_email('ENROLL_PAY_INFO', student)
 
@@ -1059,11 +1059,11 @@ def pay(request, student_id, course_id=None):
             plan_update_course(course_id)
 
 
-            return redirect('../..')
+            return HttpResponseRedirect('../..')
             
     else:
-        data = {'course_cost':student.course_cost, 'paid':student.paid, 'discount':student.discount, 'pay_info':student.pay_info,'send_info': (not student.no_email_notification)}
-        form = PayInfoForm(data)
+ #       data = {'course_cost':student.course_cost, 'paid':student.paid, 'discount':student.discount, 'pay_info':student.pay_info,'send_info': (not student.no_email_notification)}
+        form = PayInfoForm(course_cost = student.course_cost, paid= student.paid, discount=student.discount, pay_info=student.pay_info, send_info= (not student.no_email_notification))
 
     return render_to_response('admin/students_pay.html', RequestContext(request, {
         'student':student,'course':course, 'form':form

@@ -4,11 +4,14 @@
 {% block title %} Administrace zápisu {% endblock %}
 
 {% block content %}
+{% loadkwacros 'admin/macro.html' %}
+
 
 <br/>Vyhledání žáka<br/>
 <form method="post" name="form" action=".">
 <table>
-{{ form.as_table }}
+  {% usekwacro form_as_table form %}
+
 </table>
 <input class="button" type="submit" value="hledat"/>
 </form>
