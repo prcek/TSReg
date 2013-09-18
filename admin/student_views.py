@@ -1,10 +1,16 @@
 # -*- coding: utf-8 -*-
 
-from django import forms
 from django.http import HttpResponse, Http404, HttpResponseRedirect
-from django.shortcuts import render_to_response, redirect, get_object_or_404
+from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext,Context, loader
 #from google.appengine.api import taskqueue
+
+from wtforms.ext.appengine.db import model_form
+from wtforms.form import Form
+from wtforms.fields import SelectField, TextField, BooleanField, IntegerField
+from utils.wtf  import DisabledTextField, InputRequired, OptionalValue, YearRequired, EmailRequired
+
+
 
 from enroll.models import Student,Course,Season
 from admin.queue import plan_send_student_email, plan_update_course, plan_job_transfer_students, plan_job_card_for_students, plan_job_invitation_for_students, plan_job_makecopy_students, plan_job_cardout_for_students, plan_job_hide_students
@@ -21,26 +27,26 @@ import re
 
 
 
-ADDRESSING_CHOICES = (
-    ('-',''),
-    ('p','Pan'),
-    ('s','Slečna'),
-    ('d','Paní'),
-)
+ADDRESSING_CHOICES = [
+    ('-',u''),
+    ('p',u'Pan'),
+    ('s',u'Slečna'),
+    ('d',u'Paní'),
+]
 
-ADD_CHOICES = (
-    ('e','zapsaného'),
-    ('s','náhradníka')
-)
+ADD_CHOICES = [
+    ('e',u'zapsaného'),
+    ('s',u'náhradníka')
+]
 
 YEAR_CHOICES = [
     (0,'')
 ]
 
-for x in range(1900,2011):
+for x in range(1900,2013):
     YEAR_CHOICES.append((x,x))
 
-ERROR_MESSAGES={'required': 'Prosím vyplň tuto položku', 'invalid': 'Neplatná hodnota'}
+#ERROR_MESSAGES={'required': 'Prosím vyplň tuto položku', 'invalid': 'Neplatná hodnota'}
 
 
 def is_valid_int(s):
@@ -62,107 +68,150 @@ def is_pay_info(s):
     
 
 
-class CourseField(forms.ChoiceField):
-    def valid_value(self, value):
-        self._set_choices(Course.get_COURSE_CHOICES())
-        return super(CourseField,self).valid_value(value)
+#class CourseField(forms.ChoiceField):
+#    def valid_value(self, value):
+#        self._set_choices(Course.get_COURSE_CHOICES())
+#        return super(CourseField,self).valid_value(value)
+
+
+StudentForm = model_form(Student, only=[
+            'addressing', 'name', 'surname', 'email', 'no_email_notification', 'no_email_info', 'no_email_ad', 'student', 
+            'student_check', 'long_period', 'course_cost', 'paid', 'discount', 'pay_info', 'card_out', 'phone', 'year', 
+            'street', 'street_no', 'city', 'post_code', 'school', 'school_class', 'partner_ref_code', 'comment'], field_args = {
+
+'addressing': { 'label':u'oslovení', 'choices':ADDRESSING_CHOICES },
+'name': { 'label':u'jméno', 'validators':[InputRequired()] },
+'surname': { 'label':u'příjmení', 'validators':[InputRequired()] },
+'email': { 'label':u'email', 'validators':[OptionalValue(),EmailRequired()]},
+'no_email_notification': { 'label':u'nezasílat změny přihlášky' },
+'no_email_info': { 'label':u'nezasílat informace' },
+'no_email_ad': { 'label':u'nezasílat reklamu' },
+'student': { 'label':u'student' },
+'student_check': { 'label':u'st. ověřen' },
+'long_period': { 'label':u'celoroční' },
+'course_cost': { 'label':u'kurzovné', 'validators':[InputRequired()]},
+'paid': { 'label':u'platba', 'validators':[InputRequired()]},
+'discount': { 'label':u'sleva' },
+'pay_info': { 'label':u'platební info' },
+'card_out': { 'label':u'karta vydána' },
+'phone': { 'label':u'telefon' },
+'year': { 'label':u'rok nar.', 'validators': [OptionalValue(),YearRequired()] },
+'street': { 'label':u'ulice' },
+'street_no': { 'label':u'číslo' },
+'city': { 'label':u'město' },
+'post_code': { 'label':u'psč' },
+'school': { 'label':u'škola' },
+'school_class': { 'label':u'třída' },
+'partner_ref_code': { 'label':u'kód partnera' },
+'comment': { 'label':u'poznámka' },
 
 
 
-class StudentForm(forms.ModelForm):
-
-    addressing = forms.CharField(label='oslovení', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=ADDRESSING_CHOICES))
-    name = forms.CharField(label='jméno', error_messages=ERROR_MESSAGES)
-    surname = forms.CharField(label='příjmení', error_messages=ERROR_MESSAGES)
-    email = forms.EmailField(label='email', error_messages=ERROR_MESSAGES, required=False)
-    no_email_notification = forms.BooleanField(label='nezasílat změny přihlášky', error_messages=ERROR_MESSAGES, required=False)
-    no_email_info = forms.BooleanField(label='nezasílat informace', error_messages=ERROR_MESSAGES, required=False)
-    no_email_ad = forms.BooleanField(label='nezasílat reklamu', error_messages=ERROR_MESSAGES, required=False)
-    student = forms.BooleanField(label='student', error_messages=ERROR_MESSAGES, required=False)
-    student_check = forms.BooleanField(label='st. ověřen', error_messages=ERROR_MESSAGES, required=False)
-    long_period = forms.BooleanField(label='celoroční', error_messages=ERROR_MESSAGES, required=False)
-    course_cost = forms.IntegerField(label='kurzovné', error_messages=ERROR_MESSAGES)
-    paid = forms.IntegerField(label='platba', error_messages=ERROR_MESSAGES)
-    discount = forms.CharField(label='sleva', error_messages=ERROR_MESSAGES, required=False)
-    pay_info = forms.CharField(label='platební info', error_messages=ERROR_MESSAGES, required=False)
-    card_out = forms.BooleanField(label='karta vydána', error_messages=ERROR_MESSAGES, required=False)
-    phone = forms.CharField(label='telefon', error_messages=ERROR_MESSAGES, required=False)
-    year = forms.IntegerField(label='rok nar.', error_messages=ERROR_MESSAGES, required=False)
-    street = forms.CharField(label='ulice', error_messages=ERROR_MESSAGES, required=False)
-    street_no = forms.CharField(label='číslo', error_messages=ERROR_MESSAGES, required=False)
-    city = forms.CharField(label='město', error_messages=ERROR_MESSAGES, required=False)
-    post_code = forms.CharField(label='psč', error_messages=ERROR_MESSAGES, required=False)
-    school = forms.CharField(label='škola', error_messages=ERROR_MESSAGES, required=False)
-    school_class = forms.CharField(label='třída', error_messages=ERROR_MESSAGES, required=False)
-    partner_ref_code = forms.CharField(label='kód partnera', error_messages=ERROR_MESSAGES, required=False)
-    comment = forms.CharField(label='poznámka', error_messages=ERROR_MESSAGES, required=False)
+        })
 
 
-    def clean_addressing(self):
-        data = self.cleaned_data['addressing']
-        if not data in ['p','s','d']:
-            raise forms.ValidationError(ERROR_MESSAGES['required'])
-        return data
 
-    class Meta:
-        model = Student
-        fields = ( 'addressing', 'name', 'surname', 'email', 'no_email_info', 'no_email_ad', 'no_email_notification', 'student', 'student_check', 'long_period', 'course_cost', 'paid', 'discount',  'pay_info', 'card_out', 'phone', 'year', 'street', 'street_no', 'city', 'post_code', 'school', 'school_class', 'partner_ref_code', 'comment' )
+#class StudentForm(Form):
+
+#    addressing = forms.CharField(label='oslovení', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=ADDRESSING_CHOICES))
+#    name = forms.CharField(label='jméno', error_messages=ERROR_MESSAGES)
+#    surname = forms.CharField(label='příjmení', error_messages=ERROR_MESSAGES)
+#    email = forms.EmailField(label='email', error_messages=ERROR_MESSAGES, required=False)
+#    no_email_notification = forms.BooleanField(label='nezasílat změny přihlášky', error_messages=ERROR_MESSAGES, required=False)
+#    no_email_info = forms.BooleanField(label='nezasílat informace', error_messages=ERROR_MESSAGES, required=False)
+#    no_email_ad = forms.BooleanField(label='nezasílat reklamu', error_messages=ERROR_MESSAGES, required=False)
+#    student = forms.BooleanField(label='student', error_messages=ERROR_MESSAGES, required=False)
+#    student_check = forms.BooleanField(label='st. ověřen', error_messages=ERROR_MESSAGES, required=False)
+#    long_period = forms.BooleanField(label='celoroční', error_messages=ERROR_MESSAGES, required=False)
+#    course_cost = forms.IntegerField(label='kurzovné', error_messages=ERROR_MESSAGES)
+#    paid = forms.IntegerField(label='platba', error_messages=ERROR_MESSAGES)
+#    discount = forms.CharField(label='sleva', error_messages=ERROR_MESSAGES, required=False)
+#    pay_info = forms.CharField(label='platební info', error_messages=ERROR_MESSAGES, required=False)
+#    card_out = forms.BooleanField(label='karta vydána', error_messages=ERROR_MESSAGES, required=False)
+#    phone = forms.CharField(label='telefon', error_messages=ERROR_MESSAGES, required=False)
+#    year = forms.IntegerField(label='rok nar.', error_messages=ERROR_MESSAGES, required=False)
+#    street = forms.CharField(label='ulice', error_messages=ERROR_MESSAGES, required=False)
+#    street_no = forms.CharField(label='číslo', error_messages=ERROR_MESSAGES, required=False)
+#    city = forms.CharField(label='město', error_messages=ERROR_MESSAGES, required=False)
+#    post_code = forms.CharField(label='psč', error_messages=ERROR_MESSAGES, required=False)
+#    school = forms.CharField(label='škola', error_messages=ERROR_MESSAGES, required=False)
+#    school_class = forms.CharField(label='třída', error_messages=ERROR_MESSAGES, required=False)
+#    partner_ref_code = forms.CharField(label='kód partnera', error_messages=ERROR_MESSAGES, required=False)
+#    comment = forms.CharField(label='poznámka', error_messages=ERROR_MESSAGES, required=False)
+#
+
+#    def clean_addressing(self):
+#        data = self.cleaned_data['addressing']
+#        if not data in ['p','s','d']:
+#            raise forms.ValidationError(ERROR_MESSAGES['required'])
+#        return data
+
+#    class Meta:
+#        model = Student
+#        fields = ( 'addressing', 'name', 'surname', 'email', 'no_email_info', 'no_email_ad', 'no_email_notification', 'student', 'student_check', 'long_period', 'course_cost', 'paid', 'discount',  'pay_info', 'card_out', 'phone', 'year', 'street', 'street_no', 'city', 'post_code', 'school', 'school_class', 'partner_ref_code', 'comment' )
 
 #    def __init__(self,data = None, **kwargs):
 #        super(self.__class__,self).__init__(data, **kwargs)
 #        self.fields['course_key']._set_choices(Course.get_COURSE_CHOICES())
 
 
+
+
 class StudentFormAdd(StudentForm):
-    add_mode = forms.CharField(label='přidat jako', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=ADD_CHOICES))
-    addressing = forms.CharField(label='oslovení', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=ADDRESSING_CHOICES))
-    name = forms.CharField(label='jméno', error_messages=ERROR_MESSAGES)
-    surname = forms.CharField(label='příjmení', error_messages=ERROR_MESSAGES)
-    email = forms.EmailField(label='email', error_messages=ERROR_MESSAGES, required=False)
-    no_email_notification = forms.BooleanField(label='nezasílat změny přihlášky', error_messages=ERROR_MESSAGES, required=False)
-    no_email_info = forms.BooleanField(label='nezasílat informace', error_messages=ERROR_MESSAGES, required=False)
-    no_email_ad = forms.BooleanField(label='nezasílat reklamu', error_messages=ERROR_MESSAGES, required=False)
-    student = forms.BooleanField(label='student', error_messages=ERROR_MESSAGES, required=False)
-    student_check = forms.BooleanField(label='st. ověřen', error_messages=ERROR_MESSAGES, required=False)
-    long_period = forms.BooleanField(label='celoroční', error_messages=ERROR_MESSAGES, required=False)
-    course_cost = forms.IntegerField(label='kurzovné', error_messages=ERROR_MESSAGES)
-    paid = forms.IntegerField(label='platba', error_messages=ERROR_MESSAGES)
-    discount = forms.CharField(label='sleva', error_messages=ERROR_MESSAGES, required=False)
-    pay_info = forms.CharField(label='platební info', error_messages=ERROR_MESSAGES, required=False)
-    card_out = forms.BooleanField(label='karta vydána', error_messages=ERROR_MESSAGES, required=False)
-    phone = forms.CharField(label='telefon', error_messages=ERROR_MESSAGES, required=False)
-    year = forms.IntegerField(label='rok nar.', error_messages=ERROR_MESSAGES, required=False)
-    street = forms.CharField(label='ulice', error_messages=ERROR_MESSAGES, required=False)
-    street_no = forms.CharField(label='číslo', error_messages=ERROR_MESSAGES, required=False)
-    city = forms.CharField(label='město', error_messages=ERROR_MESSAGES, required=False)
-    school = forms.CharField(label='škola', error_messages=ERROR_MESSAGES, required=False)
-    school_class = forms.CharField(label='třída', error_messages=ERROR_MESSAGES, required=False)
-    post_code = forms.CharField(label='psč', error_messages=ERROR_MESSAGES, required=False)
-    partner_ref_code = forms.CharField(label='kód partnera', error_messages=ERROR_MESSAGES, required=False)
-    comment = forms.CharField(label='poznámka', error_messages=ERROR_MESSAGES, required=False)
+    add_mode = SelectField(label=u'přidat jako', choices = ADD_CHOICES)
 
 
-    def clean_addressing(self):
-        data = self.cleaned_data['addressing']
-        if not data in ['p','s','d']:
-            raise forms.ValidationError(ERROR_MESSAGES['required'])
-        return data
 
-    class Meta:
-        model = Student
-        fields = ( 'addressing', 'name', 'surname', 'email', 'no_email_info', 'no_email_ad', 'no_email_notification', 'student', 'student_check', 'long_period', 'course_cost', 'paid', 'discount',  'pay_info', 'card_out', 'phone', 'year', 'street', 'street_no', 'city', 'post_code', 'school', 'school_class', 'partner_ref_code', 'comment' )
+# class StudentFormAdd(Form):
+#     add_mode = forms.CharField(label='přidat jako', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=ADD_CHOICES))
+#     addressing = forms.CharField(label='oslovení', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=ADDRESSING_CHOICES))
+#     name = forms.CharField(label='jméno', error_messages=ERROR_MESSAGES)
+#     surname = forms.CharField(label='příjmení', error_messages=ERROR_MESSAGES)
+#     email = forms.EmailField(label='email', error_messages=ERROR_MESSAGES, required=False)
+#     no_email_notification = forms.BooleanField(label='nezasílat změny přihlášky', error_messages=ERROR_MESSAGES, required=False)
+#     no_email_info = forms.BooleanField(label='nezasílat informace', error_messages=ERROR_MESSAGES, required=False)
+#     no_email_ad = forms.BooleanField(label='nezasílat reklamu', error_messages=ERROR_MESSAGES, required=False)
+#     student = forms.BooleanField(label='student', error_messages=ERROR_MESSAGES, required=False)
+#     student_check = forms.BooleanField(label='st. ověřen', error_messages=ERROR_MESSAGES, required=False)
+#     long_period = forms.BooleanField(label='celoroční', error_messages=ERROR_MESSAGES, required=False)
+#     course_cost = forms.IntegerField(label='kurzovné', error_messages=ERROR_MESSAGES)
+#     paid = forms.IntegerField(label='platba', error_messages=ERROR_MESSAGES)
+#     discount = forms.CharField(label='sleva', error_messages=ERROR_MESSAGES, required=False)
+#     pay_info = forms.CharField(label='platební info', error_messages=ERROR_MESSAGES, required=False)
+#     card_out = forms.BooleanField(label='karta vydána', error_messages=ERROR_MESSAGES, required=False)
+#     phone = forms.CharField(label='telefon', error_messages=ERROR_MESSAGES, required=False)
+#     year = forms.IntegerField(label='rok nar.', error_messages=ERROR_MESSAGES, required=False)
+#     street = forms.CharField(label='ulice', error_messages=ERROR_MESSAGES, required=False)
+#     street_no = forms.CharField(label='číslo', error_messages=ERROR_MESSAGES, required=False)
+#     city = forms.CharField(label='město', error_messages=ERROR_MESSAGES, required=False)
+#     school = forms.CharField(label='škola', error_messages=ERROR_MESSAGES, required=False)
+#     school_class = forms.CharField(label='třída', error_messages=ERROR_MESSAGES, required=False)
+#     post_code = forms.CharField(label='psč', error_messages=ERROR_MESSAGES, required=False)
+#     partner_ref_code = forms.CharField(label='kód partnera', error_messages=ERROR_MESSAGES, required=False)
+#     comment = forms.CharField(label='poznámka', error_messages=ERROR_MESSAGES, required=False)
 
-class SeasonField(forms.ChoiceField):
-    def valid_value(self, value):
-        self._set_choices(Season.get_SEASON_CHOICES())
-        return super(SeasonField,self).valid_value(value)
+
+#     def clean_addressing(self):
+#         data = self.cleaned_data['addressing']
+#         if not data in ['p','s','d']:
+#             raise forms.ValidationError(ERROR_MESSAGES['required'])
+#         return data
+
+#     class Meta:
+#         model = Student
+#         fields = ( 'addressing', 'name', 'surname', 'email', 'no_email_info', 'no_email_ad', 'no_email_notification', 'student', 'student_check', 'long_period', 'course_cost', 'paid', 'discount',  'pay_info', 'card_out', 'phone', 'year', 'street', 'street_no', 'city', 'post_code', 'school', 'school_class', 'partner_ref_code', 'comment' )
+
+#class SeasonField(forms.ChoiceField):
+#    def valid_value(self, value):
+#        self._set_choices(Season.get_SEASON_CHOICES())
+#        return super(SeasonField,self).valid_value(value)
    
 
-class FindForm(forms.Form):
+class FindForm(Form):
 #    season_key = SeasonField(label='v sezóně', error_messages=ERROR_MESSAGES)
-    ref_code = forms.CharField(label='referenční číslo', error_messages=ERROR_MESSAGES,required=False)
-    surname = forms.CharField(label='příjmení', error_messages=ERROR_MESSAGES,required=False)
-    email = forms.EmailField(label='email', error_messages=ERROR_MESSAGES,required=False)
+    ref_code = TextField(label=u'referenční číslo')
+    surname = TextField(label=u'příjmení')
+    email = TextField(label=u'email')
         
 #    def __init__(self,data = None, **kwargs):
 #        super(self.__class__,self).__init__(data, **kwargs)
@@ -252,11 +301,12 @@ def index_course_kicked(request, course_id):
     }))
 
 
-class SeasonFilterForm(forms.Form):
-    season_key = SeasonField(label='sezóna', error_messages=ERROR_MESSAGES)
+
+class SeasonFilterForm(Form):
+    season_key = SelectField(label=u'sezóna',coerce=str)
     def __init__(self,data = None, **kwargs):
-        super(self.__class__,self).__init__(data, **kwargs)
-        self.fields['season_key']._set_choices(Season.get_SEASON_CHOICES())
+        super(SeasonFilterForm,self).__init__(data, **kwargs)
+        self.season_key.choices = Season.get_SEASON_CHOICES()
  
 
 def action_course(request,course_id):
@@ -357,20 +407,20 @@ SUBA_CHOICES=(
     ('discount2payinfo','sleva do pl. infa'),
 )
 
-class ExtraActionForm(forms.Form):
-    sub_action = forms.CharField(label='akce', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=SUBA_CHOICES))
-    bool_value = forms.BooleanField(label='ano/ne parametr', error_messages=ERROR_MESSAGES,  required=False)
-    int_value = forms.IntegerField(label='ciselny parametr', error_messages=ERROR_MESSAGES,  required=False)
-    str_value = forms.CharField(label='textovy parametr', error_messages=ERROR_MESSAGES,  required=False)
+class ExtraActionForm(Form):
+    sub_action = SelectField(label=u'akce', choices=SUBA_CHOICES)
+    bool_value = BooleanField(label=u'ano/ne parametr')
+    int_value = IntegerField(label=u'ciselny parametr')
+    str_value = TextField(label=u'textovy parametr')
  
 
-class TargetCoursePickForm(forms.Form):
-    course_key = forms.ChoiceField(label='Do kurzu')
-    def __init__(self, data = None, courses = []):
-        super(self.__class__,self).__init__(data)
-        self.fields['course_key'].choices=courses
+class TargetCoursePickForm(Form):
+    course_key = SelectField(label=u'Do kurzu', coerce=str)
+    def __init__(self, *args, **kwargs ):
+        super(TargetCoursePickForm,self).__init__(*args, **kwargs)
+        self.course_key.choices = kwargs['courses']
 
-       
+    
 
 @ar_edit
 def action_do_extra(request, source_course=None, student_ids=None):
@@ -384,7 +434,7 @@ def action_do_extra(request, source_course=None, student_ids=None):
     info = 'extra operace'
     if request.method=='POST' and 'sub_action' in request.POST:
         form = ExtraActionForm(request.POST)     
-        if form.is_valid():
+        if form.validate():
             suba = form.cleaned_data['sub_action']
             iv = form.cleaned_data['int_value']
             sv = form.cleaned_data['str_value']
@@ -447,10 +497,10 @@ def action_do_extra(request, source_course=None, student_ids=None):
  
     return render_to_response('admin/action_extra.html', RequestContext(request, { 'form':form, 'info':info, 'operation':request.POST['operation'], 'all_select':student_ids}))
 
-class EmailFilterForm(forms.Form):
-    email_ad = forms.BooleanField(label='včetně těch co nechtějí reklamy', error_messages=ERROR_MESSAGES, required=False, initial=True)
-    email_info = forms.BooleanField(label='včetně těch co nechtějí žádné zpravy', error_messages=ERROR_MESSAGES, required=False)
-    gsize = forms.IntegerField(label='skupinky po', error_messages=ERROR_MESSAGES,  required=True, initial=40)
+class EmailFilterForm(Form):
+    email_ad = BooleanField(label=u'včetně těch co nechtějí reklamy', default=True)
+    email_info = BooleanField(label=u'včetně těch co nechtějí žádné zpravy')
+    gsize = IntegerField(label=u'skupinky po', validators=[InputRequired()],  default=40)
  
 
 def action_do_email(request, source_course=None, student_ids=None):
@@ -473,7 +523,7 @@ def action_do_email(request, source_course=None, student_ids=None):
     ecount = None
  
     form = EmailFilterForm(request.POST)
-    if form.is_valid():
+    if form.validate():
         info = 'přehled vybraných emailů' 
 
         studs = []
@@ -483,13 +533,13 @@ def action_do_email(request, source_course=None, student_ids=None):
         studs = filter(lambda x: str(x.key().id()) in student_ids,studs)
         
 
-        if not form.cleaned_data['email_ad']:
+        if not form.data['email_ad']:
             studs = filter(lambda x: not x.no_email_ad,studs)
-        if not form.cleaned_data['email_info']:
+        if not form.data['email_info']:
             studs = filter(lambda x: not x.no_email_info,studs)
 
-        if form.cleaned_data['gsize']:
-            gsize = form.cleaned_data['gsize']
+        if form.data['gsize']:
+            gsize = form.data['gsize']
         else: 
             gsize = 0
 
@@ -555,7 +605,7 @@ def action_do_transfer(request, source_course=None, student_ids=None, target_cou
             filter_form = SeasonFilterForm()
             form = None
         else:
-            filter_form = SeasonFilterForm({'season_key':target_season.key()})       
+            filter_form = SeasonFilterForm(season_key=target_season.key())       
             form = TargetCoursePickForm(courses = target_season.get_COURSE_CHOICES())
 
         return render_to_response('admin/action_transfer.html', RequestContext(request, {'filter_form': filter_form, 'form':form, 'info':info, 'operation':request.POST['operation'], 'all_select':student_ids}))
@@ -581,7 +631,7 @@ def action_do_makecopy(request, source_course=None, student_ids=None, target_cou
             filter_form = SeasonFilterForm()
             form = None
         else:
-            filter_form = SeasonFilterForm({'season_key':target_season.key()})       
+            filter_form = SeasonFilterForm(season_key = target_season.key())       
             form = TargetCoursePickForm(courses = target_season.get_COURSE_CHOICES())
 
 
@@ -593,20 +643,21 @@ def action_do_makecopy(request, source_course=None, student_ids=None, target_cou
     return HttpResponseRedirect('../wait/%d/'%job_id)
 
 
-class CardPickForm(forms.Form):
-    course_code = forms.CharField(required=False, label='Kód kurzu')
-    season_name = forms.CharField(required=False, label='Sezóna')
-    info_line_1 = forms.CharField(required=False, label='1. řádek')
-    info_line_2 = forms.CharField(required=False, label='2. řádek')
+class CardPickForm(Form):
+    course_code = TextField(label=u'Kód kurzu')
+    season_name = TextField(label=u'Sezóna')
+    info_line_1 = TextField(label=u'1. řádek')
+    info_line_2 = TextField(label=u'2. řádek')
    
-    def __init__(self, data = None, course = None):
-        super(self.__class__,self).__init__(data)
+    def __init__(self, *args, **kwargs):
+        course = kwargs.get("course", None)
         if not course is None:
-            self.fields['course_code'].initial = course.code
-            self.fields['season_name'].initial = course.season_name()
-            self.fields['info_line_1'].initial = course.card_line_1
-            self.fields['info_line_2'].initial = course.card_line_2
+            kwargs.setdefault('course_code',course.code)
+            kwargs.setdefault('season_name',course.season_name())
+            kwargs.setdefault('info_line1',course.card_line_1)
+            kwargs.setdefault('info_line2',course.card_line_2)
 
+        super(CardPickForm,self).__init__(*args, **kwargs)
     
 @ar_edit
 def action_do_card(request, source_course=None, student_ids=None):
@@ -623,11 +674,11 @@ def action_do_card(request, source_course=None, student_ids=None):
         return render_to_response('admin/action_card.html', RequestContext(request, {'form':form, 'info':info, 'operation':request.POST['operation'], 'all_select':student_ids}))
    
     form = CardPickForm(request.POST)
-    if form.is_valid():
-        course_code = form.cleaned_data['course_code']
-        season_name = form.cleaned_data['season_name']
-        info_line_1 = form.cleaned_data['info_line_1']
-        info_line_2 = form.cleaned_data['info_line_2']
+    if form.validate():
+        course_code = form.data['course_code']
+        season_name = form.data['season_name']
+        info_line_1 = form.data['info_line_1']
+        info_line_2 = form.data['info_line_2']
         job_id=plan_job_card_for_students(request.auth_info.email,student_ids,course_code, season_name, info_line_1, info_line_2)
         return HttpResponseRedirect('../wait/%d/'%job_id)
 
@@ -656,18 +707,17 @@ INVITATION_MODE_CHOICES = (
 )
 
         
-class InvitationPickForm(forms.Form):
-    addressing_parents = forms.CharField(required=False, label='Oslovení pro rodiče', initial='Vážení rodiče')
-    addressing_p = forms.CharField(required=False, label='Oslovení pro pána', initial='Vážený pan')
-    addressing_s = forms.CharField(required=False, label='Oslovení pro slečnu', initial='Vážená slečna')
-    addressing_d = forms.CharField(required=False, label='Oslovení pro paní', initial='Vážená paní')
-    mode  = forms.CharField(label='Typ adresy', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=INVITATION_MODE_CHOICES), initial='parents')
+class InvitationPickForm(Form):
+    addressing_parents = TextField(label='Oslovení pro rodiče', default=u'Vážení rodiče')
+    addressing_p = TextField(label=u'Oslovení pro pána', default=u'Vážený pan')
+    addressing_s = TextField(label=u'Oslovení pro slečnu', default=u'Vážená slečna')
+    addressing_d = TextField(label=u'Oslovení pro paní', default=u'Vážená paní')
+    mode  = TextField(label=u'Typ adresy', choices=INVITATION_MODE_CHOICES, default='parents')
    
-    def __init__(self, data = None, course = None):
-        super(self.__class__,self).__init__(data)
-        if not course is None:
-#TODO preselect mode by course type
-            pass
+    def __init__(self,*args,**kwargs):
+
+        super(CardPickForm,self).__init__(*args, **kwargs)
+
 
 @ar_edit
 def action_do_invitation(request, source_course=None, student_ids=None):
@@ -732,10 +782,10 @@ def action_do_pair(request, source_course=None, student_ids=None):
             s.mark_as_modify()
             s.save()
  
-    return redirect('..')
+    return HttpResponseRedirect('..')
 
-class ConfirmForm(forms.Form):
-    confirm = forms.BooleanField(label='opravdu to chci udělat', error_messages=ERROR_MESSAGES,  required=True)
+class ConfirmForm(Form):
+    confirm = BooleanField(label=u'opravdu to chci udělat')
  
 
 @ar_edit
@@ -753,8 +803,8 @@ def action_do_delete(request, source_course=None, student_ids=None):
         return render_to_response('admin/action_delete.html', RequestContext(request, {'form':form, 'info':info, 'operation':request.POST['operation'], 'all_select':student_ids}))
    
     form = ConfirmForm(request.POST)
-    if form.is_valid():
-        confirm = form.cleaned_data['confirm']
+    if form.validate():
+        confirm = form.data['confirm']
         if (confirm):
             job_id=plan_job_hide_students(request.auth_info.email,student_ids, source_course)
             return HttpResponseRedirect('../wait/%d/'%job_id)
@@ -775,21 +825,21 @@ def edit(request, student_id,course_id=None):
 
 
     if request.method == 'POST':
-        form = StudentForm(request.POST, instance=student)
-        if form.is_valid():
+        form = StudentForm(request.POST, obj=student)
+        if form.validate():
             logging.info('edit student before %s'% student)
-            form.save(commit=False)
+            form.populate_obj(student)
             logging.info('edit student after %s'% student)
             student.mark_as_modify()
-            student.save()
+            student.put()
 
             course_id = student.get_course_id()
             logging.info('student course_id = %s'%(course_id))
             plan_update_course(course_id)
 
-            return redirect('../..')
+            return HttpResponseRedirect('../..')
     else:
-        form = StudentForm(instance=student)
+        form = StudentForm(obj=student)
 
     return render_to_response('admin/students_edit.html', RequestContext(request, {'form':form}))
 
@@ -808,24 +858,24 @@ def create(request, course_id):
     student.reg_by_admin = True
     student.status = '-'
     if request.method == 'POST':
-        form = StudentFormAdd(request.POST, instance=student)
-        if form.is_valid():
+        form = StudentFormAdd(request.POST, obj=student)
+        if form.validate():
             logging.info('create student before %s'% student)
-            form.save(commit=False)
-            student.status =  form.cleaned_data['add_mode']
+            form.populate_obj(student)
+            student.status =  form.data['add_mode']
             if student.status=='e':
                 student.init_enroll()
             logging.info('create student after %s'% student)
-            student.save()
+            student.put()
             student.init_ref_codes()
             student.mark_as_modify()
             
-            student.save()
+            student.put()
 
             course_id = student.get_course_id()
             plan_update_course(course_id)
 
-            return redirect('..')
+            return HttpResponseRedirect('..')
     else:
         form = StudentFormAdd(instance=student)
     return render_to_response('admin/students_create.html', RequestContext(request, {'form':form}))
@@ -854,26 +904,26 @@ def create_pair(request, course_id):
     student2.status = '-'
  
     if request.method == 'POST':
-        form1 = StudentFormAdd(request.POST,prefix='p1',instance=student1)
-        form2 = StudentFormAdd(request.POST,prefix='p2',instance=student2)
+        form1 = StudentFormAdd(request.POST,prefix='p1',obj=student1)
+        form2 = StudentFormAdd(request.POST,prefix='p2',obj=student2)
 
-        if form1.is_valid() and form2.is_valid():
+        if form1.validate() and form2.validate():
 
 
-            form1.save(commit=False)
-            student1.status =  form1.cleaned_data['add_mode']
+            form1.populate_obj(student1)
+            student1.status =  form1.data['add_mode']
             if student1.status=='e':
                 student1.init_enroll()
             logging.info('create student after %s'% student1)
-            student1.save()
+            student1.put()
             student1.init_ref_codes()
 
-            form2.save(commit=False)
-            student2.status =  form2.cleaned_data['add_mode']
+            form2.populate_obj(student2)
+            student2.status =  form2.data['add_mode']
             if student2.status=='e':
                 student2.init_enroll()
             logging.info('create student after %s'% student2)
-            student2.save()
+            student2.put()
             student2.init_ref_codes()
 
 
@@ -882,17 +932,17 @@ def create_pair(request, course_id):
             
             student1.mark_as_modify()
             student2.mark_as_modify()
-            student1.save()
-            student2.save()
+            student1.put()
+            student2.put()
 
             course_id = student1.get_course_id()
             plan_update_course(course_id)
 
-            return redirect('..')
+            return HttpResponseRedirect('..')
 
     else:
-        form1 = StudentFormAdd(prefix='p1',instance=student1)
-        form2 = StudentFormAdd(prefix='p2',instance=student2)
+        form1 = StudentFormAdd(prefix='p1',obj=student1)
+        form2 = StudentFormAdd(prefix='p2',obj=student2)
 
     return render_to_response('admin/students_create_pair.html', RequestContext(request, {'form1':form1,'form2':form2}))
 
@@ -972,12 +1022,12 @@ def view(request,student_id,course_id=None):
     }))
 
 
-class PayInfoForm(forms.Form):
-    course_cost = forms.IntegerField(label='kurzovné', error_messages=ERROR_MESSAGES)
-    paid = forms.IntegerField(label='platba', error_messages=ERROR_MESSAGES)
-    discount = forms.CharField(label='sleva', error_messages=ERROR_MESSAGES, required=False)
-    pay_info = forms.CharField(label='platební info', error_messages=ERROR_MESSAGES, required=False)
-    send_info = forms.BooleanField(label='odeslat info o platbě', error_messages=ERROR_MESSAGES, required=False)
+class PayInfoForm(Form):
+    course_cost = IntegerField(label=u'kurzovné', validators=[InputRequired()])
+    paid = IntegerField(label=u'platba', validators=[InputRequired()])
+    discount = TextField(label=u'sleva' )
+    pay_info = TextField(label=u'platební info')
+    send_info = BooleanField(label=u'odeslat info o platbě')
 
 @ar_edit
 def pay(request, student_id, course_id=None):
@@ -1022,12 +1072,12 @@ def pay(request, student_id, course_id=None):
 
 
 
-class EmailSelectForm(forms.Form):
-    include_enroll = forms.BooleanField(label='zapsané', error_messages=ERROR_MESSAGES, required=False)
-    include_spare = forms.BooleanField(label='náhradníky', error_messages=ERROR_MESSAGES, required=False)
-    email_ad = forms.BooleanField(label='i těm co nechtějí reklamy', error_messages=ERROR_MESSAGES, required=False)
-    email_info = forms.BooleanField(label='i těm co nechtějí žádné zpravy', error_messages=ERROR_MESSAGES, required=False)
-    gsize = forms.IntegerField(label='skupinky po', error_messages=ERROR_MESSAGES,  required=False, initial=40)
+class EmailSelectForm(Form):
+    include_enroll = BooleanField(label=u'zapsané')
+    include_spare = BooleanField(label=u'náhradníky')
+    email_ad = BooleanField(label=u'i těm co nechtějí reklamy')
+    email_info = BooleanField(label=u'i těm co nechtějí žádné zpravy')
+    gsize = IntegerField(label=u'skupinky po', default=40)
  
  
 
@@ -1042,18 +1092,18 @@ def course_emails(request, course_id):
     ecount = None
     if request.method == 'POST':
         form = EmailSelectForm(request.POST)
-        if form.is_valid():
+        if form.validate():
             studs = []
-            if form.cleaned_data['include_spare']:
+            if form.data['include_spare']:
                 studs.extend(Student.list_for_course_to_enroll(course.key()))
-            if form.cleaned_data['include_enroll']:
+            if form.data['include_enroll']:
                 studs.extend(Student.list_for_course_enrolled(course.key()))
-            if not form.cleaned_data['email_ad']:
+            if not form.data['email_ad']:
                 studs = filter(lambda x: not x.no_email_ad,studs)
-            if not form.cleaned_data['email_info']:
+            if not form.data['email_info']:
                 studs = filter(lambda x: not x.no_email_info,studs)
-            if form.cleaned_data['gsize']:
-                gsize = form.cleaned_data['gsize']
+            if form.data['gsize']:
+                gsize = form.data['gsize']
             else: 
                 gsize = 0
 

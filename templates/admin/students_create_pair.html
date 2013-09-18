@@ -3,10 +3,22 @@
 {% block title %} Založení páru {% endblock %}
 
 {% block content %}
+{% loadkwacros 'admin/macro.html' %}
+
 <form method="post" name="form">
 <table><tr>
-<td><table> {{ form1.as_table }} </table></td>
-<td><table> {{ form2.as_table }} </table></td>
+<td>
+	<table> 
+	  {% usekwacro form_as_table form1 %}
+
+	</table>
+</td>
+<td>
+	<table> 
+	  {% usekwacro form_as_table form2 %}
+
+	</table>
+</td>
 </tr></table>
 
 <input class="button" type="submit" value="založit pár">

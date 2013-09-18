@@ -22,11 +22,11 @@ import urllib
 
 #ERROR_MESSAGES={'required': 'Prosím vyplň tuto položku', 'invalid': 'Neplatná hodnota'}
 
-GENDER_CHOICES = (
+GENDER_CHOICES = [
     ('-',u'?'),
     ('m',u'mužský'),
     ('f',u'ženský'),
-)
+]
 
 PART_CHOICES = [
     ('-',u'?'),

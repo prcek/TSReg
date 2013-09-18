@@ -4,6 +4,8 @@
 {% block title %} Administrace zápisu {% endblock %}
 
 {% block content %}
+{% loadkwacros 'admin/macro.html' %}
+
 
 <br><br>
 {{info}}
@@ -17,7 +19,8 @@
 <input type="hidden" name="all_select" value="{{s}}" />
 {% endfor %}
 <table>
-{{ form.as_table }}
+ {% usekwacro form_as_table form %}
+
 </table>
     <input class="button" type="submit" value="vygenerovat">
     <a class='button' href='../'>zpět</a>
