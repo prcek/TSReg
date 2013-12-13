@@ -3,7 +3,7 @@ from django.http import HttpResponse, Http404, HttpResponseForbidden
 from django.shortcuts import render_to_response
 from django.template import RequestContext, Context, loader
 from google.appengine.api import users
-from google.appengine.ext import db
+from google.appengine.ext import ndb
 from google.appengine.api import memcache
 
 from admin.models import AppUser
@@ -13,6 +13,7 @@ import json
 import random
 import logging
 import os
+import uuid
 
 
 
@@ -114,67 +115,38 @@ class Auth(object):
 #        request.__class__.task_request = True 
 #        
 #    return None
+session_ancestor_key = ndb.Key('Sessions','root')
+
+class SessionData(ndb.Model):
+    session_json = ndb.TextProperty()
+    modification_time = ndb.DateTimeProperty(auto_now=True)
 
 
-mcache = memcache.Client()
+    def set_dict(self, kv):
+        self.session_json = json.dumps(kv)
 
-SYMBOLS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789~!@#$%^&*()'
-def generate_sessid():
-    return ''.join([SYMBOLS[random.randrange(0, len(SYMBOLS))] for i in range(64)])
+    def get_dict(self):
+        return json.loads(self.session_json)
 
-class SessionDb(db.Model):
-    stored_kv = db.TextProperty()
-    modification_time = db.DateTimeProperty(auto_now=True)
 
-    @staticmethod
-    def load_session(sessid):
-        parent_key = db.Key.from_path('SESSION_ID', sessid)
 
-        q = SessionDb.all()
-        q.ancestor(parent_key)
-        sessdb = q.get()
-
-        return sessdb
-
-    @staticmethod
-    def create_session(sessid):
-        parent_key = db.Key.from_path('SESSION_ID', sessid)
-        sessdb = SessionDb.load_session(sessid)
-
-        if sessdb == None:
-            sessdb = SessionDb(parent=parent_key)
-            sessdb.set_kv({})
-            sessdb.put()
-
-        return sessdb
-
-    def set_kv(self, kv):
-        self.stored_kv = json.dumps(kv)
-
-    def get_kv(self):
-        return json.loads(self.stored_kv)
 
 class Session:
     def __init__(self, request):        
         self.request = request
+        self.session_data = None
+        self.cleared = False
+        self.dict = None
+        self.session_id = None
+
         try:
-            self.sessid = self.request.COOKIES['SESSION_ID']
+            self.session_id = self.request.COOKIES['SESSION_ID']
+            logging.debug('session cookie %s' % self.session_id)
+
         except KeyError:
-            self.sessid = generate_sessid()
+            logging.debug('no session cookie')
+            self.dict = dict()
 
-        self.cookie_cleared = False
-
-        if self.get_all() == None:
-            self.cookie_cleared = True
-            return
-
-        tmp_access = self.get('tmp_access')
-        if tmp_access == None:
-            tmp_access = str(datetime.now()).split('.')[0]
-            self.set('tmp_access', tmp_access)
-        elif (datetime.strptime(tmp_access, '%Y-%m-%d %H:%M:%S') <= datetime.now() - timedelta(days=1)):
-            tmp_access = str(datetime.now()).split('.')[0]
-            self.set('tmp_access', tmp_access)
 
     def __setitem__(self, key, value):
         self.set(key,value)
@@ -183,65 +155,93 @@ class Session:
         return self.get(key)
 
 
-    def set(self, key, val):
-        sessdb = SessionDb.load_session(self.sessid) or \
-            SessionDb.create_session(self.sessid)
+    def set(self, key, value):
+        if self.dict is None:
+            self.load_or_create()
 
-        stored_kv = sessdb.get_kv()
-        stored_kv[key] = val
+        logging.debug('session set key %s, value %s' % (key,value))
+        self.dict[key]=value
 
-        sessdb.set_kv(stored_kv)
-        sessdb.put()
-        mcache.set(key=self.sessid, value=stored_kv)
-        self.cookie_cleared = False
 
-    def get(self, key):
-        try:
-            stored_kv = mcache.get(self.sessid)
+    def get(self, key, default = None):
+        if self.dict is None:
+            self.load_or_create()
 
-            if stored_kv == None:
-                sessdb = SessionDb.load_session(self.sessid)
-                if sessdb == None:
-                    return None
-                else:
-                    stored_kv = sessdb.get_kv()
-                    mcache.set(self.sessid, stored_kv)
 
-            value = stored_kv[key]
-            return value
-        except:
-            return None
+        value = self.dict.get(key,default)
+      
+        logging.debug('session read key %s, value %s' % (key,value))
+        return value
 
-    def get_all(self):
-        kv = mcache.get(self.sessid)
-        if kv == None:
-            sessdb = SessionDb.load_session(self.sessid)
-            if sessdb:
-                kv = sessdb.get_kv()
 
-        return kv
-
-    def delete(self, key):
-        sessdb = SessionDb.load_session(self.sessid)
-        stored_kv = sessdb.get_kv()
-
-        if stored_kv != None:
-            try:
-                stored_kv.pop(key)
-
-                sessdb.set_kv(stored_kv)
-                sessdb.put()
-                mcache.set(self.sessid, stored_kv)
-            except:
-                pass
 
     def clear(self):
-        sessdb = SessionDb.load_session(self.sessid)
-        if sessdb:
-            sessdb.delete()
+        self.cleared = True
+        self.dict = None
+        logging.debug('session cleared')
 
-        mcache.delete(self.sessid)
-        self.cookie_cleared = True
+    def load_or_create(self):
+        if not self.session_id:
+            logging.info('session id missing, creating empty dict')
+            self.dict = dict()
+        else:
+            try:
+                logging.info('session load data for %s', self.session_id)
+                self.session_data = SessionData.get_by_id(self.session_id,parent = session_ancestor_key)
+                if self.session_data:
+                    self.dict = self.session_data.get_dict()
+                    logging.info('session data loaded')
+                else:
+                    logging.info('session not found')
+                    self.session_id = None
+                    self.dict = dict()
+            except Exception as e:
+                logging.error('reading session error - %s' % e)
+                self.session_id = None
+                self.dict = dict()
+
+
+
+
+
+    def store(self,response):
+        if self.dict:
+            logging.debug('session store dict')
+            if self.session_data:
+                logging.debug('session data ready')
+                self.session_data.set_dict(self.dict)
+                self.session_data.put()
+                logging.debug('session data saved')
+
+             
+            else:
+                logging.debug('session data not ready')
+                self.session_id = str(uuid.uuid4()) 
+                self.session_data = SessionData.get_or_insert(self.session_id,parent = session_ancestor_key)
+                self.session_data.set_dict(self.dict)
+                key = self.session_data.put()
+                logging.info('session data stored, new key is %s',key)
+                
+            response.set_cookie(key='SESSION_ID', value=self.session_id,        
+                expires=datetime.now() + timedelta(days=7))
+            logging.debug('session cookie sets %s', self.session_id)
+
+
+        else:
+            logging.debug('session store without dict')
+            if self.cleared and self.session_id:
+
+                response.delete_cookie(key='SESSION_ID')
+               
+                key = ndb.Key(SessionData,self.session_id,parent = session_ancestor_key)
+                logging.info('session delete %s',key)
+                key.delete()
+                logging.info('session data deleted, key is %s', key)
+               
+
+
+
+        
 
 class SessionMiddleware:
     def process_request(self, request):
@@ -249,12 +249,10 @@ class SessionMiddleware:
 
     def process_response(self, request, response):
         try:
-            if not request.session.cookie_cleared:
-                response.set_cookie(key='SESSION_ID', value=request.session.sessid,
-                                    expires=datetime.now() + timedelta(days=7))
-            else:
-                response.delete_cookie(key='SESSION_ID')
-        except AttributeError:
+            logging.debug('processing response cookies')
+            request.session.store(response)
+        except Exception as e:
+            logging.error('session store problem - %s' % e)
             pass
 
         return response
