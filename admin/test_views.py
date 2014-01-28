@@ -32,5 +32,16 @@ def index(request):
     if request.method == 'POST':
         logging.info(request.POST)
 
+
+    val = request.session['counter']
+    if val is None:
+        val = 0
+    request.session['counter']=val+1
+
+    if val > 3:
+        request.session.clear()
+
+
+    
     return render_to_response('admin/test.html', RequestContext(request, { 'now': now, 'localized_now': localized_now, 'local_now': local_now, 'local_s': local_s, 'lines':lines }))
 

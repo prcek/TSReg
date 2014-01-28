@@ -5,7 +5,7 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext,Context, loader
 
-from wtforms.ext.appengine.db import model_form
+from wtforms.ext.appengine.ndb import model_form
 from utils.wtf import InputRequired
 
 

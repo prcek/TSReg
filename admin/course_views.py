@@ -6,6 +6,8 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext,Context, loader
 
 from google.appengine.api import taskqueue
+from google.appengine.ext import ndb
+
 
 from wtforms.ext.appengine.db import model_form
 from wtforms.form import Form
@@ -97,18 +99,21 @@ def index(request):
         form = SeasonCategoryFilterForm(request.POST)
         if form.validate():
             logging.info(form.data)
-            season = Season.get(form.data['season_key'])
+            season_key = ndb.Key(urlsafe=form.data['season_key'])
+            season = season_key.get()
+            #season = Season.get(form.data['season_key'])
             folder = Folder.get(form.data['folder_key'])
             logging.info('season %s' % season)
             logging.info('folder %s' % folder)
             if not season is None:
-                request.session['course_season_key']=str(season.key())
+                request.session['course_season_key']=season.key.urlsafe()
             if not folder is None:
                 request.session['course_folder_key']=str(folder.key())
     else:
         cskey = request.session['course_season_key']
         if not cskey is None:
-            season =  Season.get(str(cskey))
+            season_key = ndb.Key(urlsafe=cskey)
+            season =  season_key.get()
         cfkey = request.session['course_folder_key']
         if not cfkey is None:
             folder =  Folder.get(str(cfkey))
@@ -117,7 +122,7 @@ def index(request):
         if (season is None) or (folder is None):
             form = SeasonCategoryFilterForm()
         else:
-            form = SeasonCategoryFilterForm(season_key=str(season.key()), folder_key=str(folder.key()))
+            form = SeasonCategoryFilterForm(season_key=season.key.urlsafe(), folder_key=str(folder.key()))
 
     if (season is None) or (folder is None):
         course_list = None
@@ -130,7 +135,7 @@ def index(request):
             logging.info('all mode')
             course_list=Course.list()
         else:
-            course_list=Course.list_filter(str(season.key()),str(folder.key()))
+            course_list=Course.list_filter(season,str(folder.key()))
 
     return render_to_response('admin/courses_index.html', RequestContext(request, { 'form':form, 'course_list': course_list }))
 

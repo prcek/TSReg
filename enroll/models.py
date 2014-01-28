@@ -2,6 +2,7 @@
 
 #from appengine_django.models import BaseModel
 from google.appengine.ext import db
+from google.appengine.ext import ndb
 import datetime
 import logging
 import random
@@ -12,10 +13,6 @@ from operator import itemgetter
 
 from string import maketrans
 
-#intab = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-#outtab = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-#transtab = maketrans(intab, outtab)
-#transtab_r = maketrans(outtab,intab)
 
 def Bool2AnoNe(b):
     if b:
@@ -27,10 +24,12 @@ class BaseModel(db.Model):
     pass
 
 
-class Season(BaseModel):
-    name = db.StringProperty(default='')
-    public_name = db.StringProperty(default='')
-    order_value = db.IntegerProperty(default=0)
+Season_ancestor_key = ndb.Key('Seasons','root')
+
+class Season(ndb.Model):
+    name = ndb.StringProperty(default='')
+    public_name = ndb.StringProperty(default='')
+    order_value = ndb.IntegerProperty(default=0)
 
     @staticmethod
     def get_name_by_key(season_key):
@@ -38,16 +37,16 @@ class Season(BaseModel):
 
     @staticmethod
     def list():
-        return get_season_list()
+        q = Season.query().order(Season.order_value, Season.name)
+        return q.fetch()
 
 
     @staticmethod
     def get_SEASON_CHOICES():
-        clist = get_season_list()
+        clist = Season.list()
         res = []
         for c in clist:
-            res.append((c.key().__str__(),c.name))
-#        logging.info('get_SEASON_CHOICES: %s'%res)
+            res.append((c.key.urlsafe(),c.name))
         return res 
 
 
@@ -59,7 +58,6 @@ class Season(BaseModel):
             
         res = sorted(res,key=itemgetter(1))
 
-#        logging.info('season.get_COURSE_CHOICES: %s'%res)
         return res
 
 
@@ -163,7 +161,8 @@ class Course(BaseModel):
         return Course.all().filter('hidden',False).order('order_value').order('code')
 
     @staticmethod
-    def list_filter(season_key,folder_key):
+    def list_filter(season,folder_key):
+        season_key = season.key.urlsafe() 
         return Course.all().filter('hidden',False).filter('season_key',season_key).filter('folder_key',folder_key).order('order_value').order('code')
 
     @staticmethod
@@ -680,19 +679,19 @@ def build_season_list():
 
 
 
-def get_season_dict():
-    d = cache.get('season_dict')
-    if d is None:
-        d = build_season_dict()
-        cache.set('season_dict',d)
-    return d
+#def get_season_dict():
+#    d = cache.get('season_dict')
+#    if d is None:
+#        d = build_season_dict()
+#        cache.set('season_dict',d)
+#    return d
 
-def get_season_list():
-    d = cache.get('season_list')
-    if d is None:
-        d = build_season_list()
-        cache.set('season_list',d)
-    return d
+#def get_season_list():
+#    d = cache.get('season_list')
+#    if d is None:
+#        d = build_season_list()
+#        cache.set('season_list',d)
+#    return d
 
 
 
