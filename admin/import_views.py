@@ -22,7 +22,7 @@ ERROR_MESSAGES={'required': 'Položka musí být vyplněna', 'invalid': 'Neplatn
 ACTION_CHOICES = (
     ('-','--- zvol akci ---'),
     ('import_students','import žáků'),
-    ('import_school','import skoly'),
+    ('import_school','import tříd a škol'),
 )
 
 
@@ -167,7 +167,7 @@ def import_students_do(request,file_id, start_line, end_line, course_id):
     if f is None:
         raise Http404
     d = cStringIO.StringIO(f.data)
-    r = UnicodeReader(d)
+    r = UnicodeReader(d, encoding='utf8', delimiter=';', quotechar='"')
 
     start_line = int(start_line)
     end_line = int(end_line)
@@ -216,7 +216,7 @@ def import_school(request,file_id):
         raise Http404
 
     d = cStringIO.StringIO(f.data)
-    r = UnicodeReader(d)
+    r = UnicodeReader(d,encoding='utf8', delimiter=';', quotechar='"')
    
     form = None
     course = None 
@@ -372,7 +372,9 @@ def import_student2(course,row):
     logging.info('import student2 data=%s'%(row))
     
     try:
-        int(row[0])
+        s = row[0].lower()
+        if not (s in ['p','s','d','?']):
+            return None
     except:
         logging.info('skip, no number at first col')
         return None
@@ -384,41 +386,41 @@ def import_student2(course,row):
     st.course_key=str(course.key())
     st.init_reg()
     st.init_ref_base()
-    s = row[1].lower()
+    s = row[0].lower()
     if s in ['p','s','d']:
         st.addressing = s
     
-    st.name = row[3]
-    st.surname = row[2]
+    st.surname = row[1]
+    st.name = row[2]
  
     try:
-        paid = int(row[4])
+        paid = int(row[3])
     except:
         paid = 0
     try:
-        to_pay = int(row[5])
+        to_pay = int(row[4])
     except:
         to_pay = 0
         
     st.course_cost = paid+to_pay
     st.paid = paid
         
-    st.discount = row[6]
+    st.discount = row[5]
     
-    st.pay_info = row[7]
+    st.pay_info = row[6]
     
-    st.school = row[8]
-    st.school_class = row[9]
+    st.school = row[7]
+    st.school_class = row[8]
 
-    st.street = row[10]
-    st.street_no = row[11]
-    st.city = row[12]
-    st.post_code = row[13]
-    st.phone = row[14]
+    st.street = row[9]
+    st.street_no = row[10]
+    st.city = row[11]
+    st.post_code = row[12]
+    st.phone = row[13]
 
-    st.email = row[15]
+    st.email = row[14]
 
-    st.comment = row[16]
+    st.comment = row[15]
 
     st.no_email_notification = True
     st.no_email_info = not valid_email(st.email)
