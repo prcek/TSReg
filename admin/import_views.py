@@ -271,7 +271,7 @@ def import_school_do(request,file_id, course_id):
     if f is None:
         raise Http404
     d = cStringIO.StringIO(f.data)
-    r = UnicodeReader(d)
+    r = UnicodeReader(d, encoding='utf8', delimiter=';', quotechar='"')
 
     st_list=[]
     for row in r:
@@ -374,9 +374,10 @@ def import_student2(course,row):
     try:
         s = row[0].lower()
         if not (s in ['p','s','d','?']):
+            logging.info('skip, no p/s/d/? at first col')
             return None
     except:
-        logging.info('skip, no number at first col')
+        logging.info('skip, no p/s/d/? at first col')
         return None
     
     
