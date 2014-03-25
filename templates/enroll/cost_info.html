@@ -1,18 +1,18 @@
 {% if course.cost_mode == 'Normal' %}
     Kurzovné: {{ course.cost_a }}kč/dospěli, {{ course.cost_b }}kč/studenti.
     {% if course.cost_sale %}
-        POZOR SLEVA ! Pokud se přihlásíte, teď zaplatíte jen: {{ course.cost_sa }}kč/dospěli, {{ course.cost_sb }}kč/studenti.
+        POZOR NYNÍ SLEVA! Pokud se přihlásíte a zaplatíte v době slevy, platíte pouze: {{ course.cost_sa }}kč/dospěli, {{ course.cost_sb }}kč/studenti.
     {% endif %}
 {% endif %}
 {% if course.cost_mode == 'Period' %}
     Kurzovné: {{ course.cost_a }}kč/roční, {{ course.cost_b }}kč/pololetní.<br>
     {% if course.cost_sale %}
-        POZOR SLEVA ! Pokud se přihlásíte, teď zaplatíte jen:  {{ course.cost_sa }}kč/roční, {{ course.cost_sb }}kč/pololetní.<br>
+        POZOR NYNÍ SLEVA! Pokud se přihlásíte a zaplatíte v době slevy, platíte pouze:  {{ course.cost_sa }}kč/roční, {{ course.cost_sb }}kč/pololetní.<br>
     {% endif %}
 {% endif %}
 {% if course.cost_mode == 'Fix' %}
     Kurzovné: {{ course.cost_a }}kč<br>
     {% if course.cost_sale %}
-       POZOR SLEVA ! Pokud se přihlásíte, teď zaplatíte jen:  {{ course.cost_sa }}kč<br>
+       POZOR NYNÍ SLEVA! Pokud se přihlásíte a zaplatíte v době slevy, platíte pouze:  {{ course.cost_sa }}kč<br>
     {% endif %}
 {% endif %}
