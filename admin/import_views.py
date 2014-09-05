@@ -216,7 +216,7 @@ def import_school(request,file_id):
         raise Http404
 
     d = cStringIO.StringIO(f.data)
-    r = UnicodeReader(d,encoding='utf8', delimiter=';', quotechar='"')
+    r = UnicodeReader(d,encoding='utf8', delimiter=',', quotechar='"')
    
     form = None
     course = None 
@@ -271,7 +271,7 @@ def import_school_do(request,file_id, course_id):
     if f is None:
         raise Http404
     d = cStringIO.StringIO(f.data)
-    r = UnicodeReader(d, encoding='utf8', delimiter=';', quotechar='"')
+    r = UnicodeReader(d, encoding='utf8', delimiter=',', quotechar='"')
 
     st_list=[]
     for row in r:
@@ -391,35 +391,39 @@ def import_student2(course,row):
     if s in ['p','s','d']:
         st.addressing = s
     
-    st.surname = row[1]
-    st.name = row[2]
- 
+    st.surname = row[2]
+    st.name = row[1]
+
     try:
-        paid = int(row[3])
+        st.course_cost = int(row[3])
     except:
-        paid = 0
+        st.course_cost = 0
+
     try:
-        to_pay = int(row[4])
+        st.paid = int(row[4])
     except:
-        to_pay = 0
-        
-    st.course_cost = paid+to_pay
-    st.paid = paid
+        st.paid = 0
+
+       
         
     st.discount = row[5]
     
     st.pay_info = row[6]
     
-    st.school = row[7]
-    st.school_class = row[8]
+    st.email = row[7]
+    st.phone = row[8]
+
 
     st.street = row[9]
     st.street_no = row[10]
     st.city = row[11]
     st.post_code = row[12]
-    st.phone = row[13]
 
-    st.email = row[14]
+
+
+    st.school = row[13]
+    st.school_class = row[14]
+
 
     st.comment = row[15]
 
