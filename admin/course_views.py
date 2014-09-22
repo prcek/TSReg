@@ -161,7 +161,7 @@ def index(request):
             tc_p+=c.stat_fp_m+c.stat_fp_f
             tc_ppm+=c.stat_pp_m
             tc_ppf+=c.stat_pp_f
-            tc_pp=c.stat_pp_m+c.stat_pp_f
+            tc_pp+=c.stat_pp_m+c.stat_pp_f
             tc_npm+=c.stat_np_m
             tc_npf+=c.stat_np_f
             tc_np+=c.stat_np_m+c.stat_np_f
