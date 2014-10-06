@@ -65,6 +65,11 @@ indexes:
   - name: order_value
   - name: name
 
+- kind: FolderStats
+  properties:
+  - name: season_key
+  - name: folder_order_value
+
 - kind: Invitation
   properties:
   - name: owner

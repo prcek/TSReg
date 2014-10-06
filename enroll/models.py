@@ -303,6 +303,11 @@ class FolderStats(BaseModel):
             fs = FolderStats(folder_key=folder_key, season_key=season_key, folder_name=f.name, folder_order_value=f.order_value)
         return fs
 
+    @staticmethod
+    def list_by_season(season_key):
+        fs = FolderStats.all().filter('season_key',season_key).order('folder_order_value')
+        return fs
+
 
 class Student(BaseModel):
     hidden = db.BooleanProperty(default=False)

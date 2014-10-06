@@ -4,9 +4,80 @@
 {% block title %} Administrace zápisu {% endblock %}
 
 {% block content %}
-    <a class='button' href='.'>přenačíst</a>
+
 
     <br/>Hlavní přehled<br/>
+
+<form method="post" name="form" action=".">
+<table>
+{{ form.as_table }}
+</table>
+<input class="button" type="submit" value="zobrazit"/>
+</form>
+
+
+{% if folder_stats %}
+    <br/><br/>Přehled statistik podle kategorii<br/>
+
+    <table>
+    <tr class='b_t'>
+        <th class='b_l b_r' rowspan=2>Kategorie</th>
+        <th colspan=3>přihlášených žáků</th>
+        <th colspan=3>zaplaceno</th>
+        <th colspan=3>záloha</th>
+        <th colspan=3>neplaceno</th>
+        <th class='b_r b_l' rowspan=2>vyb. kurzovné</th>
+    </tr>
+ 
+     <tr>
+        <th class='b_l'>p</th>
+        <th>d</th>
+        <th class='b_r'>c</th>
+
+        <th class='b_l'>p</th>
+        <th>d</th>
+        <th class='b_r'>c</th>
+
+        <th class='b_l'>p</th>
+        <th>d</th>
+        <th class='b_r'>c</th>
+
+        <th class='b_l'>p</th>
+        <th>d</th>
+        <th class='b_r'>c</th>
+    </tr>
+
+
+    {% for fs in folder_stats %}
+    	<tr>
+    		<td class='b_l'> {{fs.folder_name}} </td>
+
+
+            <td class='b_l'>{{fs.stat_em}}</td>
+            <td class=''>{{fs.stat_ef}}</td>
+            <td class='b_r'>{{fs.stat_e}}</td>
+            
+            <td class='b_l'>{{fs.stat_pm}}</td>
+            <td class=''>{{fs.stat_pf}}</td>
+            <td class='b_r'>{{fs.stat_p}}</td>
+            
+            <td class='b_l'>{{fs.stat_ppm}}</td>
+            <td class=''>{{fs.stat_ppf}}</td>
+            <td class='b_r'>{{fs.stat_pp}}</td>
+            
+            <td class='b_l'>{{fs.stat_npm}}</td>
+            <td class=''>{{fs.stat_npf}}</td>
+            <td class='b_r'>{{fs.stat_np}}</td>
+          
+            <td class='b_l b_r'>{{fs.stat_sum}}</td>
+
+
+    	</tr>
+    {% endfor %}
+
+	</table>
+{% endif %}
+
 
 {% endblock %}
 

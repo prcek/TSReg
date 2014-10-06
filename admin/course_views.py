@@ -92,6 +92,11 @@ class SeasonCategoryFilterForm(forms.Form):
         self.fields['folder_key']._set_choices(Folder.get_FOLDER_CHOICES())
         self.fields['season_key']._set_choices(Season.get_SEASON_CHOICES())
     
+class SeasonFilterForm(forms.Form):
+    season_key = SeasonField(label='sezóna', error_messages=ERROR_MESSAGES)
+    def __init__(self,data = None, **kwargs):
+        super(self.__class__,self).__init__(data, **kwargs)
+        self.fields['season_key']._set_choices(Season.get_SEASON_CHOICES())
 
 
 def index(request):
