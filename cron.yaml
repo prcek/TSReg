@@ -14,3 +14,9 @@ cron:
   schedule: every mon,tue,wed,thu,fri,sat,sun 07:03
   timezone: Europe/Prague
 
+- description: update folder stats
+  url: /cron/udpate_folder_stats/
+  schedule: every mon,tue,wed,thu,fri,sat,sun 06:47
+  timezone: Europe/Prague
+
+
