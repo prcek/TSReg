@@ -2,7 +2,7 @@
 
 from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response, redirect, get_object_or_404
-from enroll.models import Student,Course
+from enroll.models import Student,Course,FolderStats
 from admin.models import Job,Card,Invitation,CourseBackup,EMailTemplate,EMailJob
 from email.utils import parseaddr
 import utils.config as cfg
@@ -950,3 +950,76 @@ def incoming_email(request):
         return HttpResponse("ok - import email")
  
     return HttpResponse('ok - ign')
+
+
+def update_folder_stats(request):
+    logging.info(request.POST)
+    folder_key = request.POST['folder_key']
+    season_key = request.POST['season_key']
+   
+    course_list=Course.list_filter(season_key,folder_key)
+
+    tc_em = 0
+    tc_ef = 0
+    tc_e = 0
+    tc_pm = 0
+    tc_pf = 0
+    tc_p = 0
+
+    tc_ppm = 0
+    tc_ppf = 0
+    tc_pp = 0
+
+    tc_npm = 0
+    tc_npf = 0
+    tc_np = 0
+
+    tc_sum = 0
+    if course_list is not None:
+        for c in course_list:
+            tc_em+=c.stat_e_m
+            tc_ef+=c.stat_e_f
+            tc_e+=c.usage
+            tc_pm+=c.stat_fp_m
+            tc_pf+=c.stat_fp_f
+            tc_p+=c.stat_fp_m+c.stat_fp_f
+            tc_ppm+=c.stat_pp_m
+            tc_ppf+=c.stat_pp_f
+            tc_pp+=c.stat_pp_m+c.stat_pp_f
+            tc_npm+=c.stat_np_m
+            tc_npf+=c.stat_np_f
+            tc_np+=c.stat_np_m+c.stat_np_f
+            tc_sum+=c.stat_paid
+
+    logging.info('stat done')
+
+    fs = FolderStats.get_or_create(season_key,folder_key)
+
+    logging.info('old folder stats %s' % (fs))
+
+
+    fs.stat_em = tc_em
+    fs.stat_ef = tc_ef
+    fs.stat_e = tc_e
+
+    fs.stat_pm = tc_pm
+    fs.stat_pf = tc_pf
+    fs.stat_p = tc_p
+
+    fs.stat_ppm = tc_ppm
+    fs.stat_ppf = tc_ppf
+    fs.stat_pp = tc_pp
+
+    fs.stat_npm = tc_npm
+    fs.stat_npf = tc_npf
+    fs.stat_np = tc_np
+ 
+    fs.stat_sum = tc_sum
+
+    fs.mark_update()
+    fs.save()
+
+    logging.info('folder stats %s' % (fs))
+
+    return HttpResponse('ok')
+

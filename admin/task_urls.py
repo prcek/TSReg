@@ -16,4 +16,5 @@ urlpatterns = patterns('admin',
     (r'^plan_multimail/$', 'tasks.plan_multimail'),
     (r'^send_mail/$', 'tasks.send_mail'),
     (r'^incoming_email/$', 'tasks.incoming_email'),
+    (r'^update_folder_stats/$', 'tasks.update_folder_stats'),
 )

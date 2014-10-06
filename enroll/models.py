@@ -261,7 +261,47 @@ class Course(BaseModel):
         self.backup_datetime = datetime.datetime.utcnow()        
         self.backup_flag = False 
 
-    
+
+
+class FolderStats(BaseModel):
+    folder_key = db.StringProperty()
+    season_key = db.StringProperty()
+    folder_name = db.StringProperty()
+    folder_order_value = db.IntegerProperty(default=0)
+
+    update_datetime = db.DateTimeProperty()
+
+    stat_em = db.IntegerProperty(default=0)
+    stat_ef = db.IntegerProperty(default=0)
+    stat_e = db.IntegerProperty(default=0)
+
+    stat_pm = db.IntegerProperty(default=0)
+    stat_pf = db.IntegerProperty(default=0)
+    stat_p = db.IntegerProperty(default=0)
+
+    stat_ppm = db.IntegerProperty(default=0)
+    stat_ppf = db.IntegerProperty(default=0)
+    stat_pp = db.IntegerProperty(default=0)
+
+    stat_npm = db.IntegerProperty(default=0)
+    stat_npf = db.IntegerProperty(default=0)
+    stat_np = db.IntegerProperty(default=0)
+
+    stat_sum = db.IntegerProperty(default=0)
+
+    def mark_update(self):
+        self.update_datetime = datetime.datetime.utcnow()        
+
+    @staticmethod
+    def get_or_create(season_key,folder_key):
+        logging.info('getting folder stat for s: %s f: %s ' % (season_key,folder_key))
+        fs = FolderStats.all().filter('season_key',season_key).filter('folder_key',folder_key).get()
+        if fs is None:
+            logging.info('no folder stat record, creating new')
+            f = Folder.get(folder_key)
+            logging.info('getting folder detail %s' %(f))
+            fs = FolderStats(folder_key=folder_key, season_key=season_key, folder_name=f.name, folder_order_value=f.order_value)
+        return fs
 
 
 class Student(BaseModel):

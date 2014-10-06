@@ -2,7 +2,7 @@
 
 from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response, redirect, get_object_or_404
-from enroll.models import Student,Course
+from enroll.models import Student,Course,Season,Folder
 import utils.config as cfg
 from google.appengine.api import taskqueue
 
@@ -58,3 +58,17 @@ def plan_course_backup(request):
  
     return HttpResponse('ok')
  
+def udpate_folder_stats(request):
+    logging.info('adding tasks for stats update')
+    folders = Folder.list()
+    seasons = Season.list()
+
+
+    for s in seasons:
+        for f in folders:
+            logging.info('stats task season %s and folder %s' %(s,f))
+            taskqueue.add(url='/task/update_folder_stats/', params={'season_key':str(s.key()), 'folder_key': str(f.key())})
+
+    return HttpResponse('ok')
+
+
