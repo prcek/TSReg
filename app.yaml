@@ -1,5 +1,5 @@
 application: ts-zapis
-version: 10a-stats
+version: 10b-stats
 runtime: python
 api_version: 1
 

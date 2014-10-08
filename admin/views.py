@@ -33,7 +33,11 @@ def index(request):
     if not season is None:
     	folder_stats = FolderStats.list_by_season(str(season.key()))
 
+    total_sum = 0
+    for fs in folder_stats:
+         total_sum = total_sum + fs.stat_sum
+
     return render_to_response('admin/index.html', RequestContext(request, {
-    	'form': form, 'folder_stats':folder_stats
+    	'form': form, 'folder_stats':folder_stats, 'total_sum':total_sum
     	}))
 
