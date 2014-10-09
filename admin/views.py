@@ -29,9 +29,11 @@ def index(request):
         else:
             form = SeasonFilterForm({'season_key':str(season.key())})
 
-    folder_stats = None
+    folder_stats = []
     if not season is None:
     	folder_stats = FolderStats.list_by_season(str(season.key()))
+
+
 
     total_sum = 0
     for fs in folder_stats:
