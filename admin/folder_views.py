@@ -20,11 +20,12 @@ class FolderForm(forms.ModelForm):
     order_value = forms.IntegerField(label='řazení',error_messages=ERROR_MESSAGES, help_text='kategorie budou tříděny podle tohodle čísla v zestupném pořadí')
     name = forms.CharField(label='název', error_messages=ERROR_MESSAGES)
     public_name = forms.CharField(label='veřejný název', error_messages=ERROR_MESSAGES)
+    no_stat = forms.BooleanField(label='nezahrnovat do statistik', required=False)
 
 
     class Meta:
         model = Folder
-        fields = ( 'order_value', 'name', 'public_name' )
+        fields = ( 'order_value', 'name', 'public_name', 'no_stat' )
 
 
 def index(request):

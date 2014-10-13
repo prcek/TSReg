@@ -15,6 +15,7 @@
         <th>řazení</th>
         <th>název</th>
         <th>veřejný název</th>
+        <th>nezahrnovat do statistik</th>
         <th>operace</th>
     </tr>
     {% for f in folder_list %}
@@ -22,6 +23,7 @@
             <td>{{f.order_value}}</td>
             <td>{{f.name}}</td>
             <td>{{f.public_name}}</td>
+            <td>{{f.no_stat|anone}}</td>
             <td>
                 <a class='button' href='{{f.key.id}}/edit/'>editovat</a>
                 <a class='cbutton' href='{{f.key.id}}/del/'>smazat</a>

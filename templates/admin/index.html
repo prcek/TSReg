@@ -21,15 +21,15 @@
 
     <table>
     <tr class='b_t'>
-        <th class='b_l b_r' rowspan=2>Kategorie</th>
+        <th class='b_l b_r b_b' rowspan=2>Kategorie</th>
         <th colspan=3>přihlášených žáků</th>
         <th colspan=3>zaplaceno</th>
         <th colspan=3>záloha</th>
         <th colspan=3>neplaceno</th>
-        <th class='b_r b_l' rowspan=2>vyb. kurzovné</th>
+        <th class='b_r b_l b_b' rowspan=2>vyb. kurzovné</th>
     </tr>
  
-     <tr>
+     <tr class='b_b'>
         <th class='b_l'>p</th>
         <th>d</th>
         <th class='b_r'>c</th>
@@ -74,7 +74,25 @@
 
     	</tr>
     {% endfor %}
-    <tr class='n_b'> <td class='n_l b_t' colspan=13>&nbsp;</td><td class='b_b b_l b_r b_t' style="text-align:right">{{total_sum}}</td></tr>
+    <tr class='n_b'> <td class='n_l b_t'>&nbsp;</td>
+        <td class='b_b b_t b_l'>{{ts_em}}</td>
+        <td class='b_b b_t'>{{ts_ef}}</td>
+        <td class='b_b b_t b_r'>{{ts_e}}</td>
+            
+        <td class='b_b b_t b_l'>{{ts_pm}}</td>
+        <td class='b_b b_t'>{{ts_pf}}</td>
+        <td class='b_b b_t b_r'>{{ts_p}}</td>
+            
+        <td class='b_b b_t b_l'>{{ts_ppm}}</td>
+        <td class='b_b b_t'>{{ts_ppf}}</td>
+        <td class='b_b b_t b_r'>{{ts_pp}}</td>
+            
+        <td class='b_b b_t b_l'>{{ts_npm}}</td>
+        <td class='b_b b_t'>{{ts_npf}}</td>
+        <td class='b_b b_t b_r'>{{ts_np}}</td>
+
+        <td class='b_b b_l b_r b_t' style="text-align:right">{{ts_sum}}</td>
+    </tr>
 	</table>
 {% endif %}
 

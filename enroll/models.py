@@ -66,6 +66,7 @@ class Folder(BaseModel):
     name = db.StringProperty(default='')
     public_name = db.StringProperty(default='')
     order_value = db.IntegerProperty(default=0)
+    no_stat = db.BooleanProperty(default=False)
 
     @staticmethod
     def get_name_by_key(folder_key):
@@ -268,6 +269,7 @@ class FolderStats(BaseModel):
     season_key = db.StringProperty()
     folder_name = db.StringProperty()
     folder_order_value = db.IntegerProperty(default=0)
+    folder_no_stat = db.BooleanProperty(default=False)
 
     update_datetime = db.DateTimeProperty()
 
@@ -296,16 +298,20 @@ class FolderStats(BaseModel):
     def get_or_create(season_key,folder_key):
         logging.info('getting folder stat for s: %s f: %s ' % (season_key,folder_key))
         fs = FolderStats.all().filter('season_key',season_key).filter('folder_key',folder_key).get()
+        f = Folder.get(folder_key)
         if fs is None:
             logging.info('no folder stat record, creating new')
-            f = Folder.get(folder_key)
             logging.info('getting folder detail %s' %(f))
-            fs = FolderStats(folder_key=folder_key, season_key=season_key, folder_name=f.name, folder_order_value=f.order_value)
+            fs = FolderStats(folder_key=folder_key, season_key=season_key, folder_name=f.name, folder_order_value=f.order_value, folder_no_stat=f.no_stat)
+        else:
+            fs.folder_name = f.name
+            fs.folder_order_value = f.order_value
+            fs.folder_no_stat = f.no_stat
         return fs
 
     @staticmethod
     def list_by_season(season_key):
-        fs = FolderStats.all().filter('season_key',season_key).order('folder_order_value')
+        fs = FolderStats.all().filter('folder_no_stat',False).filter('season_key',season_key).order('folder_order_value')
         return fs
 
 

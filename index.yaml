@@ -67,6 +67,12 @@ indexes:
 
 - kind: FolderStats
   properties:
+  - name: folder_no_stat
+  - name: season_key
+  - name: folder_order_value
+
+- kind: FolderStats
+  properties:
   - name: season_key
   - name: folder_order_value
 

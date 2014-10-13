@@ -35,11 +35,49 @@ def index(request):
 
 
 
-    total_sum = 0
+    ts_em = 0
+    ts_ef = 0
+    ts_e = 0
+
+    ts_pm = 0
+    ts_pf = 0
+    ts_p = 0
+
+    ts_ppm = 0 
+    ts_ppf = 0
+    ts_pp = 0
+
+    ts_npm = 0
+    ts_npf = 0
+    ts_np = 0
+
+    ts_sum = 0
+
     for fs in folder_stats:
-         total_sum = total_sum + fs.stat_sum
+        ts_em = ts_em + fs.stat_em
+        ts_ef = ts_ef + fs.stat_ef
+        ts_e = ts_e + fs.stat_e
+
+        ts_pm = ts_pm + fs.stat_pm
+        ts_pf = ts_pf + fs.stat_pf
+        ts_p = ts_p + fs.stat_p
+
+        ts_ppm = ts_ppm + fs.stat_ppm
+        ts_ppf = ts_ppf + fs.stat_ppf
+        ts_pp = ts_pp + fs.stat_pp
+ 
+        ts_npm = ts_npm + fs.stat_npm
+        ts_npf = ts_npf + fs.stat_npf
+        ts_np = ts_np + fs.stat_np
+
+        ts_sum = ts_sum + fs.stat_sum
 
     return render_to_response('admin/index.html', RequestContext(request, {
-    	'form': form, 'folder_stats':folder_stats, 'total_sum':total_sum
+    	'form': form, 'folder_stats':folder_stats, 
+        'ts_em': ts_em, 'ts_ef': ts_ef, 'ts_e': ts_e,
+        'ts_pm': ts_pm, 'ts_pf': ts_pf, 'ts_p': ts_p,
+        'ts_ppm': ts_ppm, 'ts_ppf': ts_ppf, 'ts_pp': ts_pp,
+        'ts_npm': ts_npm, 'ts_npf': ts_npf, 'ts_np': ts_np,
+        'ts_sum':ts_sum
     	}))
 
