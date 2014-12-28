@@ -21,8 +21,6 @@ Případně lze kurz uhradit v hotovosti na adrese:
     Babylon centrum
     Kounicova 20, Brno
     
-Otevírací doba: 
-    pondělí, pátek 14:00-16:00, 
-    středa 14:00-17:00.
+Otevírací doba: pondělí, středa 15:00-17:00
 
 {% include "email/signature.txt" %}
