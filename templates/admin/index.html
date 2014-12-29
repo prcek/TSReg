@@ -26,7 +26,14 @@
         <th colspan=3>zaplaceno</th>
         <th colspan=3>záloha</th>
         <th colspan=3>neplaceno</th>
-        <th class='b_r b_l b_b' rowspan=2>vyb. kurzovné</th>
+        <th class='b_r b_l b_b' rowspan=2>vyb. kurzovné<br>{{ s.name }}</th>
+        {% if prev_s1 %}
+        <th class='b_r b_l b_b' rowspan=2> {{ prev_s1.name }} </th>
+        {% endif %}
+        {% if prev_s2 %}
+        <th class='b_r b_l b_b' rowspan=2> {{ prev_s2.name }} </th>
+        {% endif %}
+
     </tr>
  
      <tr class='b_b'>
@@ -71,6 +78,13 @@
           
             <td class='b_l b_r' style="text-align:right">{{fs.stat_sum}}</td>
 
+            {% if prev_s1 %}
+            <td class='b_r b_l' style="text-align:right"> {{ fs.prev_season_sum_1 }} </td>
+            {% endif %}
+            {% if prev_s2 %}
+            <td class='b_r b_l' style="text-align:right"> {{ fs.prev_season_sum_2 }} </td>
+            {% endif %}
+
 
     	</tr>
     {% endfor %}
@@ -92,6 +106,15 @@
         <td class='b_b b_t b_r'>{{ts_np}}</td>
 
         <td class='b_b b_l b_r b_t' style="text-align:right">{{ts_sum}}</td>
+
+
+        {% if prev_s1 %}
+        <td class='b_r b_l b_b b_t' style="text-align:right"> {{ ts_prev_s1 }} </td>
+        {% endif %}
+        {% if prev_s2 %}
+        <td class='b_r b_l b_b b_t' style="text-align:right"> {{ ts_prev_s2 }} </td>
+        {% endif %}
+
     </tr>
 	</table>
 {% endif %}

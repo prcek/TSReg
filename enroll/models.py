@@ -9,6 +9,7 @@ import random
 from utils import crypt
 from utils import cache
 from operator import itemgetter
+from itertools import cycle,izip,tee
 
 from string import maketrans
 
@@ -23,6 +24,11 @@ def Bool2AnoNe(b):
     else:
         return "Ne"
 
+def pairwise(iterable):
+    "s -> (s0,s1), (s1,s2), (s2, s3), ..."
+    a, b = tee(iterable)
+    next(b, None)
+    return izip(a, b)
 
 class Season(BaseModel):
     name = db.StringProperty(default='')
@@ -58,6 +64,13 @@ class Season(BaseModel):
 
 #        logging.info('season.get_COURSE_CHOICES: %s'%res)
         return res
+
+    def get_prev(self):
+        slist = get_season_list()
+        for s,ns in pairwise(slist):
+            if s.key() == self.key():
+                return ns
+        return None
 
 
 
@@ -290,6 +303,10 @@ class FolderStats(BaseModel):
     stat_np = db.IntegerProperty(default=0)
 
     stat_sum = db.IntegerProperty(default=0)
+
+
+    prev_season_sum_1 = -1
+    prev_season_sum_2 = -1
 
     def mark_update(self):
         self.update_datetime = datetime.datetime.utcnow()        
