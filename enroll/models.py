@@ -24,6 +24,15 @@ def Bool2AnoNe(b):
     else:
         return "Ne"
 
+_sentinel = object()
+def next(it, default=_sentinel):
+    try:
+        return it.next()
+    except StopIteration:
+        if default is _sentinel:
+            raise
+        return default
+
 def pairwise(iterable):
     "s -> (s0,s1), (s1,s2), (s2, s3), ..."
     a, b = tee(iterable)

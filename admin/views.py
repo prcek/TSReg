@@ -36,10 +36,14 @@ def index(request):
     prev_season = None
     if not season is None:
         prev_season = season.get_prev()
+    
+    logging.info(prev_season)
 
     prev_prev_season = None
     if not prev_season is None:
         prev_prev_season = prev_season.get_prev()
+
+    logging.info(prev_prev_season)
 
 
 
@@ -58,7 +62,7 @@ def index(request):
         for fs,ps in izip(folder_stats,prev_prev_folder_stats):
             fs.prev_season_sum_2 = ps.stat_sum
 
-    
+
     ts_em = 0
     ts_ef = 0
     ts_e = 0

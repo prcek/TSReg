@@ -1,5 +1,5 @@
 application: ts-zapis
-version: 10i-prev
+version: 10i-prev-fix
 runtime: python
 api_version: 1
 
