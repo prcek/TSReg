@@ -12,7 +12,7 @@ class LogSenderHandler(InboundMailHandler):
 
 
     def receive(self, mail_message):
-        filename= '/inmail/' + str(uuid.uuid4())
+        filename= 'inmail/' + str(uuid.uuid4())
         logging.info('INMAIL_TEST handler')
         logging.info("Received a message from: %s, to: %s" % (mail_message.sender, mail_message.to))
         logging.info("mail date: %s" % mail_message.date)

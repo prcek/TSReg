@@ -5,7 +5,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), 'libs'))
 
 import cloudstorage as gcs 
 
-app_bucket = "inmail"
+app_bucket = "ts-zapis"
 
 
 def write_file(filename, data):
