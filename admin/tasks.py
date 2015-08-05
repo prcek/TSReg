@@ -7,7 +7,7 @@ from admin.models import Job,Card,Invitation,CourseBackup,EMailTemplate,EMailJob
 from email.utils import parseaddr
 import utils.config as cfg
 import utils.mail as mail
-from google.appengine.ext import blobstore
+import files
 from google.appengine.api import mail as gmail
 from google.appengine.api.mail import EmailMessage
 from google.appengine.api import taskqueue
@@ -927,14 +927,9 @@ def process_incoming_email_template(template_id, data):
 
 def incoming_email(request):
     logging.info(request.POST)
-    fk = request.POST['blob_key']
-    logging.info("fk = %s"%(fk))
-    blob_info = blobstore.BlobInfo.get(fk)
-    if not blob_info:
-        return HttpResponse('error - no blob')
-
-    blob_reader = blob_info.open()
-    data = blob_reader.read()
+    filename= request.POST['filename']
+    logging.info("filename = %s"%(filename))
+    data = files.read_file(filename)
 
     logging.info('email fetch ok')
     email = EmailMessage(data)
