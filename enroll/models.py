@@ -13,6 +13,14 @@ from itertools import cycle,izip,tee
 
 from string import maketrans
 
+import unicodedata
+
+def remove_accents(input_str):
+    nkfd_form = unicodedata.normalize('NFKD', input_str)
+    only_ascii = nkfd_form.encode('ASCII', 'ignore')
+    return only_ascii
+
+
 #intab = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 #outtab = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 #transtab = maketrans(intab, outtab)
@@ -378,6 +386,7 @@ class Student(BaseModel):
     school_class = db.StringProperty(default='')
     comment = db.StringProperty(default='')
     modify_datetime = db.DateTimeProperty()
+    search_surname = db.StringProperty()
 
     x_pair_empty_slot = False
     x_pair_no = 0
@@ -391,6 +400,17 @@ class Student(BaseModel):
     x_import_no_1 = None
     x_import_no_2 = None
 
+
+
+
+    def update_search(self):
+        self.search_surname = remove_accents(self.surname)
+
+
+    #Overriding
+    def save(self, *args, **kwargs):
+        self.update_search()
+        super(Student, self).save(*args, **kwargs)
 
     def clone(self):
         s = Student() 
@@ -425,6 +445,7 @@ class Student(BaseModel):
         s.school = self.school
         s.school_class = self.school_class
         s.comment = self.comment
+        s.search_surname = s.search_surname
 
 
         s.save()
