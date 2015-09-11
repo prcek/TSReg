@@ -1,5 +1,5 @@
 application: ts-zapis
-version: 11a-nofileapi
+version: 11b-redesing
 runtime: python
 api_version: 1
 
