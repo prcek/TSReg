@@ -419,4 +419,7 @@ def confirm_pair(request,confirm_code1,confirm_code2):
             plan_update_course(course)
 
     return render_to_response('enroll/confirm_pair.html', RequestContext(request, { 'course': course, 'student1':student1, 'student2':student2, 'confirm_code1':confirm_code1, 'confirm_code2':confirm_code2 , 'status':status }))
-        
+   
+def smernice(request):
+    return render_to_response('enroll/smernice.html', RequestContext(request, {  }))
+     

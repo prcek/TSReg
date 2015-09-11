@@ -1,6 +1,7 @@
 from django.conf.urls.defaults import *
 urlpatterns = patterns('enroll.views',
     (r'^$', 'index'),
+    (r'^smernice$', 'smernice'),
 #    (r'^kategorie/(?P<folder_id>\d+)/$','folder_index'),
     (r'^kurz/(?P<course_id>\d+)/$','attend'),
     (r'^kurz/(?P<course_id>\d+)/s/$','attend_force_single'),
