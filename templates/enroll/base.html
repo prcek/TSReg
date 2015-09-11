@@ -1,71 +1,270 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
-    <link href="/static/ts.css" type="text/css" rel="stylesheet" media="all"></link>
+<!DOCTYPE html>
+<html lang="cs">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!--[if lte IE 6]>
-<style type="text/css">
-.clearfix {height: 1%;}
-</style>
-<![endif]-->
-<!--[if gte IE 7.0]>
-<style type="text/css">
-.clearfix {display: inline-block;}
-</style>
-<![endif]-->
-<!--[if lte IE 6]>
-<style type="text/css">
-</style>
-<![endif]-->
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto+Condensed:300italic,400italic,400,300,700&amp;subset=latin-ext" type="text/css">
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Dosis:200,300,400,500,600,700&amp;subset=latin-ext" type="text/css">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+    <!--<link href="/static/ts.css" type="text/css" rel="stylesheet" media="all"></link> -->
+    <style> 
+
+       body {
+        font-family:'Roboto Condensed';
+        background-color:  #eee;
+        font-size: 15px;
+        line-height: 24px;
+        font-weight: 300;
+       }
+
+       .navbar-brand {
+        margin-bottom:  0px;
+       }
+
+       #top {
+        margin-left: 20px;
+        margin-right: 20px;
+ 
+       }
+       #header {
+        margin-left: 20px;
+        margin-right: 20px;
+        padding: 10px;
+        background-color: white;
+       }
+
+       #top ul {
+            margin: 0;
+            list-style: none;
+            padding: 0;
+       }
+       #top li {
+            list-style:  none;
+            display: inline-block;
+            line-height: 40px;
+            padding: 0px 10px;
+       }
+       #top ul li i {
+            margin: 0 6px 0 0;
+       }
+
+       #header {
+                padding: 40px 20px;
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+                -webkit-box-shadow: 0px 0px 9px 2px rgba(201, 201, 201, 0.3);
+                -moz-box-shadow: 0px 0px 9px 2px rgba(201, 201, 201, 0.3);
+                box-shadow: 0px 0px 9px 2px rgba(201, 201, 201, 0.3);
+                border: 1px solid rgba(206, 206, 206, 0.6);
+                border-bottom: 0;
+       }
+
+       #header2 {
+            margin-top: 35px;
+            font-size: 25px;
+            font-weight: 300;
+            height: 48px;
+            line-height: 24px;
+            margin-bottom: 10px;
+            text-align: right;
+            text-transform: uppercase;
+       }
+
+       #header3 {
+            font-size: 18px;
+            font-weight: 300;
+       }
+
+       #header3 i {
+            color: rgb(125, 0, 25);
+       }
+
+
+       #head_block {
+        margin-left: 20px;
+        margin-right: 20px;
+        background-color: rgb(42, 48, 56);
+        min-height: 53px;
+        color: white;
+       }
+
+       #content_block {
+        margin-left: 20px;
+        margin-right: 20px;
+        padding: 10px;
+        background-color: white;
+       }
+
+       #footer {
+        background-color: black;
+        position: absolute;
+        left: 0;
+        right: 0;
+        width: 100%;
+        min-height: 110px;
+       }
+       #footer_block {
+                margin-left: 20px;
+                margin-right: 20px;
+                padding: 10px;
+                color: rgba(255, 255, 255, 0.74902);;
+       }
+
+
+       .table1 {
+            border-collapse: collapse;
+            text-indent: 0;
+            border-spacing: 2px;
+            border-color: gray;
+            width:100%;
+        }
+
+        .table1 tr, .table1 td, .table1 th {
+            border-top: 1px solid lightGrey;
+            border-bottom: 1px solid lightGrey;
+            padding-left: 5px;
+            padding-right: 5px;
+            text-align: left;
+        }
+
+        .table1 th {
+            background: #EEE;
+            font-weight: bold;
+        }
+
+        .field_error {
+            color: #ff1010;
+        }
+        .small_info {
+            color: #202020;
+            font-size:75%;
+        }
+
+        #id_name, #id_surname, #id_p1-name, #id_p1-surname, #id_p2-name, #id_p2-surname {
+            width:150px;
+        }
+
+        #id_email, #id_p1-email, #id_p2-email {
+            width:220px;
+        }
+
+        #id_street, #id_p1-street, #id_p2-street {
+            width:100px;
+        }
+
+        #id_street_no, #id_post_code, #id_p1-street_no, #id_p1-post_code, #id_p2-street_no, #id_p2-post_code {
+            width:50px;
+        }
+
+        #id_city , #id_p1-city, #id_p2-city {
+            width:100px;
+        }
+
+        #id_phone, #id_p1-phone, #id_p2-phone  {
+            width:130px;
+        }
+
+        #id_comment, #id_p1-comment, #id_p2-comment {
+            width:220px;
+        }
+
+        #id_school, #id_p1-school, #id_p2-school {
+            width:220px;
+        }
+
+        #id_school_class, #id_p1-school_class, #id_p2-school_class {
+            width:100px;
+        }
+
+
+    </style>
 
     <title>{% block title %}{% endblock %}</title>
     
 </head>
-<body id="bd" class="wide fs3">
-<div id="ja-wrapper2">
-    <div id="ja-wrapper1">
-        <div id="ja-wrapper">
-            <div id="ja-headerwrap">
-                <div id="ja-header">
-                <h1>
-                    <a href="http://www.starlet-brno.cz" title="Taneční škola Starlet Brno">Taneční škola Starlet Brno</a>
-                </h1>
+<body>
+
+    <div class="container">
+        <div id="top" class="row">
+            <div class="col-md-10">
+                <ul>
+                    <li><i class="fa fa-map-marker"></i> Špitálka 253/6, 602 00 Brno–Zábrdovice </li>
+                    <li> <i style="" class="fa fa-phone "></i> +420 732 754 293 </li>
+                    <li> <i style="" class="fa fa-envelope "></i> <a href="mailto:starlet@starlet-brno.cz">starlet@starlet-brno.cz</a>  </li>
+                </ul>
+            </div>
+            <div class="col-md-2">
+                <ul class="pull-right">
+                    <li><a href="https://www.facebook.com/tsstarlet" target="_blank"><i class="fa fa-facebook"></i></a></li>
+                </ul>
+            </div> 
+        </div>
+        <div id="header" class="row">
+       
+            <div class="col-md-8">
+                <img src="/static/ts/logo.png" class="img-responsive" alt="Responsive image">
+            </div>
+
+            <div class="col-md-4">
+
+
+                <div id="header2" class="pull-right">Máte dotaz?
+                    <div id="header3"><i class="fa fa-phone "></i>  +420 732 754 293</div>
                 </div>
-    <div>                
-{% block head %}
-{% endblock %}
+
+            </div>
+        </div>
+
+
+        <div id="head_block" class="row">
+                      <div class="navbar-header">
+                            <p class="navbar-brand">
+            {% block head %}
+            {% endblock %}
+                            </p>
+                      </div>
+        </div>
+        
+       <div id="content_block" class="row">
+            <div class="col-md-12">
+            {% block content %}
+            {% endblock %}
+            </div>
+        </div>
+ 
+
     </div>
-                
-            </div>
-            <div id="ja-containerwrap">
-                <div id="ja-container" class="clearfix">
-                    <div id="ja-mainbody-fl">
-                        <div id="ja-content">
-{% block content %}
-{% endblock %}
-                        </div> 
-                   </div>
-                </div>
-            </div>
-            <div id="ja-footerwrap">
-                <div id="ja-footer">
-                    <small>
+
+ 
+<div id="footer">
+   <div class="container">
+        <div id="footer_block" class="row">
+ 
 Kontaktní telefon: 732 754 293, 545 162 090 a e-mail: starlet@starlet-brno.cz<br/>
 Přihlášky a informace: Kulturní centrum Babylon, Kounicova 20, Brno (po, st 15-17hod.)<br/>
 Copyright © 2015 Taneční škola Starlet Brno<br/>
 
 {% block footer %}
 {% endblock %}
-                            <br/>
-                    </small>
-                </div>     
-            </div>
-        </div>
+       </div>
     </div>
 </div>
+
+</div>
+
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+
 </body>
 
 </html>

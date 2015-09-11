@@ -2,9 +2,12 @@
 
 {% block title %} TŠ Starlet - Zápis - Přihláška {% endblock %}
 
+{% block head %}
+	Přihláška do kurzu {{ course.code }} - {{ course.name }} 
+{% endblock %}
+
 {% block content %}
 
-<h1 class='contentheading'> Přihláška do kurzu {{ course.code }} - {{ course.name }} </h1>
 
 Vaše přihláška s referenčním kódem {{ ref_code }} byla úspěšně zaevidována. Na uvedený e-mail Vám byly odeslány
 instrukce k potvrzení přihlášky a další informace. Bez tohoto potrzení je přihláška neplataná a bude smazána.
