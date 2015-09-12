@@ -1,5 +1,5 @@
 application: ts-zapis
-version: 11c-smernice
+version: 11d-fixjs
 runtime: python
 api_version: 1
 
