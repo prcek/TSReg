@@ -31,7 +31,7 @@ YEAR_CHOICES = [
 ERROR_MESSAGES={'required': 'Položka musí být vyplněna', 'invalid': 'Neplatná hodnota'}
 
 
-for x in reversed(range(1900,2011)):
+for x in reversed(range(1900,2016)):
     YEAR_CHOICES.append((x,x))
 
 class EnrollForm(forms.Form):
