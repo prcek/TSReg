@@ -17,10 +17,5 @@ Pokyny k platbě:
 Platbu lze provést bezhotovostně - na účet číslo 413345621/0100, do zprávy
 pro příjemce je nutno uvést Vaše jméno a číslo kurzu.
 
-Případně lze kurz uhradit v hotovosti na adrese:
-    Babylon centrum
-    Kounicova 20, Brno
-    
-Otevírací doba: pondělí, středa 15:00-17:00
 
 {% include "email/signature.txt" %}
