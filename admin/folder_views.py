@@ -10,6 +10,7 @@ from google.appengine.api import taskqueue
 
 from enroll.models import Folder,rebuild_folders
 import utils.config as cfg
+import utils.cdbsync as cdbsync
 import logging
 
 
@@ -48,6 +49,7 @@ def edit(request, folder_id):
             form.save(commit=False)
             logging.info('edit folder after %s'% folder)
             folder.save()
+            cdbsync.plan_cdb_put(folder)
             rebuild_folders()
             return redirect('../..')
     else:
@@ -65,6 +67,7 @@ def create(request):
             form.save(commit=False)
             logging.info('edit folder after %s'% folder)
             folder.save()
+            cdbsync.plan_cdb_put(folder)
             rebuild_folders() 
             return redirect('..')
     else:

@@ -10,6 +10,7 @@ from google.appengine.api import taskqueue
 
 from enroll.models import Season,rebuild_seasons
 import utils.config as cfg
+import utils.cdbsync as cdbsync
 import logging
 
 
@@ -47,6 +48,7 @@ def edit(request, season_id):
             form.save(commit=False)
             logging.info('edit season after %s'% season)
             season.save()
+            cdbsync.plan_cdb_put(season)
             rebuild_seasons()
             return redirect('../..')
     else:
@@ -64,6 +66,7 @@ def create(request):
             form.save(commit=False)
             logging.info('edit season after %s'% season)
             season.save()
+            cdbsync.plan_cdb_put(season)
             rebuild_seasons()
             return redirect('..')
     else:

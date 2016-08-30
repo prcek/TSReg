@@ -18,35 +18,14 @@
      <h1>select form test</h1>
     <div class='box'>
      <form action="." method="POST">   
-    <table>
-        <tr><th></th><th>x</th></tr>
-        {% for l in lines %}
-        <tr class='autohover'>
-            <td> 
-              <div class="check-area">  <input class="check-action" id='select-all-slave' type="checkbox" value="{{ l.key }}" {% if l.selected %}checked{% endif %} name="categories" /> </div>
-            </td>
-            <td> {{ l.value }} </td>
-        </tr>
-        {% endfor %}
-    </table>
-    <div class="form-table-opt">
-
-        <div class="check-area">
-            <input id="select-all" type="checkbox" />
-            <label for="select-all">vše</label>
-        </div>
-    
-
-        <label class="blind" for="operation">Akce:</label>
-        <select id="operation" name="operation">
-            <option value="action_1">Akce1</option>
-            <option value="action_2">Akce2</option>
-        </select>
+        <input type="text" name="target_url" value="{{target_url}}" />
         <input class="button" type="submit" value="test">
-    </div>
+        <div class='box'>
+        {{url_response}}
+        </div>
     </form>
     </div>
-
+  
 <script type="text/javascript">
 
         TOOLS.bindSelect('select-all','select-all-slave');     

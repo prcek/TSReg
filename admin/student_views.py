@@ -18,6 +18,7 @@ import logging
 from operator import attrgetter
 import urllib
 import re
+import utils.cdbsync as cdbsync
 
 
 
@@ -435,8 +436,10 @@ def action_do_extra(request, source_course=None, student_ids=None):
                             if is_pay_info(s.discount):
                                 s.pay_info = s.discount
                                 s.discount = ""
-                                s.save()                            
- 
+                                s.save() 
+
+                    cdbsync.plan_cdb_put(s)
+
  
                 logging.info('s after: %s'%s)
 
@@ -718,6 +721,9 @@ def action_do_pair(request, source_course=None, student_ids=None):
 
     s1.save()
     s2.save()
+    cdbsync.plan_cdb_put(s1)
+    cdbsync.plan_cdb_put(s2)
+
 
 
     for s in Student.list_by_partner(s1.ref_key):
@@ -725,12 +731,16 @@ def action_do_pair(request, source_course=None, student_ids=None):
             s.partner_ref_code=""
             s.mark_as_modify()
             s.save()
+            cdbsync.plan_cdb_put(s)
+
     
     for s in Student.list_by_partner(s2.ref_key):
         if s.key().id != s1.key().id:
             s.partner_ref_code=""
             s.mark_as_modify()
             s.save()
+            cdbsync.plan_cdb_put(s)
+
  
     return redirect('..')
 
@@ -782,6 +792,8 @@ def edit(request, student_id,course_id=None):
             logging.info('edit student after %s'% student)
             student.mark_as_modify()
             student.save()
+            cdbsync.plan_cdb_put(student)
+
 
             course_id = student.get_course_id()
             logging.info('student course_id = %s'%(course_id))
@@ -821,6 +833,7 @@ def create(request, course_id):
             student.mark_as_modify()
             
             student.save()
+            cdbsync.plan_cdb_put(student)
 
             course_id = student.get_course_id()
             plan_update_course(course_id)
@@ -884,6 +897,10 @@ def create_pair(request, course_id):
             student2.mark_as_modify()
             student1.save()
             student2.save()
+            cdbsync.plan_cdb_put(student1)
+            cdbsync.plan_cdb_put(student2)
+
+
 
             course_id = student1.get_course_id()
             plan_update_course(course_id)
@@ -923,6 +940,8 @@ def enroll(request,student_id,course_id=None):
         student.mark_as_modify()
         student.init_enroll()
         student.save()
+        cdbsync.plan_cdb_put(student)
+
         plan_send_student_email('ENROLL_OK_PAY_REQUEST', student)
         plan_update_course(course_id)
 
@@ -938,6 +957,8 @@ def kick(request,student_id,course_id=None):
         student.status = 'k'
         student.mark_as_modify()
         student.save()
+        cdbsync.plan_cdb_put(student)
+
         plan_send_student_email('ENROLL_KICK', student)
         plan_update_course(course_id)
  
@@ -953,6 +974,8 @@ def spare(request,student_id,course_id=None):
         student.status = 's'
         student.mark_as_modify()
         student.save()
+        cdbsync.plan_cdb_put(student)
+
         plan_send_student_email('ENROLL_KICK_TO_SPARE', student)
         plan_update_course(course_id)
  
@@ -997,6 +1020,7 @@ def pay(request, student_id, course_id=None):
             student.pay_info = form.cleaned_data['pay_info']
             student.mark_as_modify()
             student.save()
+            cdbsync.plan_cdb_put(student)
             logging.info('pay student after %s'% student)
 
             if form.cleaned_data['send_info']:

@@ -103,6 +103,10 @@ def setupConfig():
     createConfig('CAPTCHA_PRIVATE_KEY','1234567890')
     createConfig('CAPTCHA_ON','0')
 
+    createConfig('CDBSYNC_ON','0')
+    createConfig('CDBSYNC_URL','https://couchdb.test/test')
+    createConfig('CDBSYNC_AUTH','xxx')
+
     createConfig('ENROLL_ENROLL_ON', '0')
     createConfig('ENROLL_CHECK_URL_BASE', 'http://localhost:8080/zapis/potvrdit/')
     createConfig('ENROLL_EMAIL','info@appid.appspotmail.com')

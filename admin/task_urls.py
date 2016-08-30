@@ -5,6 +5,7 @@ urlpatterns = patterns('admin',
     (r'^send_enroll_form_to_admin/(?P<test_id>\d+)/$', 'tasks.send_enroll_form_to_admin'),
     (r'^recount_capacity/$', 'tasks.recount_capacity'),
     (r'^course_backup/$', 'tasks.course_backup'),
+    (r'^course_fullsync/$', 'tasks.course_fullsync'),
     (r'^send_backup/$', 'tasks.send_backup'),
     (r'^hide_course_students/$', 'tasks.hide_course_students'),
     (r'^transfer_students/$', 'tasks.transfer_students'),
@@ -17,4 +18,5 @@ urlpatterns = patterns('admin',
     (r'^send_mail/$', 'tasks.send_mail'),
     (r'^incoming_email/$', 'tasks.incoming_email'),
     (r'^update_folder_stats/$', 'tasks.update_folder_stats'),
+    (r'^cdbsync_model/$', 'tasks.cdbsync_model')
 )

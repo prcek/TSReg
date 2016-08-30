@@ -11,6 +11,7 @@ from google.appengine.api import taskqueue
 from enroll.models import Course,Folder,Season
 from utils.decorators import ar_edit
 import utils.config as cfg
+import utils.cdbsync as cdbsync
 import logging
 
 
@@ -200,6 +201,7 @@ def edit(request, course_id):
             logging.info('edit course after %s'% course)
             course.mark_as_modify()
             course.save()
+            cdbsync.plan_cdb_put(course)
             taskqueue.add(url='/task/recount_capacity/', params={'course_id':course.key().id()})
             return HttpResponseRedirect('../..')
     else:
@@ -234,6 +236,7 @@ def create(request):
             logging.info('edit course after %s'% course)
             course.mark_as_modify()
             course.save()
+            cdbsync.plan_cdb_put(course)
             return HttpResponseRedirect('..')
     else:
         form = CourseForm(instance=course)

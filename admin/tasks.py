@@ -18,10 +18,34 @@ from admin.queue import plan_send_student_email, plan_send_multimail, plan_send_
 
 import re
 from utils.data import dump_to_csv
+import utils.cdbsync as cdbsync
+
 import cStringIO
 
 import logging
 import sys
+
+
+def cdbsync_model(request):
+    logging.info("cdbsync_model")
+    logging.info(request.POST)
+    cdbsync.planned_cdb_put(request.POST['key'])
+    return HttpResponse('ok')
+
+def course_fullsync(request):
+    logging.info(request.POST)
+    course_id = request.POST['course_id']
+    course = Course.get_by_id(int(course_id))
+    if course is None:
+        raise Http404 
+    cdbsync.plan_cdb_put(course)
+    logging.info('course=%s'%course)
+    students = Student.list_for_course(course.key())
+    for s in students:
+        logging.info("student %s" % s.key())
+        cdbsync.plan_cdb_put(s)
+    logging.info("all done")
+    return HttpResponse('ok')
 
 
 def send_student_email(request):
@@ -389,6 +413,8 @@ def recount_capacity(request):
     recount_course_capacity(course)
     course.save()
     logging.info(course)
+    cdbsync.plan_cdb_put(course)
+
  
     return HttpResponse('ok')
 
@@ -405,9 +431,13 @@ def hide_course_students(request):
     for s in list:
         s.hidden = True
         s.save()
+        cdbsync.plan_cdb_put(s)
+
 
     course.mark_as_modify()
     course.save()
+    cdbsync.plan_cdb_put(course)
+
  
     return HttpResponse('ok')
 
@@ -419,6 +449,8 @@ def transfer_student(student_id, course):
 
     student.set_course_key(str(course.key()))
     student.save()
+    cdbsync.plan_cdb_put(student)
+
 
     try:
         plan_send_student_email('ENROLL_TRANSFER', student)
@@ -466,6 +498,8 @@ def transfer_students(request):
     recount_course_capacity(source_course)
     source_course.save()
     logging.info(source_course)
+    cdbsync.plan_cdb_put(source_course)
+
  
 
     taskqueue.add(url='/task/recount_capacity/', params={'course_id':target_course.key().id()})
@@ -486,6 +520,8 @@ def makecopy_student(student_id, course):
     logging.info('clone ok')
     new.set_course_key(str(course.key()))
     new.save()
+    cdbsync.plan_cdb_put(new)
+
     
     return (student.ref_key,new)
 
@@ -535,6 +571,8 @@ def makecopy_students(request):
             logging.info('update partner_ref_code %s -> %s'%(n.partner_ref_code,np.ref_key))
             n.partner_ref_code=np.ref_key
             n.save()
+            cdbsync.plan_cdb_put(n)
+
             
     
     
@@ -599,7 +637,9 @@ def mark_cardout(owner, student_id):
         return
 
     student.card_out=True
-    student.save()    
+    student.save()
+    cdbsync.plan_cdb_put(student)
+ 
 
 
 
@@ -720,6 +760,8 @@ def hide_student(owner, student_id):
 
     student.hidden = True
     student.save()    
+    cdbsync.plan_cdb_put(student)
+
 
 
 
@@ -754,6 +796,8 @@ def hide_students(request):
     recount_course_capacity(course)
     course.save()
     logging.info(course)
+    cdbsync.plan_cdb_put(course)
+
  
 
     job.finish()

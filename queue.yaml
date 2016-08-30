@@ -4,3 +4,7 @@ queue:
 
 - name: email
   rate: 10/m
+
+- name: cdbsync
+  rate: 1/s
+  

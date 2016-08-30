@@ -70,6 +70,18 @@ def plan_backup(request,course_id):
 
     return HttpResponseRedirect('../..')
 
+def plan_fullsync(request,course_id):
+
+    course = Course.get_by_id(int(course_id))
+    if course is None:
+        raise Http404
+
+    logging.info('course: %s'%course)
+    taskqueue.add(url='/task/course_fullsync/', params={'course_id':course.key().id()})
+
+    return HttpResponseRedirect('../..')
+
+
 def index_course(request, course_id):
     course = Course.get_by_id(int(course_id))
     if course is None:
