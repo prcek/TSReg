@@ -827,6 +827,7 @@ def create(request, course_id):
             student.status =  form.cleaned_data['add_mode']
             if student.status=='e':
                 student.init_enroll()
+            student.init_gid()
             logging.info('create student after %s'% student)
             student.save()
             student.init_ref_codes()
@@ -877,6 +878,7 @@ def create_pair(request, course_id):
             student1.status =  form1.cleaned_data['add_mode']
             if student1.status=='e':
                 student1.init_enroll()
+            student1.init_gid()
             logging.info('create student after %s'% student1)
             student1.save()
             student1.init_ref_codes()
@@ -885,7 +887,9 @@ def create_pair(request, course_id):
             student2.status =  form2.cleaned_data['add_mode']
             if student2.status=='e':
                 student2.init_enroll()
+            student2.init_gid()
             logging.info('create student after %s'% student2)
+
             student2.save()
             student2.init_ref_codes()
 

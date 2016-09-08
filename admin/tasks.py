@@ -2,7 +2,7 @@
 
 from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response, redirect, get_object_or_404
-from enroll.models import Student,Course,FolderStats
+from enroll.models import Season,Student,Course,FolderStats
 from admin.models import Job,Card,Invitation,CourseBackup,EMailTemplate,EMailJob
 from email.utils import parseaddr
 import utils.config as cfg
@@ -46,6 +46,73 @@ def course_fullsync(request):
         cdbsync.plan_cdb_put(s)
     logging.info("all done")
     return HttpResponse('ok')
+
+
+
+def update_all_students(request):
+    logging.info("update_all_students")
+    logging.info(request.POST)
+    seasons = Season.list()
+    for s in seasons:
+        logging.info("season %s"%s.key())
+        taskqueue.add(url='/task/update_all_students_for_season/', params={'season_id':s.key().id()})
+    return HttpResponse('ok')
+
+def update_all_students_for_season(request):
+    logging.info("update_all_students_for_season")
+    logging.info(request.POST)
+    season_id = request.POST['season_id']
+    season = Season.get_by_id(int(season_id))
+    if season is None:
+        raise Http404 
+    logging.info("season %s" % season)
+    cdbsync.plan_cdb_put(season)
+
+    courses = Course.list_season(str(season.key()))
+    logging.info("all courses get") 
+    for c in courses:
+        logging.info("course %s "%c.key())
+        taskqueue.add(url='/task/update_all_students_for_course/', params={'course_id':c.key().id()})
+    return HttpResponse('ok')
+   
+def update_all_students_for_course(request):
+    logging.info(request.POST)
+    course_id = request.POST['course_id']
+    course = Course.get_by_id(int(course_id))
+    if course is None:
+        raise Http404 
+    logging.info('course=%s'%course)
+    cdbsync.plan_cdb_put(course)
+    students = Student.list_for_course(course.key())
+    for s in students:
+        logging.info("student %s" % s.key())
+        taskqueue.add(url='/task/update_all_students_do_one/', params={'student_key':s.key()})
+
+    logging.info("all done")
+    return HttpResponse('ok')
+
+def update_all_students_do_one(request):
+    logging.info("update_all_students_do_one")
+    logging.info(request.POST)
+    student_key = request.POST["student_key"]
+    s = Student.get(student_key)
+    if s is None:
+        raise Http404
+
+    logging.info("update student %s"%s)
+    logging.info("ref gid %d" % s.ref_gid)
+
+    if (s.ref_gid is 0):
+        logging.info("zero!")
+        s.init_gid()
+        s.save()
+        logging.info("new gid %d" % s.ref_gid)
+        cdbsync.plan_cdb_put(s)
+
+    return HttpResponse('ok')
+
+
+
 
 
 def send_student_email(request):

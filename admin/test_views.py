@@ -6,6 +6,7 @@ from django.template import RequestContext,Context, loader
 import utils.config as cfg
 
 from google.appengine.ext import db
+from google.appengine.api import taskqueue
 
 import logging
 import datetime
@@ -19,6 +20,10 @@ from utils.locale import local_timezone
 
 import utils.cdbsync
 
+
+def plan_update_all_students(request):
+    taskqueue.add(url='/task/update_all_students/')
+    return HttpResponse('ok')
 
 
 

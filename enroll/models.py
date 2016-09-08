@@ -8,6 +8,7 @@ import random
 
 from utils import crypt
 from utils import cache
+from utils.counter import getNextStudentID
 from operator import itemgetter
 from itertools import cycle,izip,tee
 
@@ -356,6 +357,7 @@ class Student(BaseModel):
     reg_by_admin = db.BooleanProperty(default=False)
     reg_datetime = db.DateTimeProperty()
     enroll_datetime = db.DateTimeProperty()
+    ref_gid = db.IntegerProperty(default=0)
     ref_base = db.StringProperty(default='')
     ref_key = db.StringProperty(default='')
     confirm_key = db.StringProperty()
@@ -401,8 +403,7 @@ class Student(BaseModel):
     x_import_no_2 = None
 
 
-
-
+ 
     def update_search(self):
         self.search_surname = remove_accents(self.surname)
 
@@ -417,6 +418,7 @@ class Student(BaseModel):
         s.init_reg()
         s.init_ref_base()
         s.init_enroll()
+        s.init_gid()
         s.course_key = self.course_key
         s.status = self.status
         s.reg_by_admin = True
@@ -462,6 +464,9 @@ class Student(BaseModel):
 
     def init_ref_base(self):
         self.ref_base = crypt.gen_key()
+
+    def init_gid(self):
+        self.ref_gid = getNextStudentID()
 
     def init_ref_codes(self):
         id = self.key().id()

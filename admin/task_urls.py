@@ -18,5 +18,11 @@ urlpatterns = patterns('admin',
     (r'^send_mail/$', 'tasks.send_mail'),
     (r'^incoming_email/$', 'tasks.incoming_email'),
     (r'^update_folder_stats/$', 'tasks.update_folder_stats'),
+
+    (r'^update_all_students/$', 'tasks.update_all_students'),
+    (r'^update_all_students_for_season/$', 'tasks.update_all_students_for_season'),
+    (r'^update_all_students_for_course/$', 'tasks.update_all_students_for_course'),
+    (r'^update_all_students_do_one/$', 'tasks.update_all_students_do_one'),
+
     (r'^cdbsync_model/$', 'tasks.cdbsync_model')
 )

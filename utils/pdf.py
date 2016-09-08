@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import sys
-sys.path.insert(0, 'libs/reportlab.zip')
+sys.path.insert(0, 'libs')
+#sys.path.insert(0, 'libs/reportlab.zip')
 #sys.path.insert(0, 'libs')
 
 from reportlab.pdfgen import canvas
@@ -14,6 +15,8 @@ from reportlab.lib.styles import StyleSheet1, ParagraphStyle
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle,Paragraph,PageBreak
+from reportlab.graphics.barcode.qr import QrCodeWidget
+from reportlab.graphics.shapes import Drawing 
 
 import os
 import re
@@ -626,8 +629,14 @@ def students_card(output,cards):
     styleName = styles['CardName']
     styleSurname = styles['CardSurname']
 
-
-
+    unit = 20*mm
+    qrw = QrCodeWidget('hello cruel world!')
+    b = qrw.getBounds()
+    w = b[2]-b[0]
+    h = b[3]-b[1]
+    qrcode_image = Drawing(unit,unit,transform=[unit/w,0,0,unit/h,0,0])
+    qrcode_image.add(qrw)
+    #qrcode_image=None
     elements = []
 
     cardcells = []
