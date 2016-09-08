@@ -18,13 +18,37 @@ from utils.locale import local_timezone
 #from google.appengine.api.urlfetch import Fetch,PUT
 #from enroll.models import Course,Folder,Season,FolderStats
 
-import utils.cdbsync
+import utils.cdbsync as cdbsync
+from enroll.models import Season,Student,Course,Folder
 
 
 def plan_update_all_students(request):
     taskqueue.add(url='/task/update_all_students/')
     return HttpResponse('ok')
 
+def plan_update_all_folders(request):
+    logging.info("update_all_folders")
+    folders = Folder.list()
+    for f in folders:
+        logging.info("folder %s"%f.key())
+        cdbsync.plan_cdb_put(f)
+    return HttpResponse('ok')
+
+def plan_update_all_seasons(request):
+    logging.info("update_all_seasons")
+    seasons = Season.list()
+    for s in seasons:
+        logging.info("season %s"%s.key())
+        cdbsync.plan_cdb_put(s)
+    return HttpResponse('ok')
+
+def plan_update_all_courses(request):
+    logging.info("update_all_courses")
+    courses = Course.list()
+    for c in courses:
+        logging.info("course %s"%c.key())
+        cdbsync.plan_cdb_put(c)
+    return HttpResponse('ok')
 
 
 def index(request):
@@ -62,10 +86,10 @@ def index(request):
             s = db.Model.get(key)
             sd = db.to_dict(s)
             url_response = sd
-            logging.info(json.dumps(sd,cls=utils.cdbsync.DateTimeEncoder))
+            logging.info(json.dumps(sd,cls=cdbsync.DateTimeEncoder))
   #      
         else:
-            url_response = utils.cdbsync.cdb_get_db_info()
+            url_response = cdbsync.cdb_get_db_info()
   #      utils.cdbsync.cdb_create_or_update(target_dskey)
 
  #       url_r = Fetch(target_url,headers={"Authorization": "Basic %s" % base64.b64encode("admin:nimda72cb")},validate_certificate=True)

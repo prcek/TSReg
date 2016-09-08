@@ -47,7 +47,14 @@ def course_fullsync(request):
     logging.info("all done")
     return HttpResponse('ok')
 
-
+def update_all_folders(request):
+    logging.info("update_all_folders")
+    logging.info(request.POST)
+    folders = Folder.list()
+    for f in folders:
+        logging.info("folder %s"%f.key())
+        cdbsync.plan_cdb_put(f)
+    return HttpResponse('ok')
 
 def update_all_students(request):
     logging.info("update_all_students")
@@ -67,7 +74,6 @@ def update_all_students_for_season(request):
         raise Http404 
     logging.info("season %s" % season)
     cdbsync.plan_cdb_put(season)
-
     courses = Course.list_season(str(season.key()))
     logging.info("all courses get") 
     for c in courses:
