@@ -56,8 +56,46 @@ class Job(BaseModel):
         self.finish_datetime = datetime.datetime.utcnow()
         self.finish_error = error
 
+class QCard(BaseModel):
+    create_datetime = db.DateTimeProperty()
+    owner = db.StringProperty(default='')
+    ref_gid = db.IntegerProperty(default=0)
+    name = db.StringProperty(default='')
+    surname = db.StringProperty(default='')
+    season_name = db.StringProperty(default='')
+    course_code = db.StringProperty(default='')
+    info_line_1 = db.StringProperty(default='')
+    info_line_2 = db.StringProperty(default='')
+
+    @staticmethod
+    def list_all():
+        return QCard.all().order('create_datetime')
+
+
+    @staticmethod
+    def keys_all():
+        return QCard.all(keys_only=True)
     
-       
+    @staticmethod
+    def list_my(owner):
+        return QCard.all().filter('owner',owner).order('create_datetime')
+ 
+    @staticmethod
+    def keys_my(owner):
+        return QCard.all(keys_only=True).filter('owner',owner)
+ 
+    def init(self, owner=None, ref_gid=None, name=None, surname=None, season_name=None, course_code=None, info_line_1=None, info_line_2=None):
+        self.create_datetime = datetime.datetime.utcnow()
+        self.owner = owner
+        self.ref_gid = ref_gid
+        self.name = name
+        self.surname = surname
+        self.season_name = season_name
+        self.course_code = course_code
+        self.info_line_1 = info_line_1
+        self.info_line_2 = info_line_2
+        
+
 
 class Card(BaseModel):
     create_datetime = db.DateTimeProperty()

@@ -1,0 +1,64 @@
+
+{% extends "admin/base.html" %}
+
+{% block title %} Administrace zápisu {% endblock %}
+
+{% block content %}
+    <a class='button' href='.'>přenačíst</a>
+    <a class='cbutton' href='clear/'>vymazat všechny (MOJE)</a>
+{% if request.auth_info.admin %}
+    <a class='cbutton' href='clear_all/'>vymazat ÚPLNĚ všechny</a>
+{% endif %}
+    <a class='button' href='print/'>tisk</a>
+
+    <br/><br/>Přehled QR karet<br/>
+
+{% if qcard_list %}
+    <table>
+    <tr>
+        <th>p.č.</th>
+{% if request.auth_info.admin %}
+        <th>vlastník</th>
+{% endif %}
+        <th>vyrobena</th>
+        <th>ID</th>
+        <th>sezona</th>
+        <th>kurz</th>
+        <th>1. řádek</th>
+        <th>2. řádek</th>
+        <th>jméno</th>
+        <th>přijmení</th>
+        <th>operace</th>
+    </tr>
+    {% for c in qcard_list %}
+        <tr class='autohover'>
+            <td>{{forloop.counter}}</td>
+{% if request.auth_info.admin %}
+            <td>{{c.owner}}</td>
+{% endif %}
+            <td>{{c.create_datetime|shortdatetime}}</td>
+            <td>{{c.ref_gid|nonone}}</td>
+            <td>{{c.season_name|nonone}}</td>
+            <td>{{c.course_code|nonone}}</td>
+            <td>{{c.info_line_1|nonone}}</td>
+            <td>{{c.info_line_2|nonone}}</td>
+            <td>{{c.name|nonone}}</td>
+            <td>{{c.surname|nonone}}</td>
+            <td>
+                <a class='cbutton' href='{{c.key.id}}/del/'>smazat</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+{% else %}
+    no card<br/>
+{% endif %}
+
+<script type="text/javascript">
+
+        new TOOLS.autoHover('autohover','highlight');
+
+</script>
+
+{% endblock %}
+

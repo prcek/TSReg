@@ -3,7 +3,7 @@
 from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from enroll.models import Season,Student,Course,FolderStats
-from admin.models import Job,Card,Invitation,CourseBackup,EMailTemplate,EMailJob
+from admin.models import Job,Card,QCard,Invitation,CourseBackup,EMailTemplate,EMailJob
 from email.utils import parseaddr
 import utils.config as cfg
 import utils.mail as mail
@@ -670,9 +670,6 @@ def prepare_card(owner, student_id, season_name, course_code, info_line_1, info_
     card.save()
     logging.info('card=%s'%card)
 
-
-    
-
 def prepare_cards(request):
     logging.info(request.POST)
     job_id = request.POST['job_id']
@@ -696,6 +693,53 @@ def prepare_cards(request):
             prepare_card(owner, student_id, season_name, course_code, info_line_1, info_line_2)        
         except:
             logging.info("can't prepare card")
+    
+
+
+    job.finish()
+    job.save()
+
+    return HttpResponse('ok')
+
+
+def prepare_qcard(owner, student_id):
+    student = Student.get_by_id(int(student_id))
+    if student is None:
+        return
+    logging.info("creating QR card for %s" % student)
+    qcard = QCard() 
+    season_name="sezona"
+    course_code="cc"
+    info_line_1="line1"
+    info_line_2="line2"
+    #TODO
+    qcard.init(owner=owner,ref_gid=student.ref_gid, name=student.name, surname=student.surname, season_name=season_name,  course_code=course_code, info_line_1=info_line_1, info_line_2=info_line_2)
+    qcard.save()
+
+    logging.info('qcard=%s'%qcard)
+
+    
+
+def prepare_qcards(request):
+    logging.info(request.POST)
+    job_id = request.POST['job_id']
+    job = Job.get_by_id(int(job_id))
+
+    job.start()
+    job.save()
+
+
+    student_ids = request.POST.getlist('student_ids')
+    owner = request.POST['owner']
+
+
+    logging.info('student list %s'%student_ids) 
+    for student_id in student_ids:
+        try:
+            prepare_qcard(owner, student_id)        
+        except Exception,e:
+            logging.info(e)
+            logging.info("can't prepare qcard %s" %x)
     
 
 

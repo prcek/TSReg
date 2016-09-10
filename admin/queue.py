@@ -102,6 +102,19 @@ def plan_job_card_for_students(owner,student_ids,course_code, season_name, info_
 
     return job.key().id()
 
+def plan_job_qcard_for_students(owner,student_ids):
+    logging.info('prepare qcards for %s'%(student_ids))
+
+    job = Job()
+    job.init("prepare qcards",target='../../', owner=owner)
+    job.save()
+ 
+    taskqueue.add(url='/task/prepare_qcards/', params={'job_id':job.key().id(), 'owner':owner, 'student_ids':student_ids})
+
+    logging.info('job_id %d'%(job.key().id())) 
+
+    return job.key().id()
+
 
 def plan_job_cardout_for_students(owner,student_ids):
     logging.info('prepare cardout for %s'%(student_ids))

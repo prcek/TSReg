@@ -629,14 +629,6 @@ def students_card(output,cards):
     styleName = styles['CardName']
     styleSurname = styles['CardSurname']
 
-    unit = 20*mm
-    qrw = QrCodeWidget('hello cruel world!')
-    b = qrw.getBounds()
-    w = b[2]-b[0]
-    h = b[3]-b[1]
-    qrcode_image = Drawing(unit,unit,transform=[unit/w,0,0,unit/h,0,0])
-    qrcode_image.add(qrw)
-    #qrcode_image=None
     elements = []
 
     cardcells = []
@@ -738,6 +730,134 @@ def students_card(output,cards):
     if len(elements)==0:
         elements.append(Paragraph(u"žádná data",styleH))
     doc.build(elements)
+
+def students_qcard(output,cards):
+    ipad = 1
+    pad = 10
+
+
+    doc = SimpleDocTemplate(output, pagesize=A4 ,leftMargin=1*cm, rightMargin=1*cm, topMargin=0.8*cm, bottomMargin=1*cm, showBoundary=0)
+    styles = getStyleSheet()
+
+    styleN = styles['Normal']
+    styleHeaderLeft = styles['CardHeaderLeft']
+    styleHeaderRight = styles['CardHeaderRight']
+    styleIL  = styles['CardInfoLines']
+    styleSeason  = styles['CardSeason']
+    styleCode = styles['CardCode']
+    styleName = styles['CardName']
+    styleSurname = styles['CardSurname']
+
+    unit = 20*mm
+    qrw = QrCodeWidget('hello cruel world!')
+    b = qrw.getBounds()
+    w = b[2]-b[0]
+    h = b[3]-b[1]
+    qrcode_image = Drawing(unit,unit,transform=[unit/w,0,0,unit/h,0,0])
+    qrcode_image.add(qrw)
+    #qrcode_image=None
+    elements = []
+
+    cardcells = []
+    for c in cards:
+
+        info_empty = (c.info_line_1 is None or c.info_line_1=='') and (c.info_line_2 is None or c.info_line_2=='')
+        
+            
+        c00 = Paragraph("<font size=12>STARLET</font><br/><font size=8>TANEČNÍ ŠKOLA<br/>MANŽELŮ BURYANOVÝCH</font>",styleHeaderLeft)
+        c01 = Paragraph("ČÍSLO<br/>KURZU",styleHeaderRight)
+
+        c10_n = Paragraph(escape(nonone(c.name)),styleName)
+        c10_s = Paragraph(escape(nonone(c.surname)),styleSurname)
+
+
+        code = nonone(c.course_code)
+        if len(code)<=3:
+            code_p = escape(code) 
+        else:
+            m = re.match('([^\d]*)(.*)',code)
+            if m:
+                code_p = "%s<br/>%s"%(escape(m.group(1)), escape(m.group(2)))
+            else:       
+                code_p = escape(code)
+
+        c11 = Paragraph(code_p,styleCode)
+
+        if info_empty:
+            c20_bg = colors.white
+        else:
+            c20_bg = colors.black
+
+        info_text = u""
+        if not (c.info_line_1 is None or c.info_line_1==''):            
+            info_text = info_text+escape(c.info_line_1)
+
+        if not (c.info_line_2 is None or c.info_line_2==''):            
+            if info_text != "":
+                info_text = info_text + "<br/>"
+            info_text = info_text + escape(c.info_line_2)
+            
+
+        c10 = Table([[c10_n],[c10_s]], style=[
+       #     ('GRID',(0,0),(-1,-1),1, colors.black)
+        ])
+        
+        c20 = Paragraph(nonone(info_text),styleIL)
+        c21 = Paragraph(nonone(c.season_name),styleSeason)
+
+        cc = Table([ [c00,c01],[c10,qrcode_image],[c20,c21] ], colWidths=[5.9*cm,1.5*cm],rowHeights=[1.50*cm,1.95*cm,0.95*cm], style=[
+            ('GRID',(0,0),(-1,-1),1, colors.black),
+            ('BACKGROUND',(0,0),(0,0),colors.black),
+            ('BACKGROUND',(0,2),(0,2),c20_bg),
+#            ('TEXTCOLOR',(0,0),(0,0),colors.red),
+            ('LEFTPADDING',(0,0),(-1,-1),ipad),
+            ('RIGHTPADDING',(0,0),(-1,-1),ipad),
+            ('TOPPADDING',(0,0),(-1,-1),ipad),
+            ('BOTTOMPADDING',(0,0),(-1,-1),ipad),
+            ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+            ('ALIGN',(0,0),(-1,-1),'CENTER'),
+        ])
+
+        cardcells.append(cc)
+
+    line=[]
+    data=[]
+    for t in cardcells:
+        line.append(t) 
+        if len(line)==2:
+            data.append(line)
+            line=[]
+
+    if len(line)>0:
+        line.extend((2-len(line))*" ")
+        data.append(line)
+   
+    rows = len(data) 
+
+    if rows==0:
+        elements = []
+        elements.append(Paragraph(u"žádné karty",styleN))
+        doc.build(elements)
+        return
+
+
+
+    bigtable = Table(data,colWidths=[8.5*cm,8.5*cm], rowHeights= rows*[5.43*cm], style=[
+        ('GRID',(0,0),(-1,-1),0.5,colors.gray),
+        ('ALIGN',(0,0),(-1,-1),'CENTER'),
+        ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+        ('LEFTPADDING',(0,0),(-1,-1),pad),
+        ('RIGHTPADDING',(0,0),(-1,-1),pad),
+        ('TOPPADDING',(0,0),(-1,-1),pad),
+        ('BOTTOMPADDING',(0,0),(-1,-1),pad),
+    ]) 
+    elements.append(bigtable)
+   
+
+    if len(elements)==0:
+        elements.append(Paragraph(u"žádná data",styleH))
+    doc.build(elements)
+
 
 def students_invitation(output,invitations,mode='A'):
 
