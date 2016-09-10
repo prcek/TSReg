@@ -706,13 +706,19 @@ def prepare_qcard(owner, student_id):
     student = Student.get_by_id(int(student_id))
     if student is None:
         return
-    logging.info("creating QR card for %s" % student)
+    course = student.get_course()
+    season = course.get_season()
+ 
+    logging.info("creating QR card for student %s" % (student))
+    logging.info("creating QR card for course %s" % (course))
+    logging.info("creating QR card for season %s" % (season))
     qcard = QCard() 
-    season_name="sezona"
-    course_code="cc"
-    info_line_1="line1"
-    info_line_2="line2"
-    #TODO
+
+    season_name = season.public_name
+    course_code = course.code
+    info_line_1=course.card_line_1
+    info_line_2=course.card_line_2
+
     qcard.init(owner=owner,ref_gid=student.ref_gid, name=student.name, surname=student.surname, season_name=season_name,  course_code=course_code, info_line_1=info_line_1, info_line_2=info_line_2)
     qcard.save()
 
