@@ -181,7 +181,7 @@ def form2student(form,course):
     elif course.cost_mode == 'Fix':
         st.course_cost = a
 
-
+    st.init_gid()
     st.save()
     st.init_ref_codes()
     st.save()

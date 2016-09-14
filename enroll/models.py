@@ -358,6 +358,7 @@ class Student(BaseModel):
     reg_datetime = db.DateTimeProperty()
     enroll_datetime = db.DateTimeProperty()
     ref_gid = db.IntegerProperty(default=0)
+    ref_gid_salt = db.IntegerProperty(default=0)
     ref_base = db.StringProperty(default='')
     ref_key = db.StringProperty(default='')
     confirm_key = db.StringProperty()
@@ -467,6 +468,7 @@ class Student(BaseModel):
 
     def init_gid(self):
         self.ref_gid = getNextStudentID()
+        self.ref_gid_salt = random.randint(1,(2<<31)-1)
 
     def init_ref_codes(self):
         id = self.key().id()
