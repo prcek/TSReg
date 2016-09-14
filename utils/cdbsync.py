@@ -86,22 +86,35 @@ def cdb_create_or_update(key):
 		#else:	
 		obj = db.Model.get(kkey)
 	except Exception, e:
-		logging.info("can't get from ds (%s)"%e)
+		logging.warn("can't get from ds (%s)"%e)
 		return
 	logging.info(obj)
 	doc = cdb_get(key)
+	
 	if doc is None:
 		logging.info("cdb doc not found")
 		doc=db.to_dict(obj)
 		doc["gae_ds_kind"] = kkey.kind()
 		doc["gae_ds_id"] = kkey.id_or_name()
 		logging.info("creating new one")
-		cdb_put(key,doc)
+		rdoc = cdb_put(key,doc)
+		if rdoc is None:
+			logging.error("can't create doc")
+			raise Exception("can't create doc")
+		else:
+			logging.info("res = %s" % rdoc)
 	else:
 		logging.info("cdb doc found")
 		doc=db.to_dict(obj,doc)
 		logging.info("update")
-		cdb_put(key,doc)
+		rdoc = cdb_put(key,doc)
+		if rdoc is None:
+			logging.error("can't update doc")
+			raise Exception("can't update doc")
+		else:
+			logging.info("res = %s" % rdoc)
+	
+
 def planned_cdb_put(key):
 	cdb_create_or_update(key)
 

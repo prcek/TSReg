@@ -107,13 +107,13 @@ def update_all_students_do_one(request):
         raise Http404
 
     logging.info("update student %s"%s)
-    logging.info("ref gid %d" % s.ref_gid)
+    logging.info("ref gid %d and salt %s" % (s.ref_gid,s.ref_gid_salt))
 
-    if (s.ref_gid is 0):
+    if ((s.ref_gid is 0) or (s.ref_gid_salt is 0)):
         logging.info("zero!")
         s.init_gid()
         s.save()
-        logging.info("new gid %d" % s.ref_gid)
+        logging.info("new gid %d and salt %s" % (s.ref_gid, s.ref_gid_salt))
         cdbsync.plan_cdb_put(s)
 
     return HttpResponse('ok')
