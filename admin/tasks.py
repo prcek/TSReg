@@ -19,6 +19,7 @@ from admin.queue import plan_send_student_email, plan_send_multimail, plan_send_
 import re
 from utils.data import dump_to_csv
 import utils.cdbsync as cdbsync
+from utils.qrcode import calc_qrcode_for_student
 
 import cStringIO
 
@@ -718,8 +719,8 @@ def prepare_qcard(owner, student_id):
     course_code = course.code
     info_line_1=course.card_line_1
     info_line_2=course.card_line_2
-
-    qcard.init(owner=owner,ref_gid=student.ref_gid, name=student.name, surname=student.surname, season_name=season_name,  course_code=course_code, info_line_1=info_line_1, info_line_2=info_line_2)
+    qrcode = calc_qrcode_for_student(student,course,season) 
+    qcard.init(owner=owner,ref_gid=student.ref_gid, name=student.name, surname=student.surname, season_name=season_name,  course_code=course_code, info_line_1=info_line_1, info_line_2=info_line_2, qrcode=qrcode)
     qcard.save()
 
     logging.info('qcard=%s'%qcard)

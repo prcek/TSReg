@@ -134,6 +134,17 @@ def getStyleSheet():
                                   fontSize=9)
                    )
 
+    stylesheet.add(ParagraphStyle(name='CardHeaderTopL', parent=stylesheet['Card'],
+                                  textColor=colors.white,
+                                  alignment=TA_CENTER,
+                                  )
+                   )
+    stylesheet.add(ParagraphStyle(name='CardHeaderTopR', parent=stylesheet['Card'],
+                                  textColor=colors.white,
+                                  alignment=TA_CENTER,
+                                  )
+                   )
+
     stylesheet.add(ParagraphStyle(name='CardHeaderLeft', parent=stylesheet['Card'],
                                   textColor=colors.white,
                                   alignment=TA_CENTER,
@@ -169,6 +180,18 @@ def getStyleSheet():
                                   )
                    )
 
+    stylesheet.add(ParagraphStyle(name='CardFullname', parent=stylesheet['Card'],
+                                  fontSize=8,
+                                  textColor=colors.white,
+                                  alignment=TA_CENTER,
+                                  )
+                   )
+    stylesheet.add(ParagraphStyle(name='CardFullnameSmall', parent=stylesheet['Card'],
+                                  fontSize=6,
+                                  textColor=colors.white,
+                                  alignment=TA_CENTER,
+                                  )
+                   )
 
     stylesheet.add(ParagraphStyle(name='CardCode', parent=stylesheet['Card'],
                                   textColor=colors.black,
@@ -184,6 +207,12 @@ def getStyleSheet():
                                   )
                    )
 
+    stylesheet.add(ParagraphStyle(name='CardQInfoLines', parent=stylesheet['Card'],
+                                  textColor=colors.black,
+                                  alignment=TA_CENTER,
+                                  fontSize=6
+                                  )
+                   )
 
 
 
@@ -740,22 +769,16 @@ def students_qcard(output,cards):
     styles = getStyleSheet()
 
     styleN = styles['Normal']
+    styleHeaderTopL = styles['CardHeaderTopL']
+    styleHeaderTopR = styles['CardHeaderTopR']
     styleHeaderLeft = styles['CardHeaderLeft']
     styleHeaderRight = styles['CardHeaderRight']
-    styleIL  = styles['CardInfoLines']
+    styleIL  = styles['CardQInfoLines']
     styleSeason  = styles['CardSeason']
     styleCode = styles['CardCode']
-    styleName = styles['CardName']
-    styleSurname = styles['CardSurname']
+    styleFullname = styles['CardFullname']
+    styleFullnameSmall= styles['CardFullnameSmall']
 
-    unit = 20*mm
-    qrw = QrCodeWidget('hello cruel world!')
-    b = qrw.getBounds()
-    w = b[2]-b[0]
-    h = b[3]-b[1]
-    qrcode_image = Drawing(unit,unit,transform=[unit/w,0,0,unit/h,0,0])
-    qrcode_image.add(qrw)
-    #qrcode_image=None
     elements = []
 
     cardcells = []
@@ -763,30 +786,39 @@ def students_qcard(output,cards):
 
         info_empty = (c.info_line_1 is None or c.info_line_1=='') and (c.info_line_2 is None or c.info_line_2=='')
         
+        unit = 29*mm
+        qrw = QrCodeWidget(c.qrcode)
+        b = qrw.getBounds()
+        w = b[2]-b[0]
+        h = b[3]-b[1]
+        qrcode_image = Drawing(unit,unit,transform=[unit/w,0,0,unit/h,0,0])
+        qrcode_image.add(qrw)
+
             
-        c00 = Paragraph("<font size=12>STARLET</font><br/><font size=8>TANEČNÍ ŠKOLA<br/>MANŽELŮ BURYANOVÝCH</font>",styleHeaderLeft)
-        c01 = Paragraph("ČÍSLO<br/>KURZU",styleHeaderRight)
+#        c00 = Paragraph("<font size=12>STARLET</font><br/><font size=8>TANEČNÍ ŠKOLA<br/>MANŽELŮ BURYANOVÝCH</font>",styleHeaderLeft)
+#        c01 = Paragraph("ČÍSLO<br/>KURZU",styleHeaderRight)
 
-        c10_n = Paragraph(escape(nonone(c.name)),styleName)
-        c10_s = Paragraph(escape(nonone(c.surname)),styleSurname)
+        #c10_n = Paragraph(escape(nonone(c.name)),styleName)
+        #c10_s = Paragraph(escape(nonone(c.surname)),styleSurname)
 
 
-        code = nonone(c.course_code)
-        if len(code)<=3:
-            code_p = escape(code) 
-        else:
-            m = re.match('([^\d]*)(.*)',code)
-            if m:
-                code_p = "%s<br/>%s"%(escape(m.group(1)), escape(m.group(2)))
-            else:       
-                code_p = escape(code)
+        #code = nonone(c.course_code)
+        #if len(code)<=3:
+        #    code_p = escape(code) 
+        #else:
+        #    m = re.match('([^\d]*)(.*)',code)
+        #    if m:
+        #        code_p = "%s<br/>%s"%(escape(m.group(1)), escape(m.group(2)))
+        #    else:       
+        #        code_p = escape(code)
 
-        c11 = Paragraph(code_p,styleCode)
+        c01 = Paragraph(nonone(c.course_code),styleCode)
+        c11 = Paragraph(nonone(c.season_name),styleSeason)
 
-        if info_empty:
-            c20_bg = colors.white
-        else:
-            c20_bg = colors.black
+        #if info_empty:
+        #    c20_bg = colors.white
+        #else:
+        #    c20_bg = colors.black
 
         info_text = u""
         if not (c.info_line_1 is None or c.info_line_1==''):            
@@ -798,22 +830,61 @@ def students_qcard(output,cards):
             info_text = info_text + escape(c.info_line_2)
             
 
-        c10 = Table([[c10_n],[c10_s]], style=[
+        #c10 = Table([[c10_n],[c10_s]], style=[
        #     ('GRID',(0,0),(-1,-1),1, colors.black)
-        ])
+        #])
         
-        c20 = Paragraph(nonone(info_text),styleIL)
-        c21 = Paragraph(nonone(c.season_name),styleSeason)
+        c02 = Paragraph(nonone(info_text),styleIL)
+        c03 = Paragraph(escape(nonone(c.name)+" "+nonone(c.surname)),styleFullname)
+        #c21 = Paragraph(nonone(c.season_name),styleSeason)
 
-        cc = Table([ [c00,c01],[c10,qrcode_image],[c20,c21] ], colWidths=[5.9*cm,1.5*cm],rowHeights=[1.50*cm,1.95*cm,0.95*cm], style=[
-            ('GRID',(0,0),(-1,-1),1, colors.black),
-            ('BACKGROUND',(0,0),(0,0),colors.black),
-            ('BACKGROUND',(0,2),(0,2),c20_bg),
-#            ('TEXTCOLOR',(0,0),(0,0),colors.red),
+#        cc = Table([ [c00,c01],[c10,qrcode_image],[c20,c21] ], colWidths=[5.9*cm,1.5*cm],rowHeights=[1.50*cm,1.95*cm,0.95*cm], style=[
+#            ('GRID',(0,0),(-1,-1),1, colors.black),
+#            ('BACKGROUND',(0,0),(0,0),colors.black),
+#            ('BACKGROUND',(0,2),(0,2),c20_bg),
+#            ('LEFTPADDING',(0,0),(-1,-1),ipad),
+#            ('RIGHTPADDING',(0,0),(-1,-1),ipad),
+#            ('TOPPADDING',(0,0),(-1,-1),ipad),
+#            ('BOTTOMPADDING',(0,0),(-1,-1),ipad),
+#            ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+#            ('ALIGN',(0,0),(-1,-1),'CENTER'),
+#        ])
+
+        c00 = Paragraph("<font size=14>STARLET</font>",styleHeaderTopL)
+        c10 = Paragraph("<font size=8>TANEČNÍ ŠKOLA<br/>MANŽELŮ BURYANOVÝCH</font>",styleHeaderTopR)
+       # <br/><font size=8>TANEČNÍ ŠKOLA<br/>MANŽELŮ BURYANOVÝCH</font>",styleHeaderLeft)
+
+
+        cc = Table([ 
+              [c00,c10,"#"],
+              [c01,c11,qrcode_image],
+              [c02,"#","#"], 
+              [c03,"#","#"]],
+               colWidths=[2.7*cm,2.0*cm,2.7*cm],rowHeights=[1*cm,1.7*cm,1.00*cm,0.7*cm], style=[
+            #('GRID',(0,0),(-1,-1),1, colors.black),
+            ('BOX',(0,0),(-1,-1),1,colors.black),
+            ('SPAN',(1,0),(2,0)),  #ts line
+            ('BACKGROUND',(0,0),(-1,0),colors.black),
+            ('VALIGN',(0,0),(-1,0),'MIDDLE'),
+
+            ('LINEBELOW',(0,1),(1,1),1,colors.black),
+            ('LINEAFTER',(1,1),(1,2),1,colors.black),
+
+            ('SPAN',(2,1),(2,2)),  #qr
+
+            ('SPAN',(0,2),(1,2)),  #info line
+            ('VALIGN',(0,2),(1,2),'BOTTOM'),
+
+            ('SPAN',(0,3),(2,3)),  #name
+            ('BACKGROUND',(0,3),(-1,3),colors.black),
+
+
+
+#            ('BACKGROUND',(0,2),(0,2),c20_bg),
             ('LEFTPADDING',(0,0),(-1,-1),ipad),
             ('RIGHTPADDING',(0,0),(-1,-1),ipad),
-            ('TOPPADDING',(0,0),(-1,-1),ipad),
-            ('BOTTOMPADDING',(0,0),(-1,-1),ipad),
+#            ('TOPPADDING',(0,0),(-1,-1),ipad),
+#            ('BOTTOMPADDING',(0,0),(-1,-1),ipad),
             ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
             ('ALIGN',(0,0),(-1,-1),'CENTER'),
         ])

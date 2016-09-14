@@ -66,6 +66,7 @@ class QCard(BaseModel):
     course_code = db.StringProperty(default='')
     info_line_1 = db.StringProperty(default='')
     info_line_2 = db.StringProperty(default='')
+    qrcode = db.StringProperty(default='')
 
     @staticmethod
     def list_all():
@@ -84,7 +85,7 @@ class QCard(BaseModel):
     def keys_my(owner):
         return QCard.all(keys_only=True).filter('owner',owner)
  
-    def init(self, owner=None, ref_gid=None, name=None, surname=None, season_name=None, course_code=None, info_line_1=None, info_line_2=None):
+    def init(self, owner=None, ref_gid=None, name=None, surname=None, season_name=None, course_code=None, info_line_1=None, info_line_2=None, qrcode=None):
         self.create_datetime = datetime.datetime.utcnow()
         self.owner = owner
         self.ref_gid = ref_gid
@@ -94,6 +95,7 @@ class QCard(BaseModel):
         self.course_code = course_code
         self.info_line_1 = info_line_1
         self.info_line_2 = info_line_2
+        self.qrcode = qrcode
         
 
 

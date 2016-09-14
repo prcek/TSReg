@@ -40,7 +40,7 @@ def delete(request, qcard_id):
 
 
 def clear_all(request):
-    qcard_keys=CQard.keys_my(request.auth_info.email)
+    qcard_keys=QCard.keys_my(request.auth_info.email)
     db.delete(qcard_keys)
 
     return HttpResponseRedirect('..')
