@@ -17,10 +17,13 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle,Paragraph,PageBreak
 from reportlab.graphics.barcode.qr import QrCodeWidget
 from reportlab.graphics.shapes import Drawing 
+from reportlab.graphics import renderSVG,renderPS,renderPDF
 
 import os
 import re
+import zlib
 import reportlab
+
 folderFonts = os.path.dirname(reportlab.__file__) + os.sep + 'fonts'
 
 pdfmetrics.registerFont(TTFont('DejaVuSansMono', os.path.join(folderFonts,'DejaVuSansMono.ttf')))
@@ -29,7 +32,8 @@ pdfmetrics.registerFont(TTFont('DejaVuSansBold', os.path.join(folderFonts,'DejaV
 
 
 TEST_TEXT = "Příliš žluťoučký kůň úpěl ďábelské ódy"
-
+LONG_TEST_TEST = TEST_TEXT + " " + TEST_TEXT + " " + TEST_TEXT
+EXTRA_LONG_TEST_TEST = LONG_TEST_TEST + " " + LONG_TEST_TEST + " " + LONG_TEST_TEST
 import logging
 import StringIO
 import datetime
@@ -764,7 +768,7 @@ def students_qcard(output,cards):
     ipad = 1
     pad = 10
 
-
+    logging.info("gen qcard")
     doc = SimpleDocTemplate(output, pagesize=A4 ,leftMargin=1*cm, rightMargin=1*cm, topMargin=0.8*cm, bottomMargin=1*cm, showBoundary=0)
     styles = getStyleSheet()
 
@@ -783,17 +787,24 @@ def students_qcard(output,cards):
 
     cardcells = []
     for c in cards:
-
+        logging.info("gen qcard for %s" % c)
         info_empty = (c.info_line_1 is None or c.info_line_1=='') and (c.info_line_2 is None or c.info_line_2=='')
-        
+        logging.info("#0")
+
         unit = 29*mm
         qrw = QrCodeWidget(c.qrcode)
+        logging.info("#0.1")
+        logging.info("xxx")
+
         b = qrw.getBounds()
+        logging.info( b )
         w = b[2]-b[0]
         h = b[3]-b[1]
         qrcode_image = Drawing(unit,unit,transform=[unit/w,0,0,unit/h,0,0])
-        qrcode_image.add(qrw)
+        logging.info("#0.2")
 
+        qrcode_image.add(qrw)
+        logging.info("#1")
             
 #        c00 = Paragraph("<font size=12>STARLET</font><br/><font size=8>TANEČNÍ ŠKOLA<br/>MANŽELŮ BURYANOVÝCH</font>",styleHeaderLeft)
 #        c01 = Paragraph("ČÍSLO<br/>KURZU",styleHeaderRight)
@@ -814,6 +825,7 @@ def students_qcard(output,cards):
 
         c01 = Paragraph(nonone(c.course_code),styleCode)
         c11 = Paragraph(nonone(c.season_name),styleSeason)
+        logging.info("#2")
 
         #if info_empty:
         #    c20_bg = colors.white
@@ -836,6 +848,8 @@ def students_qcard(output,cards):
         
         c02 = Paragraph(nonone(info_text),styleIL)
         c03 = Paragraph(escape(nonone(c.name)+" "+nonone(c.surname)),styleFullname)
+        logging.info("#3")
+
         #c21 = Paragraph(nonone(c.season_name),styleSeason)
 
 #        cc = Table([ [c00,c01],[c10,qrcode_image],[c20,c21] ], colWidths=[5.9*cm,1.5*cm],rowHeights=[1.50*cm,1.95*cm,0.95*cm], style=[
@@ -853,6 +867,7 @@ def students_qcard(output,cards):
         c00 = Paragraph("<font size=14>STARLET</font>",styleHeaderTopL)
         c10 = Paragraph("<font size=8>TANEČNÍ ŠKOLA<br/>MANŽELŮ BURYANOVÝCH</font>",styleHeaderTopR)
        # <br/><font size=8>TANEČNÍ ŠKOLA<br/>MANŽELŮ BURYANOVÝCH</font>",styleHeaderLeft)
+        logging.info("#4")
 
 
         cc = Table([ 
@@ -888,8 +903,11 @@ def students_qcard(output,cards):
             ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
             ('ALIGN',(0,0),(-1,-1),'CENTER'),
         ])
+        logging.info("#5")
 
         cardcells.append(cc)
+        logging.info("#6")
+
 
     line=[]
     data=[]
@@ -911,6 +929,7 @@ def students_qcard(output,cards):
         doc.build(elements)
         return
 
+    logging.info("#7")
 
 
     bigtable = Table(data,colWidths=[8.5*cm,8.5*cm], rowHeights= rows*[5.43*cm], style=[
@@ -924,10 +943,59 @@ def students_qcard(output,cards):
     ]) 
     elements.append(bigtable)
    
+    logging.info("#8")
+
 
     if len(elements)==0:
         elements.append(Paragraph(u"žádná data",styleH))
     doc.build(elements)
+
+
+def get_qrcode_as_svg_zipstring(code_value):
+  logging.info("get_qrcode_as_svg_string")
+
+  unit = 29*mm
+
+  qrw = QrCodeWidget(code_value)
+  b = qrw.getBounds()
+  logging.info( b )
+  w = b[2]-b[0]
+  h = b[3]-b[1]
+  qrcode_image = Drawing(unit,unit,transform=[unit/w,0,0,unit/h,0,0])
+  qrcode_image.add(qrw)
+
+
+  rs = renderSVG.drawToString(qrcode_image)
+  logging.info("raw size %d" % len(rs))
+  #rsz = zlib.compress(rs)
+  #logging.info("zip size %d" % len(rsz))
+  return rs
+
+
+
+def qrtest():
+  logging.info("qrtest ================ START =================  qrtest")
+
+  unit = 29*mm
+
+  qrw = QrCodeWidget(EXTRA_LONG_TEST_TEST)
+
+
+  b = qrw.getBounds()
+  logging.info( b )
+  w = b[2]-b[0]
+  h = b[3]-b[1]
+  qrcode_image = Drawing(unit,unit,transform=[unit/w,0,0,unit/h,0,0])
+  qrcode_image.add(qrw)
+
+
+  rs = renderSVG.drawToString(qrcode_image)
+  logging.info(len(rs))
+  rsz = zlib.compress(rs)
+  logging.info(len(rsz))
+
+
+  logging.info("qrtest ================ END =================  qrtest")
 
 
 def students_invitation(output,invitations,mode='A'):

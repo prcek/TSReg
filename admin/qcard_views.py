@@ -9,9 +9,10 @@ from google.appengine.ext import db
 from admin.models import QCard
 import utils.config as cfg
 import utils.pdf as pdf
+import utils.qrg as qrg
 import logging
 import urllib
-
+import base64
 
 
 
@@ -58,14 +59,31 @@ def clear_all_all(request):
 
 def print_all(request):
 
-    r =  HttpResponse(mimetype='application/pdf')
-    file_name = urllib.quote("karty.pdf")
-    logging.info(file_name)
-    r['Content-Disposition'] = "attachment; filename*=UTF-8''%s"%file_name
 
+
+
+    logging.info("fetch qcards")
     qcard_list=QCard.list_my(request.auth_info.email)
+    logging.info("fetch done")
+    if qrg.qrg_cfg_get_on():
+        logging.info("qrg is on")
+        li = []
+        for qc in qcard_list:
+            li += [db.to_dict(qc)]
+        rd = qrg.qrg_post("cards",li)
+        pdfdata = base64.b64decode(rd["data"]) 
+        r =  HttpResponse(pdfdata, mimetype='application/pdf')
+        file_name = urllib.quote("karty.pdf")
+        logging.info(file_name)
+        r['Content-Disposition'] = "attachment; filename*=UTF-8''%s"%file_name
 
-    pdf.students_qcard(r,qcard_list)
+    else:
+        logging.info("qrg is off")
+        r =  HttpResponse(mimetype='application/pdf')
+        file_name = urllib.quote("karty.pdf")
+        logging.info(file_name)
+        r['Content-Disposition'] = "attachment; filename*=UTF-8''%s"%file_name
+        pdf.students_qcard(r,qcard_list)
 
     return r
 

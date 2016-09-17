@@ -107,6 +107,11 @@ def setupConfig():
     createConfig('CDBSYNC_URL','https://couchdb.test/test')
     createConfig('CDBSYNC_AUTH','xxx')
 
+    createConfig('QRG_ON','0')
+    createConfig('QRG_URL','https://qrg.test/')
+    createConfig('QRG_AUTH','xxx')
+
+
     createConfig('ENROLL_ENROLL_ON', '0')
     createConfig('ENROLL_CHECK_URL_BASE', 'http://localhost:8080/zapis/potvrdit/')
     createConfig('ENROLL_EMAIL','info@appid.appspotmail.com')

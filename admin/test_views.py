@@ -17,8 +17,9 @@ from utils.locale import local_timezone
 
 #from google.appengine.api.urlfetch import Fetch,PUT
 #from enroll.models import Course,Folder,Season,FolderStats
-
+import utils.pdf
 import utils.cdbsync as cdbsync
+import utils.qrg as qrg
 from enroll.models import Season,Student,Course,Folder
 
 
@@ -51,6 +52,10 @@ def plan_update_all_courses(request):
     return HttpResponse('ok')
 
 
+def qrtest(request):
+    utils.pdf.qrtest()
+    return HttpResponse('ok')
+
 def index(request):
 
     tz = local_timezone #pytz.timezone('Europe/Prague') 
@@ -74,7 +79,11 @@ def index(request):
     target_url = ''
     target_dskey = ''
 
- 
+    qrg_res = "off"
+    if qrg.qrg_cfg_get_on():
+      qrg_res = qrg.qrg_get_info()
+
+
 
     if request.method == 'POST':
         logging.info(request.POST)
@@ -120,5 +129,5 @@ def index(request):
 
    #     url_response = '%s %d %s' % (target_url,url_r.status_code,cdb['_id'])
 
-    return render_to_response('admin/test.html', RequestContext(request, { 'now': now, 'localized_now': localized_now, 'local_now': local_now, 'target_url':target_url, 'target_dskey': target_dskey, 'url_response': url_response}))
+    return render_to_response('admin/test.html', RequestContext(request, { 'qrg_res':qrg_res, 'now': now, 'localized_now': localized_now, 'local_now': local_now, 'target_url':target_url, 'target_dskey': target_dskey, 'url_response': url_response}))
 
