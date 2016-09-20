@@ -28,9 +28,11 @@ def calc_qrcode_for_student(student,course,season):
 	
 	q_b64 = base64.b64encode(zlib.compress(q_json.encode("utf8")))
 	check = "%s*%d" %(q_b64,student.ref_gid_salt)
+	check2 = "%s*%s" %(q_b64,"TS")
 	crc = zlib.crc32(check)
+	crc2 = zlib.crc32(check2)
 	logging.info("raw q_b64: %s"%(q_b64))
-	logging.info("salt:%d crc32:%d"%(student.ref_gid_salt,crc))
-	qcode = "TS*%d*%s*%d**" % (student.ref_gid,q_b64,crc &0xffffffff)
+	logging.info("salt:%d crc32:%d crc32_2:%d"%(student.ref_gid_salt,crc,crc2))
+	qcode = "TS*%d*%s*%d*%d**" % (student.ref_gid,q_b64,crc &0xffffffff,crc2 &0xffffffff)
 	logging.info(qcode)
 	return qcode
