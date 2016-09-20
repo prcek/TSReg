@@ -50,7 +50,7 @@ def qrg_post(srv,data):
 	logging.info("qrg post json %s"%post_json)
 	res = Fetch("%s/%s" % (qrg_cfg_get_url(),srv),deadline=60,method=POST,payload=post_json, headers={"Authorization": "Basic %s" % qrg_cfg_get_auth(), "Content-Type":"application/json"},validate_certificate=QRG_VALIDATE_CERT)
 	logging.info("qrg post http res code %d", res.status_code)
-	logging.info(res.content)
+#	logging.info(res.content)
 	if res.status_code == 200:
 		doc = json.loads(res.content)
 		return doc

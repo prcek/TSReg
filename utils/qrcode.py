@@ -4,7 +4,7 @@
 import logging
 import datetime
 import base64
-
+import zlib
 from django.utils import simplejson as json
 
 from enroll.models import Student,Course,Season
@@ -25,6 +25,12 @@ def calc_qrcode_for_student(student,course,season):
  	logging.info("dict %s" % q)
 	q_json = json.dumps(q,cls=DateTimeEncoder)
 	logging.info(q_json)
-	q_b64 = base64.urlsafe_b64encode(q_json)
-	logging.info(q_b64)
-	return q_b64
+	
+	q_b64 = base64.b64encode(zlib.compress(q_json.encode("utf8")))
+	check = "%s*%d" %(q_b64,student.ref_gid_salt)
+	crc = zlib.crc32(check)
+	logging.info("raw q_b64: %s"%(q_b64))
+	logging.info("salt:%d crc32:%d"%(student.ref_gid_salt,crc))
+	qcode = "TS*%d*%s*%d**" % (student.ref_gid,q_b64,crc &0xffffffff)
+	logging.info(qcode)
+	return qcode
