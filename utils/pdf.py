@@ -1087,6 +1087,17 @@ def students_invitation(output,invitations,mode='A'):
  
     doc.build(elements)
 
+def empty_document(output, text):
+
+    doc = SimpleDocTemplate(output, pagesize=A4 ,leftMargin=1*cm, rightMargin=1*cm, topMargin=0.8*cm, bottomMargin=1*cm, showBoundary=0)
+    styles = getStyleSheet()
+
+    styleN = styles['Normal']
+    styleH = styles['Heading']
+    
+    elements=[]
+    elements.append(Paragraph(text,styleH))
+    doc.build(elements)
 
 
 

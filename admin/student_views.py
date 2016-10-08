@@ -12,6 +12,8 @@ from admin.student_sort import sort_students_single, sort_students_school, sort_
 import utils.config as cfg
 import utils.mail as mail
 import utils.pdf as pdf
+from utils.qrcode import calc_qrcode_for_cmdcard
+import utils.qrg
 from utils.mail import valid_email,chunks
 from utils.decorators import ar_edit
 import logging
@@ -19,7 +21,7 @@ from operator import attrgetter
 import urllib
 import re
 import utils.cdbsync as cdbsync
-
+import base64
 
 
 ADDRESSING_CHOICES = (
@@ -1244,5 +1246,40 @@ def enroll_as_pdf(request, course_id):
     students.extend(student_list_to_enroll)
 
     students_enroll_multi(r,students,with_partner=False)
+    return r
+
+def qrcmd_cards(request, course_id):
+    logging.info("qrcmd cards for course %s" % (course_id))
+    course = Course.get_by_id(int(course_id))  
+
+    if course is None:
+        logging.info("course not found")
+        raise Http404
+    logging.info(course)
+
+
+    if utils.qrg.qrg_cfg_get_on():
+        logging.info("qrg is on")
+        li = []
+        li += [{"cmd_id":"C_SETUP","name":"%s" % course.code, "desc":u"zapne příchod do kurzu %s" % course.code, "cmd_qrcode": calc_qrcode_for_cmdcard(course,"C_SETUP")}]
+        li += [{"cmd_id":"C_ADD","name":"%s" % course.code, "desc":u"povolí hostování všech z kurzu %s" % course.code, "cmd_qrcode": calc_qrcode_for_cmdcard(course,"C_ADD")}]
+        li += [{"cmd_id":"C_ADD_M","name":"%s" % course.code, "desc":u"povolí hostování kluků z kurzu %s" % course.code, "cmd_qrcode": calc_qrcode_for_cmdcard(course,"C_ADD_M")}]
+        li += [{"cmd_id":"C_ADD_F","name":"%s" % course.code, "desc":u"povolí hostování holek z kurzu %s" % course.code, "cmd_qrcode": calc_qrcode_for_cmdcard(course,"C_ADD_F")}]
+
+        rd = utils.qrg.qrg_post("cmd_cards",li)
+        pdfdata = base64.b64decode(rd["data"]) 
+        r =  HttpResponse(pdfdata, mimetype='application/pdf')
+        file_name = urllib.quote("ovladaci_karty.pdf")
+        logging.info(file_name)
+        r['Content-Disposition'] = "attachment; filename*=UTF-8''%s"%file_name
+
+    else:
+        logging.info("qrg is off")
+        r =  HttpResponse(mimetype='application/pdf')
+        file_name = urllib.quote("ovladaci_karty.pdf")
+        logging.info(file_name)
+        r['Content-Disposition'] = "attachment; filename*=UTF-8''%s"%file_name
+        pdf.empty_document(r,"ted nelze generovat ovladaci qr karty")
+
     return r
 
