@@ -1065,8 +1065,49 @@ def pay(request, student_id, course_id=None):
         'student':student,'course':course, 'form':form
     }))
 
+class ChangeQCardForm(forms.Form):
+    doit = forms.BooleanField(label='zrušit starou kartu a přidělit nový kód karty', error_messages=ERROR_MESSAGES, required=False)
 
 
+@ar_edit
+def change_qcard(request, student_id, course_id=None):
+    student = Student.get_by_id(int(student_id))
+    logging.info(student)
+    hint = ''
+    if student is None:
+        raise Http404
+    course = student.get_course()
+    if request.method == 'POST':
+        form = ChangeQCardForm(request.POST)
+        if form.is_valid():
+            if form.cleaned_data['doit']:
+                logging.info("change ref_gid!")
+
+                student.init_gid()
+                student.save()
+                cdbsync.plan_cdb_put(student)
+
+                return HttpResponseRedirect('../change_qcard_ok/')
+        hint = "pro provedení změny je potřeba zašktnout souhlas ve formuláři"
+    else:
+        data = {'doit': False}
+        form = ChangeQCardForm(data)
+
+    return render_to_response('admin/students_change_qcard.html', RequestContext(request, {
+        'hint':hint,'student':student,'course':course, 'form':form
+    }))
+
+@ar_edit
+def change_qcard_ok(request,student_id,course_id=None):
+    student = Student.get_by_id(int(student_id))
+    logging.info(student)
+    if student is None:
+        raise Http404
+    course = student.get_course()
+    return render_to_response('admin/students_change_qcard_ok.html', RequestContext(request, {
+        'student':student,'course':course
+    }))
+  
 
 class EmailSelectForm(forms.Form):
     include_enroll = forms.BooleanField(label='zapsané', error_messages=ERROR_MESSAGES, required=False)
