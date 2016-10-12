@@ -1,0 +1,45 @@
+
+{% extends "admin/base.html" %}
+
+{% block title %} Administrace zápisu {% endblock %}
+
+{% block content %}
+
+   <a class='button' href='../..'>zpět na žáky</a>
+   <a class='button' href='.'>přenačíst</a>
+
+{% if request.auth_info.edit %}
+   <a class='button' href='../edit/'>editovat</a>
+{% endif %}
+
+
+{% with student as s %}
+
+<br/>
+<br/><br/><br/>
+
+<b>Každá žák má přidělený QR kód karty. Při změně kódu přestane stará karta fungovat (bude se hlásit jako neznámá/neplatná). Po po změně kódu je potřeba žákovi ještě vytisknout novou kartu. </b>
+<br/>
+<b>Po přidělení nového kódu se již nelze vrátit k původnímu !!</b>
+<br/><br/>
+
+kurz: {{course.code}}<br/>
+jméno: {{s.name}} {{s.surname}}<br/>
+stávající kód QR karty: {{s.ref_gid}}<br/>
+<br/>
+
+<form method="post" name="form" action=".">
+<table>
+{{ form.as_table }}
+</table>
+<b class="important"> {{hint}} </b><br/>
+<input class="button" type="submit" value="provést"/>
+<a class='button' href='../..'>zpět</a>
+</form>
+
+
+
+{% endwith %}
+
+{% endblock %}
+

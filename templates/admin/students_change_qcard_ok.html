@@ -1,0 +1,30 @@
+
+{% extends "admin/base.html" %}
+
+{% block title %} Administrace zápisu {% endblock %}
+
+{% block content %}
+
+
+
+{% with student as s %}
+
+<br/>
+<br/><br/><br/>
+
+<b>Žák má přidělený nový QR kód karty. Původní karta již nebude fungovat a třeba vytisknout novou. </b>
+<br/><br/>
+
+kurz: {{course.code}}<br/>
+jméno: {{s.name}} {{s.surname}}<br/>
+nový kód QR karty: {{s.ref_gid}}<br/>
+<br/>
+
+
+<a class='button' href='../..'>zpět na žáky</a>
+
+
+{% endwith %}
+
+{% endblock %}
+
