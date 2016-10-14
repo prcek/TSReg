@@ -11,7 +11,7 @@ from google.appengine.api.urlfetch import Fetch,PUT
 from google.appengine.api import taskqueue
 
 
-from enroll.models import Course,Folder,Season,Student
+from enroll.models import Course,Folder,Season,Student,StudentInvCard
 from utils import config as cfg
 
 #CDB_URL="https://cdb.hluchan.cz/test/"

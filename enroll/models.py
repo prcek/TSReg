@@ -350,6 +350,23 @@ class FolderStats(BaseModel):
         return fs
 
 
+class StudentInvCard(BaseModel):
+    student_key = db.StringProperty()
+    inv_datetime = db.DateTimeProperty()
+    ref_gid = db.IntegerProperty(default=0)
+    ref_gid_salt = db.IntegerProperty(default=0)
+    who = db.StringProperty(default='')
+    reason = db.StringProperty(default='')
+
+    def init(self, student, who=None, reason=None):
+        self.inv_datetime = datetime.datetime.utcnow()
+        self.who = who
+        self.reason = reason
+        self.ref_gid = student.ref_gid
+        self.ref_gid_salt = student.ref_gid_salt
+        self.student_key = str(student.key())
+
+
 class Student(BaseModel):
     hidden = db.BooleanProperty(default=False)
     course_key = db.StringProperty()

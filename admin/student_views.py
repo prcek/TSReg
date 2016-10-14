@@ -6,7 +6,7 @@ from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext,Context, loader
 #from google.appengine.api import taskqueue
 
-from enroll.models import Student,Course,Season
+from enroll.models import Student,StudentInvCard,Course,Season
 from admin.queue import plan_send_student_email, plan_update_course, plan_job_transfer_students, plan_job_card_for_students, plan_job_qcard_for_students, plan_job_invitation_for_students, plan_job_makecopy_students, plan_job_cardout_for_students, plan_job_hide_students
 from admin.student_sort import sort_students_single, sort_students_school, sort_students_pair, sort_students_spare_single, sort_students_spare_school, sort_students_spare_pair, sort_students_kicked
 import utils.config as cfg
@@ -1067,7 +1067,8 @@ def pay(request, student_id, course_id=None):
 
 class ChangeQCardForm(forms.Form):
     doit = forms.BooleanField(label='zrušit starou kartu a přidělit nový kód karty', error_messages=ERROR_MESSAGES, required=False)
-
+    reason = forms.CharField(label='duvod', error_messages=ERROR_MESSAGES, required=True)
+  
 
 @ar_edit
 def change_qcard(request, student_id, course_id=None):
@@ -1083,6 +1084,10 @@ def change_qcard(request, student_id, course_id=None):
             if form.cleaned_data['doit']:
                 logging.info("change ref_gid!")
 
+                inv = StudentInvCard()
+                inv.init(student,request.auth_info.email,form.cleaned_data['reason'])
+                inv.save()
+                cdbsync.plan_cdb_put(inv)
                 student.init_gid()
                 student.save()
                 cdbsync.plan_cdb_put(student)
@@ -1090,7 +1095,7 @@ def change_qcard(request, student_id, course_id=None):
                 return HttpResponseRedirect('../change_qcard_ok/')
         hint = "pro provedení změny je potřeba zašktnout souhlas ve formuláři"
     else:
-        data = {'doit': False}
+        data = {'doit': False, 'reason':''}
         form = ChangeQCardForm(data)
 
     return render_to_response('admin/students_change_qcard.html', RequestContext(request, {
