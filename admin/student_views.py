@@ -1302,16 +1302,17 @@ def qrcmd_cards(request, course_id):
         logging.info("course not found")
         raise Http404
     logging.info(course)
-
+    season_name = course.get_season().name
+    logging.info(season_name)
 
     if utils.qrg.qrg_cfg_get_on():
         logging.info("qrg is on")
         li = []
-        li += [{"cmd_id":"C_SETUP","name":"%s" % course.code, "desc":u"zapne kurz %s" % course.code, "cmd_qrcode": calc_qrcode_for_cmdcard(course,"C_SETUP")}]
-        li += [{"cmd_id":"C_SETUP_GM","name":"%s" % course.code, "desc":u"zapne kurz %s (+hostující kluci)" % course.code, "cmd_qrcode": calc_qrcode_for_cmdcard(course,"C_SETUP_GM")}]
-        li += [{"cmd_id":"C_ADD","name":"%s" % course.code, "desc":u"povolí hostování všech z kurzu %s" % course.code, "cmd_qrcode": calc_qrcode_for_cmdcard(course,"C_ADD")}]
-        li += [{"cmd_id":"C_ADD_M","name":"%s" % course.code, "desc":u"povolí hostování kluků z kurzu %s" % course.code, "cmd_qrcode": calc_qrcode_for_cmdcard(course,"C_ADD_M")}]
-        li += [{"cmd_id":"C_ADD_F","name":"%s" % course.code, "desc":u"povolí hostování holek z kurzu %s" % course.code, "cmd_qrcode": calc_qrcode_for_cmdcard(course,"C_ADD_F")}]
+        li += [{"cmd_id":"C_SETUP","name":"%s" % course.code,"season":season_name, "desc":u"zapne kurz %s" % course.code, "cmd_qrcode": calc_qrcode_for_cmdcard(course,"C_SETUP")}]
+        li += [{"cmd_id":"C_SETUP_GM","name":"%s" % course.code, "season":season_name, "desc":u"zapne kurz %s (+hostující kluci)" % course.code, "cmd_qrcode": calc_qrcode_for_cmdcard(course,"C_SETUP_GM")}]
+        li += [{"cmd_id":"C_ADD","name":"%s" % course.code,"season":season_name, "desc":u"povolí hostování všech z kurzu %s" % course.code, "cmd_qrcode": calc_qrcode_for_cmdcard(course,"C_ADD")}]
+        li += [{"cmd_id":"C_ADD_M","name":"%s" % course.code, "season":season_name, "desc":u"povolí hostování kluků z kurzu %s" % course.code, "cmd_qrcode": calc_qrcode_for_cmdcard(course,"C_ADD_M")}]
+        li += [{"cmd_id":"C_ADD_F","name":"%s" % course.code, "season":season_name, "desc":u"povolí hostování holek z kurzu %s" % course.code, "cmd_qrcode": calc_qrcode_for_cmdcard(course,"C_ADD_F")}]
 
         rd = utils.qrg.qrg_post("cmd_cards",li)
         pdfdata = base64.b64decode(rd["data"]) 
