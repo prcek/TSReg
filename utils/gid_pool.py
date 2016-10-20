@@ -76,12 +76,15 @@ def create_new_gid_item(group_name,ref_object_key=None):
     logging.info("transaction end")
     return value
 
+  if db.is_in_transaction():
+    return txn()
+
   val = db.run_in_transaction_options(xg_on, txn)
   return val
 
 
 def ret_existing_gid_item(group_name,value,ref_object_key=None):
-  logging.info("ret_existing_gid_item begin")  
+  logging.info("ret_existing_gid_item begin value = %d" % value)  
   now = datetime.datetime.utcnow()
   def txn():
     
@@ -108,14 +111,15 @@ def ret_existing_gid_item(group_name,value,ref_object_key=None):
     logging.info("transaction end")
     return gi.usage
 
+  if db.is_in_transaction():
+    return txn()
   return db.run_in_transaction_options(xg_on, txn)
 
 
 
 def put_existing_gid_item(group_name,value,ref_object_key=None):
-  logging.info("put_existing_gid_item begin")  
+  logging.info("put_existing_gid_item begin value = %d" % value)  
   now = datetime.datetime.utcnow()
-
 
   def txn():
     logging.info("transaction begin")

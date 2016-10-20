@@ -20,8 +20,9 @@ import re
 from utils.data import dump_to_csv
 import utils.cdbsync as cdbsync
 from utils.qrcode import calc_qrcode_for_student
-
+import utils.gid_pool as gid_pool
 import cStringIO
+from google.appengine.ext import db
 
 import logging
 import sys
@@ -94,7 +95,7 @@ def update_all_students_for_course(request):
     for s in students:
         logging.info("student %s" % s.key())
         taskqueue.add(url='/task/update_all_students_do_one/', params={'student_key':s.key()})
-
+ 
     logging.info("all done")
     return HttpResponse('ok')
 
@@ -107,15 +108,9 @@ def update_all_students_do_one(request):
         raise Http404
 
     logging.info("update student %s"%s)
-    logging.info("ref gid %d and salt %s" % (s.ref_gid,s.ref_gid_salt))
 
-    if ((s.ref_gid is 0) or (s.ref_gid_salt is 0)):
-        logging.info("zero!")
-        s.init_gid()
-        s.save()
-        logging.info("new gid %d and salt %s" % (s.ref_gid, s.ref_gid_salt))
-        cdbsync.plan_cdb_put(s)
-
+    cdbsync.plan_cdb_put(s)
+    
     return HttpResponse('ok')
 
 

@@ -31,7 +31,7 @@ def increment(name):
 
 
 
-def getNextStudentID():
+def getNextStudentID_obs():
   increment("nextStudentId")
   val = get_count("nextStudentId")
   logging.info("getNextStudentID %d"%val)

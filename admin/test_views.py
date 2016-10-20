@@ -20,7 +20,9 @@ from utils.locale import local_timezone
 import utils.pdf
 import utils.cdbsync as cdbsync
 import utils.qrg as qrg
-from enroll.models import Season,Student,Course,Folder
+from enroll.models import Season,Student,StudentInvCard,Course,Folder
+
+import utils.gid_pool as gid_pool
 
 
 def plan_update_all_students(request):
@@ -75,9 +77,9 @@ def index(request):
         lines.append({'key':i,'value':'v_%d'%i})
 
 
-    url_response = ''
-    target_url = ''
-    target_dskey = ''
+    target_response = ''
+    target_group = ''
+    target_value = ''
 
     qrg_res = "off"
     if qrg.qrg_cfg_get_on():
@@ -87,47 +89,18 @@ def index(request):
 
     if request.method == 'POST':
         logging.info(request.POST)
-        target_url = request.POST['target_url']
-        target_dskey = request.POST['target_dskey']
-        if target_dskey:
-            key = db.Key(target_dskey)
-            logging.info("target dskey %s  (kind %s id %s)" % (target_dskey,key.kind(),key.id_or_name()))
-            s = db.Model.get(key)
-            sd = db.to_dict(s)
-            url_response = sd
-            logging.info(json.dumps(sd,cls=cdbsync.DateTimeEncoder))
-  #      
+        target_group = request.POST['target_group']
+        target_value = int(request.POST['target_value'])
+        if (target_value>0):
+          usage = gid_pool.put_existing_gid_item(target_group,target_value)
+          target_response = "put ok (%d)" % (usage)
+        elif (target_value<0):
+          usage = gid_pool.ret_existing_gid_item(target_group,-target_value)
+          target_response = "ret ok (%d)" % (usage)
         else:
-            url_response = cdbsync.cdb_get_db_info()
-  #      utils.cdbsync.cdb_create_or_update(target_dskey)
+          val = gid_pool.create_new_gid_item(target_group)
+          target_response = "new ok (%d)" % (val)
 
- #       url_r = Fetch(target_url,headers={"Authorization": "Basic %s" % base64.b64encode("admin:nimda72cb")},validate_certificate=True)
-
-  #      logging.info(url_r.status_code)
-  #      logging.info(url_r.content)
-  #      cdb = json.loads(url_r.content)
-  #      logging.info(cdb['_id'])
-
-  #      logging.info(cdb['seq'])
-  #      cdb['seq']=cdb['seq']+1
-  #      logging.info(cdb['seq'])
-
-  #      key = db.Key(target_dskey)
-  #      logging.info("target dskey %s  (kind %s id %s)" % (target_dskey,key.kind(),key.id_or_name()))
-  #      s = db.Model.get(key)
-  #      sd = db.to_dict(s,cdb)
-  #      logging.info(json.dumps(sd))
-
-
-
-  #      cdb_json = json.dumps(sd)
-  #      logging.info(cdb_json)
-  #      url_r2 = Fetch(target_url,method=PUT,payload=cdb_json,headers={"Authorization": "Basic %s" % base64.b64encode("admin:nimda72cb")} )
-  #      logging.info(url_r2.status_code)
-  #      logging.info(url_r2.content)
-
-
-   #     url_response = '%s %d %s' % (target_url,url_r.status_code,cdb['_id'])
-
-    return render_to_response('admin/test.html', RequestContext(request, { 'qrg_res':qrg_res, 'now': now, 'localized_now': localized_now, 'local_now': local_now, 'target_url':target_url, 'target_dskey': target_dskey, 'url_response': url_response}))
+  
+    return render_to_response('admin/test.html', RequestContext(request, { 'qrg_res':qrg_res, 'now': now, 'localized_now': localized_now, 'local_now': local_now, 'target_group':target_group, 'target_value': target_value, 'target_response': target_response}))
 

@@ -8,7 +8,8 @@ import random
 
 from utils import crypt
 from utils import cache
-from utils.counter import getNextStudentID
+#from utils.counter import getNextStudentID
+import utils.gid_pool as gid_pool
 from operator import itemgetter
 from itertools import cycle,izip,tee
 
@@ -355,6 +356,7 @@ class StudentInvCard(BaseModel):
     inv_datetime = db.DateTimeProperty()
     ref_gid = db.IntegerProperty(default=0)
     ref_gid_salt = db.IntegerProperty(default=0)
+    ref_gid_in_pool = db.BooleanProperty(default=False)
     who = db.StringProperty(default='')
     reason = db.StringProperty(default='')
 
@@ -437,7 +439,6 @@ class Student(BaseModel):
         s.init_reg()
         s.init_ref_base()
         s.init_enroll()
-        s.init_gid()
         s.course_key = self.course_key
         s.status = self.status
         s.reg_by_admin = True
@@ -470,7 +471,8 @@ class Student(BaseModel):
 
 
         s.save()
-        s.init_ref_codes();
+        s.init_ref_codes()
+        s.init_gid()  #ok
         s.save()
 
         return s
@@ -485,8 +487,9 @@ class Student(BaseModel):
         self.ref_base = crypt.gen_key()
 
     def init_gid(self):
-        self.ref_gid = getNextStudentID()
+        self.ref_gid = gid_pool.create_new_gid_item("students",str(self.key()))
         self.ref_gid_salt = random.randint(1,(2<<31)-1)
+        self.ref_gid_in_pool = True
 
     def init_ref_codes(self):
         id = self.key().id()
