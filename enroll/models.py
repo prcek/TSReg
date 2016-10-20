@@ -376,6 +376,7 @@ class Student(BaseModel):
     enroll_datetime = db.DateTimeProperty()
     ref_gid = db.IntegerProperty(default=0)
     ref_gid_salt = db.IntegerProperty(default=0)
+    ref_gid_in_pool = db.BooleanProperty(default=False)
     ref_base = db.StringProperty(default='')
     ref_key = db.StringProperty(default='')
     confirm_key = db.StringProperty()
