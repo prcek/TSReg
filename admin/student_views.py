@@ -1095,8 +1095,13 @@ def change_qcard(request, student_id, course_id=None):
                     inv.init(student,request.auth_info.email,form.cleaned_data['reason'])
                     inv.ref_gid_in_pool = True
                     inv.save()
-                    gid_pool.ret_existing_gid_item("students",student.ref_gid,str(student.key()))
-                    student.ref_gid=gid_pool.create_new_gid_item("students",str(student.key()))
+
+
+                    student.ref_gid=gid_pool.ret_and_create_new_git_item("students",student.ref_gid,str(student.key()))
+
+                    #gid_pool.ret_existing_gid_item("students",student.ref_gid,str(student.key()))
+                    #student.ref_gid=gid_pool.create_new_gid_item("students",str(student.key()))
+
                     student.save()
                     return (inv,student)
 

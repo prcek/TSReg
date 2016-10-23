@@ -1,5 +1,5 @@
 application: ts-zapis
-version: 11x-pool2
+version: 11x-pool2-undup
 runtime: python
 api_version: 1
 

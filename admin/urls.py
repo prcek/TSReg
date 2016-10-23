@@ -12,6 +12,12 @@ urlpatterns = patterns('admin',
     (r'^sys/test/update_all_folders/$', 'test_views.plan_update_all_folders'),
     (r'^sys/test/update_all_courses/$', 'test_views.plan_update_all_courses'),
     (r'^sys/test/update_all_seasons/$', 'test_views.plan_update_all_seasons'),
+
+    (r'^sys/test/kill_one_dupl/$', 'test_views.kill_one_dupl'),
+    (r'^sys/test/kill_multi_dupl/$', 'test_views.kill_multi_dupl'),
+    (r'^sys/test/get_dupl_stat/$', 'test_views.get_dupl_stat'),
+    (r'^sys/test/test_txn/$', 'test_views.test_txn'),
+
     (r'^sys/test/qrtest/$', 'test_views.qrtest'),
     (r'^sys/jobs/$', 'jobs_views.index'),
     (r'^sys/jobs/(?P<job_id>\d+)/del/$', 'jobs_views.delete'),

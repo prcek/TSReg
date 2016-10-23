@@ -8,3 +8,8 @@ queue:
 - name: cdbsync
   rate: 5/s
   
+
+- name: showsync
+  rate: 30/m
+
+

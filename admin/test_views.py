@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 
 from django.http import HttpResponse, Http404
@@ -57,6 +58,68 @@ def plan_update_all_courses(request):
 def qrtest(request):
     utils.pdf.qrtest()
     return HttpResponse('ok')
+
+def test_txn(request):
+    gid_pool.txn_test()
+    return HttpResponse('ok')
+
+def kill_one(student_key):
+
+    xg_on = db.create_transaction_options(xg=True)
+
+    def txn():
+        student = Student.get(student_key)
+        inv = StudentInvCard()
+        inv.init(student,"sys",u"špatně vygenerovaná karta (duplicitní)")
+        inv.ref_gid_in_pool = True
+        inv.save()
+
+        student.ref_gid = gid_pool.ret_and_create_new_git_item("students",student.ref_gid,str(student.key()))
+
+        #gid_pool.ret_existing_gid_item("students",student.ref_gid,str(student.key()))
+        #tudent.ref_gid=gid_pool.create_new_gid_item("students",str(student.key()))
+
+        student.save()
+        return (inv,student)
+
+
+    (inv,student) = db.run_in_transaction_options(xg_on, txn)
+
+    cdbsync.plan_cdb_put(inv)
+    cdbsync.plan_cdb_put(student)
+
+
+def kill_one_dupl(request):
+
+    res = ""
+
+    ref_gid = gid_pool.get_first_dupl("students")
+    res += " val %d" % ref_gid
+    if (ref_gid == -1):
+        return HttpResponse(res)
+
+
+    q = Student.all()
+    q.filter('ref_gid =',ref_gid)
+    for s in q:
+        sn=s.course_season()
+        res += " student %s %s %s" %(s.name,s.surname,sn) 
+        kill_one(s.key())
+
+
+
+
+    return HttpResponse(res)
+
+def get_dupl_stat(request):
+    res=gid_pool.get_stat("students")
+    return HttpResponse(res)
+
+def kill_multi_dupl(request):
+    for i in range(100):
+        taskqueue.add(queue_name='showsync', url='/admin/sys/test/kill_one_dupl/')
+    return HttpResponse('ok')
+
 
 def index(request):
 

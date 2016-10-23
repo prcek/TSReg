@@ -76,6 +76,11 @@ indexes:
   - name: season_key
   - name: folder_order_value
 
+- kind: GidItem
+  ancestor: yes
+  properties:
+  - name: usage
+
 - kind: Invitation
   properties:
   - name: owner
