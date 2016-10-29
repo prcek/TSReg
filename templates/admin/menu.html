@@ -4,8 +4,12 @@
                 <li><a href="/admin/">Přehled</a></li>
                 <li><a href="/admin/kurzy/">Kurzy</a></li>
                 <li><a href="/admin/zaci/">Hledání</a></li>
+
+{% if request.auth_info.card %}                
                 <li><a href="/admin/karty/">Karty</a></li>
                 <li><a href="/admin/qkarty/">QR Karty</a></li>
+{% endif %}
+
 
 {% if request.auth_info.edit %}
                 <li><a href="/admin/zapis/">Zápis</a></li>

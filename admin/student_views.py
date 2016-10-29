@@ -15,7 +15,7 @@ import utils.pdf as pdf
 from utils.qrcode import calc_qrcode_for_cmdcard
 import utils.qrg
 from utils.mail import valid_email,chunks
-from utils.decorators import ar_edit
+from utils.decorators import ar_edit, ar_card
 import logging
 from operator import attrgetter
 import urllib
@@ -618,7 +618,7 @@ class CardPickForm(forms.Form):
             self.fields['info_line_2'].initial = course.card_line_2
 
     
-@ar_edit
+@ar_card
 def action_do_card(request, source_course=None, student_ids=None):
     logging.info('student_ids = %s'%student_ids)
 
@@ -645,7 +645,7 @@ def action_do_card(request, source_course=None, student_ids=None):
     info = 'generování průkazek' 
     return render_to_response('admin/action_card.html', RequestContext(request, {'form':form, 'info':info, 'operation':request.POST['operation'], 'all_select':student_ids}))
   
-@ar_edit
+@ar_card
 def action_do_qcard(request, source_course=None, student_ids=None):
     logging.info('student_ids = %s'%student_ids)
 
@@ -1314,7 +1314,8 @@ def enroll_as_pdf(request, course_id):
 
     students_enroll_multi(r,students,with_partner=False)
     return r
-
+    
+@ar_card
 def qrcmd_cards(request, course_id):
     logging.info("qrcmd cards for course %s" % (course_id))
     course = Course.get_by_id(int(course_id))  

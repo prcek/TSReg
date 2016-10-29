@@ -5,7 +5,7 @@ import sys
 import os
 
 pathname, scriptname = os.path.split(sys.argv[0])
-sys.path.insert(0, os.path.join(pathname,'../libs/reportlab.zip'))
+sys.path.insert(0, os.path.join(pathname,'../libs/reportlab_25.zip'))
 
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4

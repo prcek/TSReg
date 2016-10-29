@@ -26,7 +26,10 @@
     <a class='button' href='csv'>stáhnout</a>
     <a class='button' href='pdf_list'>tisknout seznam</a>
     <a class='button' href='pdf_enroll'>tisknout přihlášky</a>
+{% if request.auth_info.card %}
     <a class='button' href='pdf_qrcmd_cards'>tisknout ovládací QR karty</a>
+{% endif %}
+
     <a class='button' href='.'>přenačíst</a>
 
     <br/><br/>
@@ -259,8 +262,11 @@
 <!--            <option value="action_email">emaily</option> -->
             <option value="action_email">emaily</option>
             <option value="action_enrollform">přihlášky</option>
+
+{% if request.auth_info.card %}
             <option value="action_card">generuj legitimace</option>
             <option value="action_qcard">generuj QR legitimace</option>
+{% endif %}
 
 {% if request.auth_info.edit %}
             <option value="action_pair">spáruj dvojci</option>

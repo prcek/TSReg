@@ -286,6 +286,7 @@ class AppUser(BaseModel):
     edit = db.BooleanProperty()
     pay = db.BooleanProperty()
     power = db.BooleanProperty()
+    card = db.BooleanProperty()
 
     @staticmethod
     def list_all():

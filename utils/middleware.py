@@ -23,6 +23,7 @@ class AuthInfo:
     pay = False
     power = False
     guest = True
+    card = False
 #    power = False
 #    cron = False
 #    task = False
@@ -61,11 +62,13 @@ class AuthInfo:
                 self.edit = aur.edit
                 self.pay = aur.pay
                 self.power = aur.power
+                self.card = aur.card
                 self.guest = False
             elif self.gae_admin:
                 self.edit = True
                 self.pay = True
                 self.power = True
+                self.card = True
                 
  
 

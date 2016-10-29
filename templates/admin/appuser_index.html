@@ -19,6 +19,7 @@
         <th>editace</th>
         <th>platby</th>
         <th>power</th>
+        <th>karty</th>
         <th>operace</th>
     </tr>
     {% for u in list %}
@@ -29,6 +30,7 @@
             <td>{{u.edit|anone}}</td>
             <td>{{u.pay|anone}}</td>
             <td>{{u.power|anone}}</td>
+            <td>{{u.card|anone}}</td>
             <td>
                 <a class='button' href='{{u.key.id}}/edit/'>editovat</a>
                 <a class='cbutton' href='{{u.key.id}}/del/'>smazat</a>

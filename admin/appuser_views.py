@@ -18,9 +18,10 @@ class AppUserForm(forms.ModelForm):
     edit = forms.BooleanField(label='právo editace', required=False)
     pay = forms.BooleanField(label='právo platby', required=False)
     power = forms.BooleanField(label='právo power', required=False)
+    card = forms.BooleanField(label='právo karty', required=False)
     class Meta:
         model = AppUser
-        fields = ( 'active', 'name','email','edit','pay','power' )
+        fields = ( 'active', 'name','email','edit','pay','power', 'card' )
 
 
 def index(request):
