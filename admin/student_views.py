@@ -660,7 +660,7 @@ def action_do_qcard(request, source_course=None, student_ids=None):
 
     
 
-@ar_edit
+@ar_card
 def action_do_cardout(request, source_course=None, student_ids=None):
     logging.info('student_ids = %s'%student_ids)
 
@@ -1072,7 +1072,7 @@ class ChangeQCardForm(forms.Form):
     reason = forms.CharField(label='duvod', error_messages=ERROR_MESSAGES, required=True)
   
 
-@ar_edit
+@ar_card
 def change_qcard(request, student_id, course_id=None):
     student = Student.get_by_id(int(student_id))
     logging.info(student)
@@ -1123,7 +1123,7 @@ def change_qcard(request, student_id, course_id=None):
         'hint':hint,'student':student,'course':course, 'form':form
     }))
 
-@ar_edit
+@ar_card
 def change_qcard_ok(request,student_id,course_id=None):
     student = Student.get_by_id(int(student_id))
     logging.info(student)
@@ -1314,7 +1314,7 @@ def enroll_as_pdf(request, course_id):
 
     students_enroll_multi(r,students,with_partner=False)
     return r
-    
+
 @ar_card
 def qrcmd_cards(request, course_id):
     logging.info("qrcmd cards for course %s" % (course_id))

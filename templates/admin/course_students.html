@@ -90,9 +90,13 @@
 {% if request.auth_info.edit %}
                 <a class='button' href='{{s.key.id}}/edit/'>edit</a>
                 <a class='button' href='{{s.key.id}}/pay/'>platba</a>
-                <a class='button' href='{{s.key.id}}/change_qcard/'>karta</a>
 {% endif %}
                 <a class='button' href='{{s.key.id}}/view/'>zobrazit</a>
+
+{% if request.auth_info.card %}
+                <a class='button' href='{{s.key.id}}/change_qcard/'>karta</a>
+{% endif %}
+ 
 
 {% if request.auth_info.edit %}
                 <a class='button' href='{{s.key.id}}/enroll/'>zapsat</a>
@@ -201,9 +205,13 @@
 {% if request.auth_info.edit %}
                 <a class='button' href='{{s.key.id}}/edit/'>edit</a>
                 <a class='button' href='{{s.key.id}}/pay/'>platba</a>
-                <a class='button' href='{{s.key.id}}/change_qcard/'>karta</a>
 {% endif %}
                 <a class='button' href='{{s.key.id}}/view/'>zobrazit</a>
+
+{% if request.auth_info.card %}
+                <a class='button' href='{{s.key.id}}/change_qcard/'>karta</a>
+{% endif %}
+
 
 {% if request.auth_info.edit %}
                 <a class='button' href='{{s.key.id}}/spare/'>náhradník</a>
@@ -266,6 +274,7 @@
 {% if request.auth_info.card %}
             <option value="action_card">generuj legitimace</option>
             <option value="action_qcard">generuj QR legitimace</option>
+            <option value="action_cardout">vydání karty</option>
 {% endif %}
 
 {% if request.auth_info.edit %}
@@ -273,7 +282,6 @@
             <option value="action_transfer">přesuň do jiného kurzu</option>
             <option value="action_makecopy">kopie do jiného kurzu</option>
             <option value="action_invitation">generuj pozvánky</option>
-            <option value="action_cardout">vydání karty</option>
             <option value="action_delete">smazat</option>
 {% endif %}
 {% if request.auth_info.admin %}
