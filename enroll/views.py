@@ -40,7 +40,7 @@ class EnrollForm(forms.Form):
     surname = forms.CharField(label='příjmení', error_messages=ERROR_MESSAGES, max_length=30)
     email = forms.EmailField(label='email', error_messages=ERROR_MESSAGES, max_length=100)
     no_email_ad = forms.BooleanField(label='nezasílat reklamu', error_messages=ERROR_MESSAGES, required=False)
-    phone = forms.CharField(label='telefon', error_messages=ERROR_MESSAGES, required=False, max_length=30)
+    phone = forms.CharField(label='telefon', error_messages=ERROR_MESSAGES, max_length=30)
     student = forms.BooleanField(label='student', error_messages=ERROR_MESSAGES, required=False)
     long_period = forms.BooleanField(label='celoroční', error_messages=ERROR_MESSAGES, required=False)
     year = forms.IntegerField(label='rok', error_messages=ERROR_MESSAGES, widget = forms.Select(choices=YEAR_CHOICES))

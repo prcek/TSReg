@@ -39,7 +39,7 @@ def course_fullsync(request):
     course_id = request.POST['course_id']
     course = Course.get_by_id(int(course_id))
     if course is None:
-        raise Http404 
+        raise Http404
     cdbsync.plan_cdb_put(course)
     logging.info('course=%s'%course)
     students = Student.list_for_course(course.key())
@@ -73,29 +73,29 @@ def update_all_students_for_season(request):
     season_id = request.POST['season_id']
     season = Season.get_by_id(int(season_id))
     if season is None:
-        raise Http404 
+        raise Http404
     logging.info("season %s" % season)
     cdbsync.plan_cdb_put(season)
     courses = Course.list_season(str(season.key()))
-    logging.info("all courses get") 
+    logging.info("all courses get")
     for c in courses:
         logging.info("course %s "%c.key())
         taskqueue.add(url='/task/update_all_students_for_course/', params={'course_id':c.key().id()})
     return HttpResponse('ok')
-   
+
 def update_all_students_for_course(request):
     logging.info(request.POST)
     course_id = request.POST['course_id']
     course = Course.get_by_id(int(course_id))
     if course is None:
-        raise Http404 
+        raise Http404
     logging.info('course=%s'%course)
     cdbsync.plan_cdb_put(course)
     students = Student.list_for_course(course.key())
     for s in students:
         logging.info("student %s" % s.key())
         taskqueue.add(url='/task/update_all_students_do_one/', params={'student_key':s.key()})
- 
+
     logging.info("all done")
     return HttpResponse('ok')
 
@@ -110,7 +110,7 @@ def update_all_students_do_one(request):
     logging.info("update student %s"%s)
 
     cdbsync.plan_cdb_put(s)
-    
+
     return HttpResponse('ok')
 
 
@@ -134,7 +134,7 @@ def send_student_email(request):
     template_key = request.POST['template_key']
     if template_key is None:
         logging.info('template_key is None')
-        raise Http404 
+        raise Http404
 
     logging.info('template_key=%s'%(template_key))
 
@@ -152,7 +152,7 @@ def send_student_email(request):
     if sender is None:
         logging.info('no sender, skip')
         return HttpResponse('ok')
-        
+
     if reply_to is None:
         logging.info('no reply to !, skip')
         return HttpResponse('ok')
@@ -164,9 +164,9 @@ def send_student_email(request):
 
     recipient = student.email.__str__()
 
-    logging.info('prepare text') 
+    logging.info('prepare text')
     (subject,body) = mail.prepare_email_text(template_key, student,course,partner)
-    logging.info('prepare text done') 
+    logging.info('prepare text done')
 
 
 #    sss=unicode(body,'utf-8')
@@ -183,10 +183,10 @@ def send_student_email(request):
 
     if bcc is None:
         logging.info('no bcc !, ignore bcc header')
-        gmail.send_mail(sender=sender, reply_to=reply_to, to=recipient, subject=subject,body=body) 
+        gmail.send_mail(sender=sender, reply_to=reply_to, to=recipient, subject=subject,body=body)
     else:
-        gmail.send_mail(sender=sender, reply_to=reply_to, bcc=bcc, to=recipient, subject=subject,body=body) 
-    
+        gmail.send_mail(sender=sender, reply_to=reply_to, bcc=bcc, to=recipient, subject=subject,body=body)
+
     logging.info('sent out !')
 
     return HttpResponse('ok')
@@ -199,17 +199,17 @@ def plan_multimail(request):
 
     if (ej_id is None):
         return HttpResponse('error')
-  
+
     if (recipients is None) or (len(recipients)==0):
         return HttpResponse('error')
     if len(recipients)==1:
-        plan_send_mail(recipients[0],ej_id)     
+        plan_send_mail(recipients[0],ej_id)
     else:
         sp = len(recipients)/2
         plan_send_multimail(recipients[:sp],ej_id)
         plan_send_multimail(recipients[sp:],ej_id)
-        
- 
+
+
     return HttpResponse('ok')
 
 def send_mail(request):
@@ -217,7 +217,7 @@ def send_mail(request):
     recipient = request.POST['recipient']
     ej_id = request.POST['ej_id']
 
-    logging.info('fake email to %s'%(recipient)) 
+    logging.info('fake email to %s'%(recipient))
     logging.info('ej_id %s'%ej_id)
 
 
@@ -225,7 +225,7 @@ def send_mail(request):
     ej  = EMailJob.get_by_id(int(ej_id))
     if ej is None:
         return HttpResponse('missing ej')
- 
+
     try:
         email = EmailMessage(ej.data)
 
@@ -249,7 +249,7 @@ def _obs_send_check_email(request):
     logging.info(request.POST)
     student_id = request.POST['student_id']
     student = Student.get_by_id(int(student_id))
-    
+
     if student is None:
         raise Http404
     course = student.get_course()
@@ -262,11 +262,11 @@ def _obs_send_check_email(request):
         return HttpResponse('ok')
 
     recipient = student.email.__str__()
-    
+
     logging.info('sending from "%s", to "%s", subject "%s", body "%s"'%(sender,recipient,subject,body))
-   
-    gmail.send_mail(sender, recipient, subject,body) 
-    
+
+    gmail.send_mail(sender, recipient, subject,body)
+
     logging.info('send ok')
 
     return HttpResponse('ok')
@@ -275,7 +275,7 @@ def _obs_send_confirm_email(request):
     logging.info(request.POST)
     student_id = request.POST['student_id']
     student = Student.get_by_id(int(student_id))
-    
+
     if student is None:
         raise Http404
     course = student.get_course()
@@ -288,11 +288,11 @@ def _obs_send_confirm_email(request):
 
 
     recipient = student.email.__str__()
-    
+
     logging.info('sending from "%s", to "%s", subject "%s", body "%s"'%(sender,recipient,subject,body))
-   
-    gmail.send_mail(sender, recipient, subject,body) 
-    
+
+    gmail.send_mail(sender, recipient, subject,body)
+
     logging.info('send ok')
 
     return HttpResponse('ok')
@@ -302,7 +302,7 @@ def _obs_send_enroll_yes_email(request):
     logging.info(request.POST)
     student_id = request.POST['student_id']
     student = Student.get_by_id(int(student_id))
-    
+
     if student is None:
         raise Http404
     course = student.get_course()
@@ -315,11 +315,11 @@ def _obs_send_enroll_yes_email(request):
 
 
     recipient = student.email.__str__()
-    
+
     logging.info('sending from "%s", to "%s", subject "%s", body "%s"'%(sender,recipient,subject,body))
-   
-    gmail.send_mail(sender, recipient, subject,body) 
-    
+
+    gmail.send_mail(sender, recipient, subject,body)
+
     logging.info('send ok')
 
     return HttpResponse('ok')
@@ -329,7 +329,7 @@ def _obs_send_enroll_no_email(request):
     logging.info(request.POST)
     student_id = request.POST['student_id']
     student = Student.get_by_id(int(student_id))
-    
+
     if student is None:
         raise Http404
     course = student.get_course()
@@ -342,18 +342,18 @@ def _obs_send_enroll_no_email(request):
 
 
     recipient = student.email.__str__()
-    
+
     logging.info('sending from "%s", to "%s", subject "%s", body "%s"'%(sender,recipient,subject,body))
-   
-    gmail.send_mail(sender, recipient, subject,body) 
-    
+
+    gmail.send_mail(sender, recipient, subject,body)
+
     logging.info('send ok')
 
     return HttpResponse('ok')
 
 
 def recount_course_capacity(course):
-   
+
     if course is None:
         raise Http404
 
@@ -401,7 +401,7 @@ def recount_course_capacity(course):
                 unconf_m+=1
             if f:
                 unconf_f+=1
-             
+
         elif s.status == 'e':
             if not s.paid is None:
                 enrolled_paid+=s.paid
@@ -411,24 +411,24 @@ def recount_course_capacity(course):
                 enrolled_m+=1
             if f:
                 enrolled_f+=1
- 
+
             if s.is_fp():
                 if m:
-                    stat_fp_m+=1   
+                    stat_fp_m+=1
                 if f:
-                    stat_fp_f+=1   
+                    stat_fp_f+=1
             elif s.is_pp():
                 if m:
-                    stat_pp_m+=1   
+                    stat_pp_m+=1
                 if f:
-                    stat_pp_f+=1   
+                    stat_pp_f+=1
             elif s.is_np():
                 if m:
-                    stat_np_m+=1   
+                    stat_np_m+=1
                 if f:
-                    stat_np_f+=1   
- 
- 
+                    stat_np_f+=1
+
+
 
 
     course.pending=pending
@@ -440,7 +440,7 @@ def recount_course_capacity(course):
     course.stat_e_f = enrolled_f
     course.stat_s_f = pending_f
     course.stat_paid = enrolled_paid
-    
+
     course.stat_fp_m = stat_fp_m
     course.stat_pp_m = stat_pp_m
     course.stat_np_m = stat_np_m
@@ -475,27 +475,27 @@ def recount_capacity(request):
     logging.info(request.POST)
     course_id = request.POST['course_id']
     course = Course.get_by_id(int(course_id))
-    
+
     if course is None:
         raise Http404
-    
+
     recount_course_capacity(course)
     course.save()
     logging.info(course)
     cdbsync.plan_cdb_put(course)
 
- 
+
     return HttpResponse('ok')
 
- 
+
 def hide_course_students(request):
     logging.info(request.POST)
     course_id = request.POST['course_id']
     course = Course.get_by_id(int(course_id))
-    
+
     if course is None:
         raise Http404
- 
+
     list = Student.list_for_course(course.key())
     for s in list:
         s.hidden = True
@@ -507,7 +507,7 @@ def hide_course_students(request):
     course.save()
     cdbsync.plan_cdb_put(course)
 
- 
+
     return HttpResponse('ok')
 
 def transfer_student(student_id, course):
@@ -526,7 +526,7 @@ def transfer_student(student_id, course):
     except:
         logging.info('email problem...')
 
-    
+
 
 def transfer_students(request):
     logging.info(request.POST)
@@ -560,16 +560,16 @@ def transfer_students(request):
 
 
 
-    logging.info('student list %s'%student_ids) 
+    logging.info('student list %s'%student_ids)
     for student_id in student_ids:
-        transfer_student(int(student_id), target_course) 
-    
+        transfer_student(int(student_id), target_course)
+
     recount_course_capacity(source_course)
     source_course.save()
     logging.info(source_course)
     cdbsync.plan_cdb_put(source_course)
 
- 
+
 
     taskqueue.add(url='/task/recount_capacity/', params={'course_id':target_course.key().id()})
 
@@ -584,17 +584,17 @@ def makecopy_student(student_id, course):
     student = Student.get_by_id(student_id)
     if student is None:
         return
-    
+
     new = student.clone()
     logging.info('clone ok')
     new.set_course_key(str(course.key()))
     new.save()
     cdbsync.plan_cdb_put(new)
 
-    
+
     return (student.ref_key,new)
 
- 
+
 def makecopy_students(request):
     logging.info(request.POST)
     job_id = request.POST['job_id']
@@ -627,10 +627,10 @@ def makecopy_students(request):
 
 
 
-    logging.info('student list %s'%student_ids) 
+    logging.info('student list %s'%student_ids)
     pr = dict()
     for student_id in student_ids:
-        (old_refkey,new) = makecopy_student(int(student_id), target_course) 
+        (old_refkey,new) = makecopy_student(int(student_id), target_course)
         pr[old_refkey]=new
 
     logging.info('stage 2 done')
@@ -642,10 +642,10 @@ def makecopy_students(request):
             n.save()
             cdbsync.plan_cdb_put(n)
 
-            
-    
-    
- 
+
+
+
+
 
     taskqueue.add(url='/task/recount_capacity/', params={'course_id':target_course.key().id()})
 
@@ -660,8 +660,8 @@ def prepare_card(owner, student_id, season_name, course_code, info_line_1, info_
     student = Student.get_by_id(int(student_id))
     if student is None:
         return
-    
-    card = Card() 
+
+    card = Card()
     card.init(owner=owner,name=student.name, surname=student.surname, season_name=season_name,  course_code=course_code, info_line_1=info_line_1, info_line_2=info_line_2)
     card.save()
     logging.info('card=%s'%card)
@@ -683,13 +683,13 @@ def prepare_cards(request):
     info_line_2 = request.POST['info_line_2']
 
 
-    logging.info('student list %s'%student_ids) 
+    logging.info('student list %s'%student_ids)
     for student_id in student_ids:
         try:
-            prepare_card(owner, student_id, season_name, course_code, info_line_1, info_line_2)        
+            prepare_card(owner, student_id, season_name, course_code, info_line_1, info_line_2)
         except:
             logging.info("can't prepare card")
-    
+
 
 
     job.finish()
@@ -704,23 +704,23 @@ def prepare_qcard(owner, student_id):
         return
     course = student.get_course()
     season = course.get_season()
- 
+
     logging.info("creating QR card for student %s" % (student))
     logging.info("creating QR card for course %s" % (course))
     logging.info("creating QR card for season %s" % (season))
-    qcard = QCard() 
+    qcard = QCard()
 
     season_name = season.public_name
     course_code = course.code
     info_line_1=course.card_line_1
     info_line_2=course.card_line_2
-    qrcode = calc_qrcode_for_student(student,course,season) 
+    qrcode = calc_qrcode_for_student(student,course,season)
     qcard.init(owner=owner,ref_gid=student.ref_gid, name=student.name, surname=student.surname, season_name=season_name,  course_code=course_code, info_line_1=info_line_1, info_line_2=info_line_2, qrcode=qrcode)
     qcard.save()
 
     logging.info('qcard=%s'%qcard)
 
-    
+
 
 def prepare_qcards(request):
     logging.info(request.POST)
@@ -735,14 +735,14 @@ def prepare_qcards(request):
     owner = request.POST['owner']
 
 
-    logging.info('student list %s'%student_ids) 
+    logging.info('student list %s'%student_ids)
     for student_id in student_ids:
         try:
-            prepare_qcard(owner, student_id)        
+            prepare_qcard(owner, student_id)
         except Exception,e:
             logging.info(e)
             logging.info("can't prepare qcard %s" %x)
-    
+
 
 
     job.finish()
@@ -758,7 +758,7 @@ def mark_cardout(owner, student_id):
     student.card_out=True
     student.save()
     cdbsync.plan_cdb_put(student)
- 
+
 
 
 
@@ -774,13 +774,13 @@ def prepare_cardout(request):
     student_ids = request.POST.getlist('student_ids')
     owner = request.POST['owner']
 
-    logging.info('student list %s'%student_ids) 
+    logging.info('student list %s'%student_ids)
     for student_id in student_ids:
         try:
-            mark_cardout(owner, student_id)        
+            mark_cardout(owner, student_id)
         except:
             logging.info("can't prepare card")
-    
+
 
 
     job.finish()
@@ -793,7 +793,7 @@ def prepare_invitation(owner, student_id, mode, addressing_parents, addressing_p
     student = Student.get_by_id(int(student_id))
     if student is None:
         return
-  
+
 
     logging.info('student: %s'%student)
 
@@ -805,7 +805,7 @@ def prepare_invitation(owner, student_id, mode, addressing_parents, addressing_p
         sex=student.get_sex()
         if not student.name is None:
             iname = inflector.do_inflect('name',sex,student.name)
-        
+
         if not student.surname is None:
             isurname = inflector.do_inflect('surname',sex,student.surname)
 
@@ -816,11 +816,11 @@ def prepare_invitation(owner, student_id, mode, addressing_parents, addressing_p
             addressing=addressing_s
         elif student.addressing =='d':
             addressing=addressing_d
-       
-    logging.info('addressing:%s'%addressing) 
- 
-    invitation = Invitation() 
-    
+
+    logging.info('addressing:%s'%addressing)
+
+    invitation = Invitation()
+
     invitation.init(owner=owner,mode=mode, addressing=addressing, name=student.name, surname=student.surname, sex=student.get_sex(), street=student.street,
         street_no=student.street_no, city=student.city, post_code=student.post_code
                 )
@@ -856,12 +856,12 @@ def prepare_invitations(request):
 
 
     inflector.init_dicts()
-    
 
-    logging.info('student list %s'%student_ids) 
+
+    logging.info('student list %s'%student_ids)
     for student_id in student_ids:
         try:
-            prepare_invitation(owner, student_id, mode,addressing_parents, addressing_p, addressing_s, addressing_d)        
+            prepare_invitation(owner, student_id, mode,addressing_parents, addressing_p, addressing_s, addressing_d)
         except:
             logging.info("can't prepare invitation")
 
@@ -878,7 +878,7 @@ def hide_student(owner, student_id):
         return
 
     student.hidden = True
-    student.save()    
+    student.save()
     cdbsync.plan_cdb_put(student)
 
 
@@ -905,19 +905,19 @@ def hide_students(request):
         return HttpResponse('error')
 
 
-    logging.info('student list %s'%student_ids) 
+    logging.info('student list %s'%student_ids)
     for student_id in student_ids:
         try:
-            hide_student(owner, student_id)        
+            hide_student(owner, student_id)
         except:
             logging.info("can't hide student")
-    
+
     recount_course_capacity(course)
     course.save()
     logging.info(course)
     cdbsync.plan_cdb_put(course)
 
- 
+
 
     job.finish()
     job.save()
@@ -931,7 +931,7 @@ def course_backup(request):
     course_id = request.POST['course_id']
     course = Course.get_by_id(int(course_id))
     if course is None:
-        raise Http404 
+        raise Http404
 
     logging.info('course=%s'%course)
 
@@ -958,7 +958,7 @@ def course_backup(request):
     for s in students:
         if not s.x_pair_empty_slot:
             data.append(s.as_csv_row())
-    
+
     out = cStringIO.StringIO()
     dump_to_csv(data,out)
 #    logging.info(out)
@@ -988,7 +988,7 @@ def send_backup(request):
     cb_id = request.POST['coursebackup_id']
     cb = CourseBackup.get_by_id(int(cb_id))
     if cb is None:
-        raise Http404 
+        raise Http404
 
     logging.info('cb=%s'%cb)
 
@@ -1006,7 +1006,7 @@ def send_backup(request):
 
     subject = "Zaloha %s"%(cb.info)
     body = "Zaloha %s, porizeno %s"%(cb.info,cb.create_datetime)
-    
+
     gmail.send_mail(sender=sender, to=to,subject=subject,body=body,attachments=[(cb.filename,cb.data)])
     logging.info('send ok')
 
@@ -1028,10 +1028,10 @@ def send_enroll_form_to_admin(request,test_id=None):
         student_id = test_id
     student = Student.get_by_id(int(student_id))
     if student is None:
-        raise Http404 
+        raise Http404
 
     logging.info('student=%s'%student)
-    
+
     course = student.get_course()
     partner = student.get_partner()
 
@@ -1047,11 +1047,11 @@ def send_enroll_form_to_admin(request,test_id=None):
     if to is None:
         logging.info('no to')
         return HttpResponse('ok - no to, ignore')
-        
-        
-    logging.info('prepare text') 
+
+
+    logging.info('prepare text')
     (subject,body) = mail.prepare_email_text('ENROLL_FORM_REPORT', student,course,partner)
-    logging.info('prepare text done')     
+    logging.info('prepare text done')
 
 #    subject =  "online prihlaska" #cfg.getConfigString('ENROLL_FORM_EMAIL_SUBJECT',None)
 #    body = "online prihlaska je v priloze" #cfg.getConfigString('ENROLL_FORM_EMAIL_SUBJECT',None)
@@ -1098,15 +1098,15 @@ def incoming_email(request):
     email = EmailMessage(data)
     a_to = parseaddr(email.to)[1]
     a_from = parseaddr(email.sender)[1]
-    logging.info('email.to=%s'%a_to) 
-    logging.info('email.sender=%s'%a_from) 
+    logging.info('email.to=%s'%a_to)
+    logging.info('email.sender=%s'%a_from)
 
-    r = re.match(r'^import-email-(\d+)@',a_to) 
+    r = re.match(r'^import-email-(\d+)@',a_to)
     if r:
         logging.info('import email, id %s'%r.group(1))
         process_incoming_email_template(r.group(1),data)
         return HttpResponse("ok - import email")
- 
+
     return HttpResponse('ok - ign')
 
 
@@ -1114,7 +1114,7 @@ def update_folder_stats(request):
     logging.info(request.POST)
     folder_key = request.POST['folder_key']
     season_key = request.POST['season_key']
-   
+
     course_list=Course.list_filter(season_key,folder_key)
 
     tc_em = 0
@@ -1171,7 +1171,7 @@ def update_folder_stats(request):
     fs.stat_npm = tc_npm
     fs.stat_npf = tc_npf
     fs.stat_np = tc_np
- 
+
     fs.stat_sum = tc_sum
 
     fs.mark_update()
@@ -1180,4 +1180,3 @@ def update_folder_stats(request):
     logging.info('folder stats %s' % (fs))
 
     return HttpResponse('ok')
-

@@ -22,10 +22,10 @@ class FakeStudent():
     name = None
     surname = None
     def get_sex(self):
-        return None 
- 
+        return None
+
     def key(self):
-        return {'id':''} 
+        return {'id':''}
 
 def get_single_sort():
         def g(obj):
@@ -39,12 +39,12 @@ def get_school_sort():
 
 def diffclass(s1,s2):
     if s1.school != s2.school:
-        return True 
+        return True
     if s1.school_class != s2.school_class:
-        return True 
+        return True
     if s1.addressing!= s2.addressing:
-        return True 
- 
+        return True
+
     return False
 
 def sort_students_kicked(students):
@@ -60,19 +60,19 @@ def sort_students_spare_pair(students):
     return sort_students_pair(students)
 
 def sort_students_single(students):
-    sl = sorted(students, key=get_single_sort()) 
+    sl = sorted(students, key=get_single_sort())
     no = 0
     for s in sl:
         no+=1
         s.x_no = no
     return sl
- 
+
 
 def sort_students_school(students):
     sl = sorted(students, key=get_school_sort())
     cno = 0
     no = 0
-    last_s = None 
+    last_s = None
     for s in sl:
         if (not last_s is None) and  diffclass(s,last_s):
             cno=0
@@ -86,14 +86,14 @@ def sort_students_school(students):
 
 def sort_students_pair(students):
 
-    d = dict() 
+    d = dict()
 #    dr = dict()
     for s in students:
         d[s.ref_key]=s
         d.setdefault(s.partner_ref_code,None)
 #        dr[s.partner_ref_code]=s
-       
-    dd = dict() 
+
+    dd = dict()
     pl = []
     for s in students:
         if s.ref_key in dd:
@@ -107,16 +107,16 @@ def sort_students_pair(students):
             if p.get_sex()=='m':
                 p.x_pair_first = True
                 s.x_pair_second = True
-                pl.append((p,s)) 
+                pl.append((p,s))
             else:
                 s.x_pair_first = True
                 p.x_pair_second = True
-                pl.append((s,p)) 
+                pl.append((s,p))
         else:
             s.x_pair_first = True
             pl.append((s,FakeStudent()))
-            
-    l = []         
+
+    l = []
     pno = 0
 
     def get_compl():
@@ -137,12 +137,12 @@ def sort_students_pair(students):
         b.x_pair_no = pno
         l.append(a)
         l.append(b)
-        
+
     no = 0
     for a in l:
         no+=1
         a.x_no = no
 
-#    l =  sorted(l, key=get_compl()) 
+#    l =  sorted(l, key=get_compl())
 #    l.append(FakeStudent())
     return l
