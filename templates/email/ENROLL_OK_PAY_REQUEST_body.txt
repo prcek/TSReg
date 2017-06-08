@@ -14,8 +14,13 @@ V případě využití slevy pro určité období, nezapomeňte, že není rozho
  
 Pokyny k platbě:
 
-Platbu lze provést bezhotovostně - na účet číslo 413345621/0100, do zprávy
-pro příjemce je nutno uvést Vaše jméno a číslo kurzu.
+Platbu lze provést bezhotovostně na účet:
+
+dětské kurzy (OK, klub sportovního tance, street dance) číslo účtu 413345621/0100
+středoškolské taneční - číslo účtu  413345621/0100
+kurzy pro dospělé (spol. tanec všech pokročilostí, salsa, latina, víkendové kurzy, svatební kurzy) - číslo účtu 2901223235/2010
+
+Do zprávy pro příjemce je nutno uvést Vaše jméno a číslo kurzu.
 
 
 {% include "email/signature.txt" %}
